@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1&nbsp; AI 모델 학습 개요 – AI 모델링 실습 · 학생용</title>
+<title>1&nbsp; AI 모델 학습 개요 – AI 모델링 실습</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -93,10 +99,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-dc2f893ab7b818674e6dd1532d8eda25.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d807e1733b757189e5f59b95ddf566f9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -130,7 +136,7 @@ div.csl-indent {
 <link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -143,7 +149,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -185,7 +191,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">AI 모델링 실습 · 학생용</a> 
+      <a href="./">AI 모델링 실습</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -512,19 +518,19 @@ window.Quarto = {
 <li><strong>NVIDIA 드라이버</strong>: 운영체제가 GPU와 통신하도록 하는 최하위 소프트웨어입니다. 가장 먼저 설치하며, 사용하려는 CUDA 버전이 요구하는 최소 드라이버 버전 이상이어야 합니다.</li>
 <li><strong>CUDA Toolkit</strong>: GPU에서 일반 계산(General-Purpose GPU)을 수행하기 위한 API와 컴파일러입니다. 파이토치 바이너리는 특정 CUDA 버전에 맞춰 빌드되어 배포됩니다.</li>
 <li><strong>cuDNN</strong>: 합성곱·순환 연산 등 딥러닝 핵심 연산을 GPU에 최적화한 라이브러리입니다. 파이토치가 내부적으로 호출합니다.</li>
-<li><strong>파이토치</strong>: 우리가 직접 다루는 최상위 계층으로, 텐서 연산과 자동미분, 신경망 모듈을 제공합니다<span class="citation" data-cites="paszke2019pytorch">(<a href="#ref-paszke2019pytorch" role="doc-biblioref">Paszke 기타, 2019</a>)</span>. 텐서플로 같은 다른 프레임워크<span class="citation" data-cites="abadi2016tensorflow">(<a href="#ref-abadi2016tensorflow" role="doc-biblioref">Abadi 기타, 2016</a>)</span>도 널리 쓰이지만, 이 교재는 파이썬 코드가 그대로 실행되는 명령형(imperative) 방식이라 학습과 디버깅이 직관적인 파이토치를 사용합니다.</li>
+<li><strong>파이토치</strong>: 우리가 직접 다루는 최상위 계층으로, 텐서 연산과 자동미분, 신경망 모듈을 제공합니다<span class="citation" data-cites="paszke2019pytorch">(<a href="#ref-paszke2019pytorch" role="doc-biblioref"><span class="nocase">Paszke 기타</span>, 2019</a>)</span>. 텐서플로 같은 다른 프레임워크<span class="citation" data-cites="abadi2016tensorflow">(<a href="#ref-abadi2016tensorflow" role="doc-biblioref"><span class="nocase">Abadi 기타</span>, 2016</a>)</span>도 널리 쓰이지만, 이 교재는 파이썬 코드가 그대로 실행되는 명령형(imperative) 방식이라 학습과 디버깅이 직관적인 파이토치를 사용합니다.</li>
 </ul>
 </section>
 <section id="nvidia-드라이버-설치와-확인" class="level3" data-number="1.2.2">
 <h3 data-number="1.2.2" class="anchored" data-anchor-id="nvidia-드라이버-설치와-확인"><span class="header-section-number">1.2.2</span> NVIDIA 드라이버 설치와 확인</h3>
 <p>먼저 그래픽 카드에 맞는 최신 드라이버를 NVIDIA 공식 사이트에서 내려받아 설치합니다. 설치 후 터미널(명령 프롬프트)에서 다음 명령으로 드라이버와 GPU 상태를 확인합니다.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nvidia-smi</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nvidia-smi</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>이 명령은 GPU 모델명, 드라이버 버전, 그리고 화면 오른쪽 위에 <strong>CUDA Version</strong>을 표시합니다. 여기 표시되는 CUDA 버전은 “이 드라이버가 지원하는 최대 CUDA 버전”을 뜻하며, 파이토치가 요구하는 CUDA 런타임 버전이 이 값 이하이면 정상적으로 동작합니다.</p>
 </section>
 <section id="아나콘다-가상환경-생성과-파이토치-설치" class="level3" data-number="1.2.3">
 <h3 data-number="1.2.3" class="anchored" data-anchor-id="아나콘다-가상환경-생성과-파이토치-설치"><span class="header-section-number">1.2.3</span> 아나콘다 가상환경 생성과 파이토치 설치</h3>
 <p>프로젝트마다 라이브러리 버전이 충돌하지 않도록 <strong>가상환경</strong>을 분리합니다. 딥러닝 프로젝트는 파이토치·넘파이·쿠다 버전이 서로 얽혀 있어, 한 프로젝트에서 버전을 올리면 다른 프로젝트가 깨지는 일이 흔합니다. 가상환경은 프로젝트별로 독립된 라이브러리 공간을 주어 이런 충돌을 원천 차단하고, 실험을 재현 가능하게 만듭니다. 아나콘다(Anaconda) 또는 더 가벼운 미니콘다(Miniconda)를 설치한 뒤, 다음과 같이 파이썬 3.10 환경을 만들고 활성화합니다.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) 가상환경 생성 (파이썬 3.10)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) 가상환경 생성 (파이썬 3.10)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> aimodel python=3.10 <span class="at">-y</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) 환경 활성화</span></span>
@@ -535,22 +541,22 @@ window.Quarto = {
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install torch torchvision torchaudio <span class="at">--index-url</span> https://download.pytorch.org/whl/cu121</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4) 실습에 자주 쓰는 라이브러리</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install numpy matplotlib scikit-learn</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install numpy matplotlib scikit-learn</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>설치가 끝나면 파이토치가 GPU를 인식하는지 반드시 확인합니다. 아래 스크립트가 <code>True</code>와 GPU 이름을 출력하면 환경 구성이 완료된 것입니다.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"PyTorch 버전:"</span>, torch.__version__)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"CUDA 사용 가능:"</span>, torch.cuda.is_available())</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> torch.cuda.is_available():</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"GPU 이름:"</span>, torch.cuda.get_device_name(<span class="dv">0</span>))</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"CUDA 런타임 버전:"</span>, torch.version.cuda)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"CUDA 런타임 버전:"</span>, torch.version.cuda)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-GPU가 없다면
+<span class="screen-reader-only">힌트</span>GPU가 없다면
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -561,7 +567,7 @@ GPU가 없다면
 </section>
 <section id="sec-array-tensor" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="sec-array-tensor"><span class="header-section-number">1.3</span> 넘파이 배열과 파이토치 텐서</h2>
-<p>수치 계산의 기본 자료구조는 넘파이의 <code>ndarray</code>와 파이토치의 <code>tensor</code>입니다. 둘 다 <strong>같은 자료형의 원소가 규칙적으로 나열된 다차원 격자</strong>라는 점에서 개념이 같습니다<span class="citation" data-cites="harris2020numpy">(<a href="#ref-harris2020numpy" role="doc-biblioref">Harris 기타, 2020</a>)</span>. 결정적 차이는 두 가지입니다. 첫째, 텐서는 GPU로 올려 병렬 연산할 수 있습니다. 둘째, 텐서는 연산 이력을 기록해 <strong>자동미분</strong>을 지원합니다. 이 두 성질이 텐서를 딥러닝의 핵심 자료구조로 만듭니다.</p>
+<p>수치 계산의 기본 자료구조는 넘파이의 <code>ndarray</code>와 파이토치의 <code>tensor</code>입니다. 둘 다 <strong>같은 자료형의 원소가 규칙적으로 나열된 다차원 격자</strong>라는 점에서 개념이 같습니다<span class="citation" data-cites="harris2020numpy">(<a href="#ref-harris2020numpy" role="doc-biblioref"><span class="nocase">Harris 기타</span>, 2020</a>)</span>. 결정적 차이는 두 가지입니다. 첫째, 텐서는 GPU로 올려 병렬 연산할 수 있습니다. 둘째, 텐서는 연산 이력을 기록해 <strong>자동미분</strong>을 지원합니다. 이 두 성질이 텐서를 딥러닝의 핵심 자료구조로 만듭니다.</p>
 <p>텐서를 이해하는 출발점은 <span class="key">랭크(rank), 즉 차원의 개수</span>입니다. 숫자 하나(스칼라)는 0차원, 숫자의 나열(벡터)은 1차원, 표(행렬)는 2차원이며, 여기에 축을 하나씩 더할수록 차원이 올라갑니다. 각 축의 크기를 나열한 것이 <strong>모양(shape)</strong>입니다. 그림 1.1은 0차원부터 6차원까지의 텐서를 큐브로 나타낸 것입니다.</p>
 <div class="figbody">
 <p><img src="figs/ch1_tensor_ranks.png" class="img-fluid" style="width:100.0%" alt="0D~6D 텐서의 랭크와 모양"></p>
@@ -595,7 +601,7 @@ GPU가 없다면
 <section id="생성과-기본-속성" class="level3" data-number="1.3.1">
 <h3 data-number="1.3.1" class="anchored" data-anchor-id="생성과-기본-속성"><span class="header-section-number">1.3.1</span> 생성과 기본 속성</h3>
 <p>배열과 텐서는 리스트, 난수, 규칙적 수열 등 다양한 방법으로 만듭니다. 텐서의 핵심 속성은 모양을 뜻하는 <code>shape</code>, 자료형을 뜻하는 <code>dtype</code>, 그리고 위치를 뜻하는 <code>device</code>입니다.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 넘파이 배열</span></span>
@@ -609,12 +615,12 @@ GPU가 없다면
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">3</span>)          <span class="co"># 표준정규분포 난수</span></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>seq <span class="op">=</span> torch.arange(<span class="dv">0</span>, <span class="dv">6</span>).reshape(<span class="dv">2</span>, <span class="dv">3</span>)   <span class="co"># 0..5를 2x3으로</span></span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t.shape, t.dtype, t.device)   <span class="co"># torch.Size([2, 3]) torch.float32 cpu</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t.shape, t.dtype, t.device)   <span class="co"># torch.Size([2, 3]) torch.float32 cpu</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="인덱싱슬라이싱모양-변경" class="level3" data-number="1.3.2">
 <h3 data-number="1.3.2" class="anchored" data-anchor-id="인덱싱슬라이싱모양-변경"><span class="header-section-number">1.3.2</span> 인덱싱·슬라이싱·모양 변경</h3>
 <p>넘파이와 텐서는 인덱싱·슬라이싱 문법이 거의 같습니다. 모양을 바꾸는 <code>reshape</code>, 차원을 추가·제거하는 <code>unsqueeze</code>/<code>squeeze</code>, 축을 바꾸는 <code>transpose</code>를 자주 씁니다.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.arange(<span class="dv">12</span>).reshape(<span class="dv">3</span>, <span class="dv">4</span>)   <span class="co"># 3행 4열</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.arange(<span class="dv">12</span>).reshape(<span class="dv">3</span>, <span class="dv">4</span>)   <span class="co"># 3행 4열</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x[<span class="dv">0</span>])        <span class="co"># 첫 번째 행</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x[:, <span class="dv">1</span>])     <span class="co"># 두 번째 열</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x[<span class="dv">1</span>, <span class="dv">2</span>])     <span class="co"># 1행 2열 원소</span></span>
@@ -622,24 +628,24 @@ GPU가 없다면
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x.reshape(<span class="dv">2</span>, <span class="dv">6</span>)          <span class="co"># 모양 변경 (원소 수 유지)</span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> x.unsqueeze(<span class="dv">0</span>)          <span class="co"># (1, 3, 4) — 맨 앞에 차원 추가</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> u.squeeze(<span class="dv">0</span>)           <span class="co"># (3, 4)   — 크기 1인 차원 제거</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>xt <span class="op">=</span> x.transpose(<span class="dv">0</span>, <span class="dv">1</span>)      <span class="co"># (4, 3)  — 두 축 교환</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>xt <span class="op">=</span> x.transpose(<span class="dv">0</span>, <span class="dv">1</span>)      <span class="co"># (4, 3)  — 두 축 교환</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="텐서의-내부-구조-저장소와-스트라이드" class="level3" data-number="1.3.3">
 <h3 data-number="1.3.3" class="anchored" data-anchor-id="텐서의-내부-구조-저장소와-스트라이드"><span class="header-section-number">1.3.3</span> 텐서의 내부 구조: 저장소와 스트라이드</h3>
 <p>텐서를 깊이 이해하려면 그 내부 표현을 알아야 합니다. 파이토치 텐서는 실제로 두 부분으로 나뉩니다. 하나는 값을 1차원으로 나열해 담은 <strong>저장소(storage)</strong>이고, 다른 하나는 그 1차원 데이터를 다차원으로 해석하는 <strong>메타데이터</strong>입니다. 메타데이터에는 모양(<code>shape</code>), 그리고 각 차원으로 한 칸 이동할 때 저장소에서 몇 칸을 건너뛰어야 하는지를 나타내는 <strong>스트라이드(stride)</strong>가 포함됩니다.</p>
 <p>예를 들어 <span class="math inline">\(3\times4\)</span> 텐서는 저장소에 12개의 값이 연속으로 놓이고, 스트라이드는 <span class="math inline">\((4, 1)\)</span>이 됩니다. 이는 “행 방향으로 한 칸 가려면 4칸을, 열 방향으로 한 칸 가려면 1칸을 건너뛴다”는 뜻입니다. 이 구조 덕분에 <code>reshape</code>나 <code>transpose</code> 같은 연산은 실제 데이터를 복사하지 않고 <strong>메타데이터만 바꾸어</strong> 같은 저장소를 다르게 바라보게 합니다. 그래서 이런 연산은 매우 빠릅니다.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.arange(<span class="dv">12</span>).reshape(<span class="dv">3</span>, <span class="dv">4</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.stride())        <span class="co"># (4, 1)</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>xt <span class="op">=</span> x.transpose(<span class="dv">0</span>, <span class="dv">1</span>)   <span class="co"># 데이터 복사 없이 스트라이드만 (1, 4)로 변경</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(xt.stride())       <span class="co"># (1, 4)</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(xt.is_contiguous())<span class="co"># False — 메모리 순서와 논리적 순서가 어긋남</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(xt.is_contiguous())<span class="co"># False — 메모리 순서와 논리적 순서가 어긋남</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>전치처럼 스트라이드가 뒤바뀐 텐서는 메모리상 연속이 아니게 되어(<code>is_contiguous()</code>가 <code>False</code>), 일부 연산에서 <code>contiguous()</code>로 실제 재배치를 요구하기도 합니다. 이런 내부 동작을 이해하면, 왜 어떤 연산은 빠르고 어떤 연산은 메모리 복사를 유발하는지 예측할 수 있습니다.</p>
 </section>
 <section id="메모리-공유-뷰와-복사" class="level3" data-number="1.3.4">
 <h3 data-number="1.3.4" class="anchored" data-anchor-id="메모리-공유-뷰와-복사"><span class="header-section-number">1.3.4</span> 메모리 공유: 뷰와 복사</h3>
 <p>앞의 성질 때문에, 넘파이 배열과 텐서를 오갈 때 <strong>메모리를 공유</strong>하는 경우가 많습니다. <code>torch.from_numpy</code>나 <code>.numpy()</code>로 변환하면 두 객체가 같은 메모리를 가리켜, 한쪽을 바꾸면 다른 쪽도 바뀝니다. 이는 효율적이지만 의도치 않은 부작용을 낳을 수 있어 주의해야 합니다.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np, torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np, torch</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([<span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">3.</span>])</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> torch.from_numpy(a)   <span class="co"># 메모리 공유</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>t[<span class="dv">0</span>] <span class="op">=</span> <span class="fl">99.0</span></span>
@@ -647,7 +653,7 @@ GPU가 없다면
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> t.clone()             <span class="co"># 완전한 복사(메모리 분리)</span></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>b[<span class="dv">0</span>] <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t[<span class="dv">0</span>])               <span class="co"># tensor(99.) — t는 영향 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t[<span class="dv">0</span>])               <span class="co"># tensor(99.) — t는 영향 없음</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>값을 안전하게 독립적으로 다루려면 <code>.clone()</code>으로 명시적으로 복사합니다. 반대로 대용량 데이터를 다룰 때는 복사를 피해 메모리를 아끼는 것이 성능에 유리합니다. 이처럼 “언제 데이터가 복사되고 언제 공유되는가”를 아는 것은 효율적인 딥러닝 코드 작성의 기본기입니다.</p>
 </section>
 </section>
@@ -662,7 +668,7 @@ GPU가 없다면
 <p><span class="math display">\[
 C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 \]</span></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([<span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">3.</span>])</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> np.array([<span class="fl">4.</span>, <span class="fl">5.</span>, <span class="fl">6.</span>])</span>
@@ -672,7 +678,7 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> np.array([[<span class="fl">5.</span>, <span class="fl">6.</span>], [<span class="fl">7.</span>, <span class="fl">8.</span>]])</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A <span class="op">@</span> B)              <span class="co"># 행렬 곱 (파이썬 @ 연산자)</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A.T)               <span class="co"># 전치</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.linalg.inv(A))    <span class="co"># 역행렬</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.linalg.inv(A))    <span class="co"># 역행렬</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>행렬 곱은 신경망 한 층의 계산 그 자체입니다. 입력 <span class="math inline">\(\mathbf{x}\)</span>, 가중치 <span class="math inline">\(W\)</span>, 편향 <span class="math inline">\(\mathbf{b}\)</span>에 대해 층의 출력은 <span class="math inline">\(\mathbf{y}=W\mathbf{x}+\mathbf{b}\)</span>로 표현됩니다. 이 아핀 변환을 여러 겹 쌓고 사이에 비선형 함수를 끼우는 것이 곧 다층 신경망입니다.</p>
 <section id="노름과-거리-그리고-그-의미" class="level3" data-number="1.4.1">
 <h3 data-number="1.4.1" class="anchored" data-anchor-id="노름과-거리-그리고-그-의미"><span class="header-section-number">1.4.1</span> 노름과 거리, 그리고 그 의미</h3>
@@ -682,17 +688,17 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 \lVert \mathbf{x} \rVert_1 = \sum_{i} \lvert x_i \rvert .
 \]</span></p>
 <p>L2 노름은 원점에서의 유클리드 거리로, 큰 성분에 더 민감합니다. L1 노름은 성분의 절댓값 합으로, 이상치에 덜 민감하고 희소성을 유도하는 성질이 있습니다. 이 차이는 2장에서 볼 L2·L1 정규화의 성질로 직접 이어집니다. 두 벡터 사이의 거리는 차의 노름 <span class="math inline">\(\lVert \mathbf{a}-\mathbf{b}\rVert\)</span>로 정의되며, 회귀의 평균제곱오차가 바로 예측과 정답 벡터의 L2 거리의 제곱에 비례합니다.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">3.</span>, <span class="op">-</span><span class="fl">4.</span>])</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.linalg.norm(x, <span class="bu">ord</span><span class="op">=</span><span class="dv">2</span>))   <span class="co"># 5.0  (√(9+16))</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.linalg.norm(x, <span class="bu">ord</span><span class="op">=</span><span class="dv">1</span>))   <span class="co"># 7.0  (3+4)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.linalg.norm(x, <span class="bu">ord</span><span class="op">=</span><span class="dv">1</span>))   <span class="co"># 7.0  (3+4)</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>또한 두 벡터의 방향적 유사성은 <strong>코사인 유사도</strong> <span class="math inline">\(\cos\theta = \dfrac{\mathbf{a}\cdot\mathbf{b}}{\lVert\mathbf{a}\rVert\,\lVert\mathbf{b}\rVert}\)</span>로 잽니다. 이는 4장의 어텐션에서 쿼리와 키의 유사도를 재는 내적의 직관과 맞닿아 있습니다. 이렇게 노름·내적·거리는 신경망 곳곳에서 반복해 등장하는 기본 언어입니다.</p>
 </section>
 </section>
 <section id="sec-tensor-linalg" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="sec-tensor-linalg"><span class="header-section-number">1.5</span> 텐서를 활용한 선형 연산</h2>
 <p>같은 연산을 파이토치 텐서로 수행합니다. 문법은 넘파이와 매우 비슷하지만, 이 연산들이 그대로 GPU에서 실행되고 자동미분으로 이어질 수 있다는 점이 다릅니다.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> torch.tensor([<span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">3.</span>])</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> torch.tensor([<span class="fl">4.</span>, <span class="fl">5.</span>, <span class="fl">6.</span>])</span>
@@ -703,12 +709,12 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A <span class="op">@</span> B)              <span class="co"># 행렬 곱</span></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.matmul(A, B))   <span class="co"># 동일한 결과</span></span>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A.T)               <span class="co"># 전치</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.linalg.inv(A))   <span class="co"># 역행렬</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.linalg.inv(A))   <span class="co"># 역행렬</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>여러 개의 샘플을 한 번에 처리하는 딥러닝에서는 <strong>배치 행렬 곱</strong>이 흔합니다. 예를 들어 크기가 <span class="math inline">\((B, m, k)\)</span>와 <span class="math inline">\((B, k, n)\)</span>인 두 텐서를 곱하면, 각 배치별로 행렬 곱이 수행되어 <span class="math inline">\((B, m, n)\)</span>이 됩니다. <code>torch.bmm</code>이나 <code>@</code> 연산자가 이를 처리합니다.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.randn(<span class="dv">8</span>, <span class="dv">3</span>, <span class="dv">4</span>)   <span class="co"># 배치 8개, 각 3x4 행렬</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.randn(<span class="dv">8</span>, <span class="dv">3</span>, <span class="dv">4</span>)   <span class="co"># 배치 8개, 각 3x4 행렬</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> torch.randn(<span class="dv">8</span>, <span class="dv">4</span>, <span class="dv">5</span>)   <span class="co"># 배치 8개, 각 4x5 행렬</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> torch.bmm(X, Y)       <span class="co"># (8, 3, 5): 배치별 행렬 곱</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Z.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Z.shape)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="sec-broadcasting" class="level2" data-number="1.6">
 <h2 data-number="1.6" class="anchored" data-anchor-id="sec-broadcasting"><span class="header-section-number">1.6</span> 브로드캐스팅과 2차원 연산 비교</h2>
@@ -730,7 +736,7 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 </div>
 </div>
 <p>다음 예는 <span class="math inline">\(3\times3\)</span> 행렬에 길이 3짜리 행벡터를 더하는 상황입니다. 행벡터가 세 행 모두에 복제되어 더해집니다. 이때 실제로 메모리를 복제하지 않고 계산만 확장하므로 메모리 효율이 좋습니다.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> np.arange(<span class="dv">9</span>).reshape(<span class="dv">3</span>, <span class="dv">3</span>).astype(np.float32)</span>
@@ -744,7 +750,7 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 열벡터로 브로드캐스팅하려면 (3,1) 모양으로 만든다</span></span>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>col <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>], [<span class="fl">2.</span>], [<span class="fl">3.</span>]])   <span class="co"># (3, 1)</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Mt <span class="op">+</span> col)   <span class="co"># 각 열에 더해짐</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Mt <span class="op">+</span> col)   <span class="co"># 각 열에 더해짐</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>넘파이와 파이토치의 2차원 브로드캐스팅 동작은 규칙이 동일합니다. 표로 비교하면 다음과 같습니다.</p>
 <table class="caption-top table">
 <thead>
@@ -794,7 +800,7 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-요소별 곱과 행렬 곱은 다릅니다
+<span class="screen-reader-only">경고</span>요소별 곱과 행렬 곱은 다릅니다
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -827,7 +833,7 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 </div>
 </div>
 <p>파이토치에서 텐서나 모델을 GPU로 옮길 때는 <code>.to(device)</code>를 사용합니다. 관례적으로 아래처럼 <code>device</code>를 한 번 정의해두고, 모든 텐서와 모델을 같은 장치로 보냅니다. <strong>연산에 참여하는 텐서들은 반드시 같은 장치에 있어야</strong> 하며, 그렇지 않으면 오류가 발생합니다.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"사용 장치:"</span>, device)</span>
@@ -839,8 +845,8 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>y_gpu <span class="op">=</span> x_gpu <span class="op">@</span> x_gpu</span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 결과를 다시 CPU로 가져와 넘파이로 변환</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>y_cpu <span class="op">=</span> y_gpu.detach().cpu().numpy()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>GPU 메모리는 CPU 메모리와 물리적으로 분리되어 있어, CPU-GPU 간 데이터 전송에는 비용이 듭니다. 따라서 <strong>학습 루프 안에서 불필요하게 장치를 오가지 않도록</strong> 설계하는 것이 성능의 핵심입니다. 큰 모델을 학습할 때는 반정밀도(FP16) 연산을 섞어 메모리와 속도를 개선하는 혼합 정밀도 학습도 널리 쓰입니다<span class="citation" data-cites="micikevicius2018mixed">(<a href="#ref-micikevicius2018mixed" role="doc-biblioref">Micikevicius 기타, 2018</a>)</span>.</p>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>y_cpu <span class="op">=</span> y_gpu.detach().cpu().numpy()</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
+<p>GPU 메모리는 CPU 메모리와 물리적으로 분리되어 있어, CPU-GPU 간 데이터 전송에는 비용이 듭니다. 따라서 <strong>학습 루프 안에서 불필요하게 장치를 오가지 않도록</strong> 설계하는 것이 성능의 핵심입니다. 큰 모델을 학습할 때는 반정밀도(FP16) 연산을 섞어 메모리와 속도를 개선하는 혼합 정밀도 학습도 널리 쓰입니다<span class="citation" data-cites="micikevicius2018mixed">(<a href="#ref-micikevicius2018mixed" role="doc-biblioref"><span class="nocase">Micikevicius 기타</span>, 2018</a>)</span>.</p>
 <section id="gpu-메모리와-성능-고려사항" class="level3" data-number="1.7.1">
 <h3 data-number="1.7.1" class="anchored" data-anchor-id="gpu-메모리와-성능-고려사항"><span class="header-section-number">1.7.1</span> GPU 메모리와 성능 고려사항</h3>
 <p>GPU를 효과적으로 쓰려면 몇 가지 원리를 이해해야 합니다. 첫째, GPU는 <strong>연산이 데이터 전송을 상쇄할 만큼 충분히 클 때</strong> 이득이 큽니다. 작은 텐서 하나를 GPU에 올려 더하는 연산은 오히려 전송 비용 때문에 CPU보다 느릴 수 있습니다. 대량의 행렬 곱처럼 연산 밀도가 높을 때 GPU의 병렬성이 빛을 발합니다.</p>
@@ -875,9 +881,9 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 </section>
 <section id="자료형과-재현성" class="level3" data-number="1.7.2">
 <h3 data-number="1.7.2" class="anchored" data-anchor-id="자료형과-재현성"><span class="header-section-number">1.7.2</span> 자료형과 재현성</h3>
-<p>텐서의 자료형(<code>dtype</code>)은 계산의 정밀도와 메모리를 좌우합니다. 딥러닝에서는 대부분 32비트 부동소수점(<code>float32</code>)을 기본으로 쓰고, 라벨이나 인덱스에는 정수형(<code>int64</code>, 파이토치의 <code>long</code>)을 씁니다. 부동소수점 정밀도를 낮추면(예: <code>float16</code>) 메모리와 속도가 개선되지만 수치 안정성이 떨어질 수 있어, 학습에서는 혼합 정밀도로 신중히 다룹니다<span class="citation" data-cites="micikevicius2018mixed">(<a href="#ref-micikevicius2018mixed" role="doc-biblioref">Micikevicius 기타, 2018</a>)</span>.</p>
+<p>텐서의 자료형(<code>dtype</code>)은 계산의 정밀도와 메모리를 좌우합니다. 딥러닝에서는 대부분 32비트 부동소수점(<code>float32</code>)을 기본으로 쓰고, 라벨이나 인덱스에는 정수형(<code>int64</code>, 파이토치의 <code>long</code>)을 씁니다. 부동소수점 정밀도를 낮추면(예: <code>float16</code>) 메모리와 속도가 개선되지만 수치 안정성이 떨어질 수 있어, 학습에서는 혼합 정밀도로 신중히 다룹니다<span class="citation" data-cites="micikevicius2018mixed">(<a href="#ref-micikevicius2018mixed" role="doc-biblioref"><span class="nocase">Micikevicius 기타</span>, 2018</a>)</span>.</p>
 <p>또한 실험을 <strong>재현</strong>하려면 난수 시드를 고정해야 합니다. 파이토치·넘파이·파이썬의 난수 생성기를 각각 고정하고, 필요하면 데이터로더의 워커 시드까지 통제합니다.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, numpy <span class="im">as</span> np, random</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, numpy <span class="im">as</span> np, random</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> set_seed(seed<span class="op">=</span><span class="dv">42</span>):</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    random.seed(seed)</span>
@@ -885,7 +891,7 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    torch.manual_seed(seed)</span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    torch.cuda.manual_seed_all(seed)   <span class="co"># GPU 사용 시</span></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>set_seed(<span class="dv">42</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>set_seed(<span class="dv">42</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>재현성은 실험 결과를 신뢰하고 서로 비교하기 위한 전제입니다. 특히 옵티마이저나 초기화를 바꿔 성능을 비교할 때는, 시드를 고정해야 성능 차이가 우연이 아닌 변경에서 비롯된 것임을 확인할 수 있습니다.</p>
 </section>
 </section>
@@ -893,32 +899,32 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <h2 data-number="1.8" class="anchored" data-anchor-id="sec-autograd"><span class="header-section-number">1.8</span> 자동미분 맛보기</h2>
 <p>파이토치의 가장 강력한 기능은 <strong>자동미분(automatic differentiation)</strong>입니다<span class="citation" data-cites="baydin2018automatic">(<a href="#ref-baydin2018automatic" role="doc-biblioref">Baydin 기타, 2018</a>)</span>. 텐서에 <code>requires_grad=True</code>를 주면, 그 텐서가 참여한 모든 연산이 <strong>계산 그래프</strong>로 기록됩니다. 이후 <code>.backward()</code>를 호출하면 연쇄법칙에 따라 각 텐서에 대한 기울기가 자동으로 계산되어 <code>.grad</code>에 저장됩니다. 신경망 학습을 지탱하는 역전파 알고리즘이 바로 이 원리로 구현됩니다<span class="citation" data-cites="rumelhart1986learning">(<a href="#ref-rumelhart1986learning" role="doc-biblioref">Rumelhart 기타, 1986</a>)</span>.</p>
 <p>간단한 예로 <span class="math inline">\(f(x) = x^2 + 3x\)</span>의 <span class="math inline">\(x=2\)</span>에서의 미분값을 구해 봅니다. 손으로 계산하면 <span class="math inline">\(f'(x)=2x+3\)</span>이므로 <span class="math inline">\(f'(2)=7\)</span>입니다.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(<span class="fl">2.0</span>, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span><span class="op">*</span>x</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>f.backward()          <span class="co"># df/dx 계산</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad)        <span class="co"># tensor(7.) — 2*2 + 3</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad)        <span class="co"># tensor(7.) — 2*2 + 3</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>이 자동미분 덕분에 우리는 복잡한 신경망의 기울기를 손으로 유도할 필요 없이, 순전파만 정의하면 역전파가 자동으로 처리됩니다.</p>
 <section id="계산-그래프와-리프-텐서" class="level3" data-number="1.8.1">
 <h3 data-number="1.8.1" class="anchored" data-anchor-id="계산-그래프와-리프-텐서"><span class="header-section-number">1.8.1</span> 계산 그래프와 리프 텐서</h3>
 <p>자동미분의 핵심은 순전파 동안 만들어지는 <strong>동적 계산 그래프</strong>입니다. 파이토치는 연산이 실행될 때마다 그래프를 그때그때 확장하는 “define-by-run” 방식을 씁니다. 그래프의 노드는 텐서와 연산이고, 각 연산은 자신의 역방향 기울기 계산 함수를 기억합니다. <code>.backward()</code>를 호출하면 이 그래프를 출력에서 입력 방향으로 거슬러 올라가며 연쇄법칙을 적용합니다.</p>
 <p>사용자가 직접 만든, 미분의 대상이 되는 텐서를 <strong>리프 텐서(leaf tensor)</strong>라 부릅니다. 모델의 가중치가 대표적입니다. 리프가 아닌 중간 텐서에는 기본적으로 기울기가 저장되지 않습니다. 또한 한 번 <code>.backward()</code>를 하면 그래프가 해제되므로, 매 미니배치마다 순전파로 그래프를 새로 만들고 역전파하는 과정을 반복합니다.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>, <span class="fl">2.0</span>], requires_grad<span class="op">=</span><span class="va">True</span>)   <span class="co"># 리프 텐서(가중치 역할)</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">3.0</span>, <span class="fl">4.0</span>])</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> (w <span class="op">*</span> x).<span class="bu">sum</span>()      <span class="co"># 계산 그래프가 만들어짐</span></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>loss.backward()           <span class="co"># w에 대한 기울기 계산</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w.grad)             <span class="co"># tensor([3., 4.]) — d(loss)/dw = x</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w.grad)             <span class="co"># tensor([3., 4.]) — d(loss)/dw = x</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="기울기-추적을-멈추는-방법" class="level3" data-number="1.8.2">
 <h3 data-number="1.8.2" class="anchored" data-anchor-id="기울기-추적을-멈추는-방법"><span class="header-section-number">1.8.2</span> 기울기 추적을 멈추는 방법</h3>
 <p>평가나 추론처럼 기울기가 필요 없는 상황에서는 그래프를 만들지 않는 것이 메모리와 속도에 유리합니다. <code>torch.no_grad()</code> 블록은 그 안의 연산에 대해 그래프 생성을 끕니다. 또 특정 텐서를 그래프에서 떼어내려면 <code>.detach()</code>를 씁니다. 이는 순환 신경망에서 은닉 상태를 구간마다 끊거나, 계산 결과를 넘파이로 안전하게 가져올 때 자주 쓰입니다.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>], requires_grad<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> w <span class="op">*</span> <span class="dv">2</span>          <span class="co"># 그래프를 만들지 않음 → 역전파 대상 아님</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> (w <span class="op">*</span> <span class="dv">3</span>).detach()   <span class="co"># z는 값은 갖되 그래프와 분리됨</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> (w <span class="op">*</span> <span class="dv">3</span>).detach()   <span class="co"># z는 값은 갖되 그래프와 분리됨</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>이처럼 자동미분의 켜고 끔을 이해하면, 불필요한 메모리 사용을 막고 학습과 평가를 명확히 분리할 수 있습니다. 다음 절에서 이 모든 요소를 실제 학습 루프에 녹여 넣습니다.</p>
 </section>
 </section>
@@ -953,14 +959,14 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 </section>
 <section id="문제와-데이터-정의" class="level3" data-number="1.9.2">
 <h3 data-number="1.9.2" class="anchored" data-anchor-id="문제와-데이터-정의"><span class="header-section-number">1.9.2</span> 문제와 데이터 정의</h3>
-<p>두 개의 반달 모양이 얽힌 형태의 합성 데이터를 사용합니다. 이 데이터는 직선 하나로 나눌 수 없어(비선형 결정경계), 활성화 함수를 가진 MLP가 왜 필요한지 잘 보여줍니다. scikit-learn의 <code>make_moons</code>로 생성합니다<span class="citation" data-cites="pedregosa2011scikit">(<a href="#ref-pedregosa2011scikit" role="doc-biblioref">Pedregosa 기타, 2011</a>)</span>.</p>
+<p>두 개의 반달 모양이 얽힌 형태의 합성 데이터를 사용합니다. 이 데이터는 직선 하나로 나눌 수 없어(비선형 결정경계), 활성화 함수를 가진 MLP가 왜 필요한지 잘 보여줍니다. scikit-learn의 <code>make_moons</code>로 생성합니다<span class="citation" data-cites="pedregosa2011scikit">(<a href="#ref-pedregosa2011scikit" role="doc-biblioref"><span class="nocase">Pedregosa 기타</span>, 2011</a>)</span>.</p>
 <div class="figbody">
 <p><img src="figs/ch1_moons_boundary.png" class="img-fluid" style="width:100.0%" alt="반달 데이터와 선형·비선형 결정경계"></p>
 </div>
 <div class="figcap">
 <p><strong>그림 1.2</strong> 두 반달(make_moons) 데이터. (a) 직선 하나로는 두 클래스를 나눌 수 없습니다. (b) MLP는 비선형 활성화를 통해 이처럼 휘어진 결정경계를 만들 수 있어 두 클래스를 분리합니다. 이 데이터가 활성화 함수의 필요성을 잘 보여 줍니다.</p>
 </div>
-<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> Dataset, DataLoader, random_split</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_moons</span>
@@ -971,7 +977,7 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> StandardScaler().fit_transform(X)   <span class="co"># 특성 표준화(평균0, 분산1)</span></span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor(X, dtype<span class="op">=</span>torch.float32)</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.tensor(y, dtype<span class="op">=</span>torch.float32).unsqueeze(<span class="dv">1</span>)   <span class="co"># (N, 1)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.tensor(y, dtype<span class="op">=</span>torch.float32).unsqueeze(<span class="dv">1</span>)   <span class="co"># (N, 1)</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>특성을 표준화하면 각 입력 차원의 크기가 비슷해져 최적화가 안정됩니다. 표준화는 다음과 같이 정의됩니다.</p>
 <p><span class="math display">\[
 \tilde{x}_j = \frac{x_j - \mu_j}{\sigma_j},
@@ -981,7 +987,7 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <section id="dataset과-dataloader" class="level3" data-number="1.9.3">
 <h3 data-number="1.9.3" class="anchored" data-anchor-id="dataset과-dataloader"><span class="header-section-number">1.9.3</span> Dataset과 DataLoader</h3>
 <p><code>Dataset</code>은 “<span class="math inline">\(i\)</span>번째 샘플이 무엇인가”를 정의하고, <code>DataLoader</code>는 그것을 미니배치로 묶어 섞고 병렬로 실어 나릅니다. 미니배치 단위 학습은 경사하강법의 표준적 형태입니다<span class="citation" data-cites="bottou2010large">(<a href="#ref-bottou2010large" role="doc-biblioref">Bottou, 2010</a>)</span>.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MoonDataset(Dataset):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MoonDataset(Dataset):</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, X, y):</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.X, <span class="va">self</span>.y <span class="op">=</span> X, y</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__len__</span>(<span class="va">self</span>):</span>
@@ -1000,12 +1006,12 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(train_ds, batch_size<span class="op">=</span><span class="dv">64</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>val_loader   <span class="op">=</span> DataLoader(val_ds,   batch_size<span class="op">=</span><span class="dv">256</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>test_loader  <span class="op">=</span> DataLoader(test_ds,  batch_size<span class="op">=</span><span class="dv">256</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>test_loader  <span class="op">=</span> DataLoader(test_ds,  batch_size<span class="op">=</span><span class="dv">256</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="mlp-모델-정의" class="level3" data-number="1.9.4">
 <h3 data-number="1.9.4" class="anchored" data-anchor-id="mlp-모델-정의"><span class="header-section-number">1.9.4</span> MLP 모델 정의</h3>
 <p>입력 2차원 → 은닉 32 → 은닉 32 → 출력 1(로짓)의 MLP를 정의합니다. 활성화 함수로는 널리 쓰이는 ReLU를 사용합니다<span class="citation" data-cites="nair2010rectified glorot2011deep">(<a href="#ref-nair2010rectified" role="doc-biblioref">Nair &amp; Hinton, 2010</a>; <a href="#ref-glorot2011deep" role="doc-biblioref">Glorot 기타, 2011</a>)</span>. 비선형 활성화가 없으면 층을 아무리 쌓아도 하나의 아핀 변환으로 축약되어 반달 데이터를 분류할 수 없습니다.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MLP(nn.Module):</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, in_dim<span class="op">=</span><span class="dv">2</span>, hidden<span class="op">=</span><span class="dv">32</span>):</span>
@@ -1021,7 +1027,7 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.net(x)</span>
 <span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> MLP().to(device)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> MLP().to(device)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>이 모델이 반달 데이터를 어떻게 분류하는지 기하학적으로 보면 이해가 깊어집니다. 첫 번째 선형층은 입력 평면을 여러 방향으로 자르는 직선(초평면)들을 만들고, ReLU는 각 직선의 한쪽을 0으로 눌러 <strong>꺾인 경계</strong>를 만듭니다. 이런 꺾임을 여러 개 조합하면 곡선에 가까운 복잡한 결정경계가 만들어집니다. 즉 신경망은 단순한 조각(선형 변환)과 꺾임(비선형)을 반복해 쌓아 임의의 곡선 경계를 근사하는 것입니다. 은닉 뉴런의 수를 늘리면 더 많은 꺾임을 쓸 수 있어 표현력이 커지지만, 그만큼 과적합 위험도 함께 커집니다.</p>
 <p>활성화 함수의 선택도 학습에 영향을 줍니다. 시그모이드나 탄젠트는 입력이 크면 기울기가 0에 가까워지는 포화가 일어나 깊은 망에서 학습이 느려집니다. 반면 ReLU는 양수 구간에서 기울기가 항상 1이라 이 문제가 덜해, 오늘날 은닉층의 기본 선택이 되었습니다.</p>
 <div class="figbody">
@@ -1039,17 +1045,17 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 \mathcal{L} = -\big[\, y\log\hat{p} + (1-y)\log(1-\hat{p}) \,\big].
 \]</span></p>
 <p>옵티마이저로는 확률적 경사하강법<span class="citation" data-cites="robbins1951stochastic">(<a href="#ref-robbins1951stochastic" role="doc-biblioref">Robbins &amp; Monro, 1951</a>)</span>에서 발전한, 파라미터별 적응적 학습률을 갖는 Adam을 사용합니다<span class="citation" data-cites="kingma2014adam">(<a href="#ref-kingma2014adam" role="doc-biblioref">Kingma &amp; Ba, 2015</a>)</span>. 학습이 진행됨에 따라 학습률을 코사인 곡선으로 줄이는 스케줄러를 붙여 후반부 수렴을 안정화합니다<span class="citation" data-cites="loshchilov2017sgdr">(<a href="#ref-loshchilov2017sgdr" role="doc-biblioref">Loshchilov &amp; Hutter, 2017</a>)</span>.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.optim <span class="im">as</span> optim</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.optim <span class="im">as</span> optim</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.BCEWithLogitsLoss()</span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-2</span>, weight_decay<span class="op">=</span><span class="fl">1e-4</span>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>scheduler <span class="op">=</span> optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max<span class="op">=</span><span class="dv">50</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>scheduler <span class="op">=</span> optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max<span class="op">=</span><span class="dv">50</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>weight_decay</code>는 가중치의 크기에 벌점을 주는 정규화로, 과적합을 억제하고 일반화를 돕습니다. Adam에서는 가중치 감쇠를 분리해 적용하는 방식이 더 낫다는 연구도 참고할 만합니다<span class="citation" data-cites="loshchilov2019decoupled">(<a href="#ref-loshchilov2019decoupled" role="doc-biblioref">Loshchilov &amp; Hutter, 2019</a>)</span>.</p>
 </section>
 <section id="학습검증테스트-루프" class="level3" data-number="1.9.6">
 <h3 data-number="1.9.6" class="anchored" data-anchor-id="학습검증테스트-루프"><span class="header-section-number">1.9.6</span> 학습·검증·테스트 루프</h3>
 <p>한 에폭은 순전파 → 손실 → 역전파 → 파라미터 갱신을 미니배치마다 반복합니다. 검증 단계에서는 기울기를 계산하지 않도록 <code>torch.no_grad()</code>와 <code>model.eval()</code>을 사용합니다. <code>eval()</code>은 드롭아웃·배치정규화 같은 계층을 평가 모드로 전환하는데<span class="citation" data-cites="srivastava2014dropout ioffe2015batch">(<a href="#ref-srivastava2014dropout" role="doc-biblioref">Srivastava 기타, 2014</a>; <a href="#ref-ioffe2015batch" role="doc-biblioref">Ioffe &amp; Szegedy, 2015</a>)</span>, 이 예제에서는 해당 계층이 없지만 습관적으로 항상 켜고 끄는 것이 안전합니다.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_epoch(model, loader, criterion, optimizer<span class="op">=</span><span class="va">None</span>):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_epoch(model, loader, criterion, optimizer<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    is_train <span class="op">=</span> optimizer <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    model.train() <span class="cf">if</span> is_train <span class="cf">else</span> model.<span class="bu">eval</span>()</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    total_loss, correct, total <span class="op">=</span> <span class="fl">0.0</span>, <span class="dv">0</span>, <span class="dv">0</span></span>
@@ -1066,9 +1072,9 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>            pred <span class="op">=</span> (torch.sigmoid(logits) <span class="op">&gt;</span> <span class="fl">0.5</span>).<span class="bu">float</span>()</span>
 <span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>            correct <span class="op">+=</span> (pred <span class="op">==</span> yb).<span class="bu">sum</span>().item()</span>
 <span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>            total <span class="op">+=</span> <span class="bu">len</span>(xb)</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total_loss <span class="op">/</span> total, correct <span class="op">/</span> total</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total_loss <span class="op">/</span> total, correct <span class="op">/</span> total</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>이제 전체 학습을 수행합니다. 매 에폭 훈련·검증 손실과 정확도를 기록하고, <strong>검증 정확도가 가장 높은 순간의 파라미터를 저장</strong>해 두었다가 마지막에 테스트에 사용합니다. 이는 과적합 이전의 가장 좋은 모델을 고르는 간단한 조기 선택 전략입니다.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>best_val_acc, best_state <span class="op">=</span> <span class="fl">0.0</span>, <span class="va">None</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>best_val_acc, best_state <span class="op">=</span> <span class="fl">0.0</span>, <span class="va">None</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>EPOCHS <span class="op">=</span> <span class="dv">50</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, EPOCHS <span class="op">+</span> <span class="dv">1</span>):</span>
@@ -1087,7 +1093,7 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 최적 파라미터 복원 후 테스트</span></span>
 <span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>model.load_state_dict(best_state)</span>
 <span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>te_loss, te_acc <span class="op">=</span> run_epoch(model, test_loader, criterion)</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"테스트 정확도: </span><span class="sc">{</span>te_acc<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"테스트 정확도: </span><span class="sc">{</span>te_acc<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>이 코드의 골격—Dataset, DataLoader, 모델, 손실, 옵티마이저, 스케줄러, 그리고 train/val/test 루프—은 회귀든 다중 분류든, 이미지든 시계열이든 거의 그대로 재사용됩니다. 바뀌는 것은 데이터셋과 모델, 손실 함수뿐입니다. 이 <span class="key">일관된 템플릿</span>을 손에 익히는 것이 1장의 가장 중요한 목표입니다.</p>
 <div class="keybox">
 <p><strong>핵심.</strong> 파이토치 학습은 언제나 <strong>Dataset → DataLoader → 모델 → 손실 → 역전파 → optimizer.step → scheduler.step</strong>의 반복입니다. 문제가 바뀌어도 이 뼈대는 그대로이고, 데이터셋·출력층·손실 함수만 교체하면 됩니다.</p>
@@ -1148,7 +1154,7 @@ C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
 <h1 class="unnumbered">참고문헌</h1>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="1" role="list">
 <div id="ref-abadi2016tensorflow" class="csl-entry" role="listitem">
-M. Abadi, P. Barham, J. Chen, Z. Chen, A. Davis, J. Dean, &amp; others. 2016. <span>“TensorFlow: A System for Large-Scale Machine Learning”</span>. <em>12th USENIX Symposium on Operating Systems Design and Implementation (OSDI)</em>, pp. 265–283.
+<span class="nocase">M. Abadi, P. Barham, J. Chen, Z. Chen, A. Davis, J. Dean, &amp; others</span>. 2016. <span>“TensorFlow: A System for Large-Scale Machine Learning”</span>. <em>12th USENIX Symposium on Operating Systems Design and Implementation (OSDI)</em>, pp. 265–283.
 </div>
 <div id="ref-baydin2018automatic" class="csl-entry" role="listitem">
 A. G. Baydin, B. A. Pearlmutter, A. A. Radul, &amp; J. M. Siskind. 2018. <span>“Automatic differentiation in machine learning: A survey”</span>. <em>Journal of Machine Learning Research</em>, vol 18, pp. 1–43.
@@ -1166,7 +1172,7 @@ X. Glorot, A. Bordes, &amp; Y. Bengio. 2011. <span>“Deep sparse rectifier neur
 I. Goodfellow, Y. Bengio, &amp; A. Courville. 2016. <span>“Deep Learning”</span>. MIT Press.
 </div>
 <div id="ref-harris2020numpy" class="csl-entry" role="listitem">
-C. R. Harris, K. J. Millman, S. J. van der Walt, R. Gommers, P. Virtanen, D. Cournapeau, &amp; others. 2020. <span>“Array programming with NumPy”</span>. <em>Nature</em>, vol 585, pp. 357–362. https://doi.org/<a href="https://doi.org/10.1038/s41586-020-2649-2">10.1038/s41586-020-2649-2</a>
+<span class="nocase">C. R. Harris, K. J. Millman, S. J. van der Walt, R. Gommers, P. Virtanen, D. Cournapeau, &amp; others</span>. 2020. <span>“Array programming with NumPy”</span>. <em>Nature</em>, vol 585, pp. 357–362. https://doi.org/<a href="https://doi.org/10.1038/s41586-020-2649-2">10.1038/s41586-020-2649-2</a>
 </div>
 <div id="ref-hornik1989multilayer" class="csl-entry" role="listitem">
 K. Hornik, M. Stinchcombe, &amp; H. White. 1989. <span>“Multilayer feedforward networks are universal approximators”</span>. <em>Neural Networks</em>, vol 2, pp. 359–366.
@@ -1190,16 +1196,16 @@ I. Loshchilov &amp; F. Hutter. 2017. <span>“SGDR: Stochastic gradient descent 
 I. Loshchilov &amp; F. Hutter. 2019. <span>“Decoupled weight decay regularization”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
 </div>
 <div id="ref-micikevicius2018mixed" class="csl-entry" role="listitem">
-P. Micikevicius, S. Narang, J. Alben, G. Diamos, E. Elsen, &amp; others. 2018. <span>“Mixed precision training”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+<span class="nocase">P. Micikevicius, S. Narang, J. Alben, G. Diamos, E. Elsen, &amp; others</span>. 2018. <span>“Mixed precision training”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
 </div>
 <div id="ref-nair2010rectified" class="csl-entry" role="listitem">
 V. Nair &amp; G. E. Hinton. 2010. <span>“Rectified linear units improve restricted Boltzmann machines”</span>. <em>International Conference on Machine Learning (ICML)</em>, pp. 807–814.
 </div>
 <div id="ref-paszke2019pytorch" class="csl-entry" role="listitem">
-A. Paszke, S. Gross, F. Massa, A. Lerer, J. Bradbury, G. Chanan, T. Killeen, Z. Lin, N. Gimelshein, L. Antiga, &amp; others. 2019. <span>“PyTorch: An Imperative Style, High-Performance Deep Learning Library”</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
+<span class="nocase">A. Paszke, S. Gross, F. Massa, A. Lerer, J. Bradbury, G. Chanan, T. Killeen, Z. Lin, N. Gimelshein, L. Antiga, &amp; others</span>. 2019. <span>“PyTorch: An Imperative Style, High-Performance Deep Learning Library”</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
 </div>
 <div id="ref-pedregosa2011scikit" class="csl-entry" role="listitem">
-F. Pedregosa, G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, &amp; others. 2011. <span>“Scikit-learn: Machine Learning in Python”</span>. <em>Journal of Machine Learning Research</em>, vol 12, pp. 2825–2830.
+<span class="nocase">F. Pedregosa, G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, &amp; others</span>. 2011. <span>“Scikit-learn: Machine Learning in Python”</span>. <em>Journal of Machine Learning Research</em>, vol 12, pp. 2825–2830.
 </div>
 <div id="ref-robbins1951stochastic" class="csl-entry" role="listitem">
 H. Robbins &amp; S. Monro. 1951. <span>“A stochastic approximation method”</span>. <em>The Annals of Mathematical Statistics</em>, vol 22, pp. 400–407.
@@ -1273,13 +1279,14 @@ document.addEventListener("DOMContentLoaded", () => {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>13&nbsp; CNN 기반 이미지 분류와 전이학습 – AI 모델링 실습 · 학생용</title>
+<title>13&nbsp; CNN 기반 이미지 분류와 전이학습 – AI 모델링 실습</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -58,10 +64,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-dc2f893ab7b818674e6dd1532d8eda25.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d807e1733b757189e5f59b95ddf566f9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -95,7 +101,7 @@ div.csl-indent {
 <link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -108,7 +114,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -150,7 +156,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">AI 모델링 실습 · 학생용</a> 
+      <a href="./">AI 모델링 실습</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -588,7 +594,7 @@ O = \left\lfloor \frac{W - F + 2P}{S} \right\rfloor + 1.
 <div class="figcap">
 <p><strong>그림 5.4</strong> ResNet 잔차 블록. 입력 <span class="math inline">\(x\)</span>가 두 번의 (Conv → BatchNorm → ReLU/…) 변환 <span class="math inline">\(\mathcal{F}(x)\)</span>를 거친 뒤, 아무 변형 없이 우회한 입력 <span class="math inline">\(x\)</span>(빨간 항등 사상)와 더해집니다(<span class="math inline">\(\mathcal{F}(x)+x\)</span>). 이 덧셈 지름길 덕분에 기울기가 잘 전달되어 아주 깊은 망도 학습할 수 있습니다.</p>
 </div>
-<p>이후에도 다양한 방향의 발전이 이어졌습니다. <strong>DenseNet</strong>은 각 층을 이전 모든 층과 직접 연결해 특징 재사용과 기울기 흐름을 극대화했습니다<span class="citation" data-cites="huang2017densely">(<a href="#ref-huang2017densely" role="doc-biblioref">Huang 기타, 2017</a>)</span>. <strong>MobileNet</strong>은 합성곱을 깊이별 합성곱과 점별 합성곱으로 분리해 연산량을 크게 줄여, 스마트폰 같은 제한된 환경에서도 동작하도록 설계되었습니다<span class="citation" data-cites="howard2017mobilenets">(<a href="#ref-howard2017mobilenets" role="doc-biblioref">Howard 기타, 2017</a>)</span>. <strong>EfficientNet</strong>은 깊이·너비·입력 해상도를 제각각 키우는 대신 균형 있게 함께 키우는 복합 스케일링으로 효율과 정확도를 동시에 높였습니다<span class="citation" data-cites="tan2019efficientnet">(<a href="#ref-tan2019efficientnet" role="doc-biblioref">Tan &amp; Le, 2019</a>)</span>. 최근에는 합성곱 대신 어텐션을 쓰는 비전 트랜스포머(ViT)도 등장해, 대규모 데이터에서 CNN에 필적하거나 앞서는 성능을 보입니다<span class="citation" data-cites="dosovitskiy2021image">(<a href="#ref-dosovitskiy2021image" role="doc-biblioref">Dosovitskiy 기타, 2021</a>)</span>. 이처럼 CNN 계열은 정확도, 효율, 배포 환경이라는 서로 다른 목표를 향해 지금도 진화하고 있습니다.</p>
+<p>이후에도 다양한 방향의 발전이 이어졌습니다. <strong>DenseNet</strong>은 각 층을 이전 모든 층과 직접 연결해 특징 재사용과 기울기 흐름을 극대화했습니다<span class="citation" data-cites="huang2017densely">(<a href="#ref-huang2017densely" role="doc-biblioref">Huang 기타, 2017</a>)</span>. <strong>MobileNet</strong>은 합성곱을 깊이별 합성곱과 점별 합성곱으로 분리해 연산량을 크게 줄여, 스마트폰 같은 제한된 환경에서도 동작하도록 설계되었습니다<span class="citation" data-cites="howard2017mobilenets">(<a href="#ref-howard2017mobilenets" role="doc-biblioref">Howard 기타, 2017</a>)</span>. <strong>EfficientNet</strong>은 깊이·너비·입력 해상도를 제각각 키우는 대신 균형 있게 함께 키우는 복합 스케일링으로 효율과 정확도를 동시에 높였습니다<span class="citation" data-cites="tan2019efficientnet">(<a href="#ref-tan2019efficientnet" role="doc-biblioref">Tan &amp; Le, 2019</a>)</span>. 최근에는 합성곱 대신 어텐션을 쓰는 비전 트랜스포머(ViT)도 등장해, 대규모 데이터에서 CNN에 필적하거나 앞서는 성능을 보입니다<span class="citation" data-cites="dosovitskiy2021image">(<a href="#ref-dosovitskiy2021image" role="doc-biblioref"><span class="nocase">Dosovitskiy 기타</span>, 2021</a>)</span>. 이처럼 CNN 계열은 정확도, 효율, 배포 환경이라는 서로 다른 목표를 향해 지금도 진화하고 있습니다.</p>
 </section>
 <section id="sec-cnn-training" class="level2" data-number="13.7">
 <h2 data-number="13.7" class="anchored" data-anchor-id="sec-cnn-training"><span class="header-section-number">13.7</span> 이미지 분류 학습의 실무</h2>
@@ -712,7 +718,7 @@ J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, &amp; L. Fei-Fei. 2009. <span>“I
 J. Donahue, Y. Jia, O. Vinyals, J. Hoffman, N. Zhang, E. Tzeng, &amp; T. Darrell. 2014. <span>“DeCAF: A deep convolutional activation feature for generic visual recognition”</span>. <em>International Conference on Machine Learning (ICML)</em>, pp. 647–655.
 </div>
 <div id="ref-dosovitskiy2021image" class="csl-entry" role="listitem">
-A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, &amp; others. 2021. <span>“An image is worth 16x16 words: Transformers for image recognition at scale”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+<span class="nocase">A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, &amp; others</span>. 2021. <span>“An image is worth 16x16 words: Transformers for image recognition at scale”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
 </div>
 <div id="ref-fukushima1980neocognitron" class="csl-entry" role="listitem">
 K. Fukushima. 1980. <span>“Neocognitron: A self-organizing neural network model for a mechanism of pattern recognition unaffected by shift in position”</span>. <em>Biological Cybernetics</em>, vol 36, pp. 193–202.
@@ -846,13 +852,14 @@ document.addEventListener("DOMContentLoaded", () => {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

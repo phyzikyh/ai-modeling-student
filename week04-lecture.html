@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>10&nbsp; Transformer 기반 시계열 모델링 – AI 모델링 실습 · 학생용</title>
+<title>10&nbsp; Transformer 기반 시계열 모델링 – AI 모델링 실습</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -93,10 +99,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-dc2f893ab7b818674e6dd1532d8eda25.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d807e1733b757189e5f59b95ddf566f9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -130,7 +136,7 @@ div.csl-indent {
 <link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -143,7 +149,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -185,7 +191,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">AI 모델링 실습 · 학생용</a> 
+      <a href="./">AI 모델링 실습</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -466,7 +472,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>트랜스포머는 임의의 두 위치를 <strong>한 번의 연산으로 직접 연결</strong>하고, 전체 시퀀스를 동시에 처리해 병렬성이 뛰어납니다. 이 성질 덕분에 대규모 데이터로 사전학습하는 BERT<span class="citation" data-cites="devlin2019bert">(<a href="#ref-devlin2019bert" role="doc-biblioref">Devlin 기타, 2019</a>)</span>, GPT<span class="citation" data-cites="radford2019language">(<a href="#ref-radford2019language" role="doc-biblioref">Radford 기타, 2019</a>)</span>, 이미지의 ViT<span class="citation" data-cites="dosovitskiy2021image">(<a href="#ref-dosovitskiy2021image" role="doc-biblioref">Dosovitskiy 기타, 2021</a>)</span>까지 확장되었습니다.</p>
+<p>트랜스포머는 임의의 두 위치를 <strong>한 번의 연산으로 직접 연결</strong>하고, 전체 시퀀스를 동시에 처리해 병렬성이 뛰어납니다. 이 성질 덕분에 대규모 데이터로 사전학습하는 BERT<span class="citation" data-cites="devlin2019bert">(<a href="#ref-devlin2019bert" role="doc-biblioref">Devlin 기타, 2019</a>)</span>, GPT<span class="citation" data-cites="radford2019language">(<a href="#ref-radford2019language" role="doc-biblioref">Radford 기타, 2019</a>)</span>, 이미지의 ViT<span class="citation" data-cites="dosovitskiy2021image">(<a href="#ref-dosovitskiy2021image" role="doc-biblioref"><span class="nocase">Dosovitskiy 기타</span>, 2021</a>)</span>까지 확장되었습니다.</p>
 <p>두 접근의 차이를 조금 더 구체적으로 보겠습니다. 순환 신경망에서 문장의 첫 단어 정보가 마지막 단어에 도달하려면, 그 사이 모든 시점의 은닉 상태를 순서대로 통과해야 합니다. 길이가 100이면 100단계를 거쳐야 하고, 그 과정에서 정보가 희석되거나 소실됩니다. 반면 셀프 어텐션에서는 첫 단어와 마지막 단어가 어텐션 한 번으로 직접 이어지므로, 거리가 아무리 멀어도 정보 전달 경로는 항상 한 단계입니다. 또한 순환 신경망은 시점을 순서대로 처리해야 해서 GPU의 수천 코어를 놀리지만, 트랜스포머는 모든 위치를 동시에 계산하므로 병렬 하드웨어를 완전히 활용합니다. “순차 처리의 병목”과 “장거리 전달의 병목”이라는 순환 신경망의 두 약점을, 트랜스포머는 어텐션이라는 하나의 메커니즘으로 동시에 해결한 것입니다.</p>
 </section>
 <section id="sec-transformer-arch" class="level2" data-number="10.2">
@@ -478,7 +484,7 @@ window.Quarto = {
 <div class="figcap">
 <p><strong>그림 4.1</strong> 트랜스포머 인코더-디코더 아키텍처. 인코더 블록(왼쪽)은 멀티 헤드 셀프 어텐션과 피드포워드를 각각 Add &amp; Norm으로 감싸 <span class="math inline">\(N\)</span>번 반복합니다. 디코더 블록(오른쪽)은 여기에 미래를 가리는 마스크드 셀프 어텐션과, 인코더 출력을 키·값으로 참조하는 인코더-디코더 어텐션을 더합니다. 마지막 선형 + 소프트맥스가 다음 토큰의 확률을 냅니다.</p>
 </div>
-<p>각 인코더·디코더 블록은 <strong>잔차 연결(residual connection)</strong><span class="citation" data-cites="he2016deep">(<a href="#ref-he2016deep" role="doc-biblioref">He 기타, 2016</a>)</span>과 <strong>층 정규화(layer normalization)</strong><span class="citation" data-cites="ba2016layer">(<a href="#ref-ba2016layer" role="doc-biblioref">Ba 기타, 2016</a>)</span>로 감싸여 있습니다. 잔차 연결은 입력을 출력에 더해 기울기 흐름을 돕고, 층 정규화는 각 위치의 특성을 정규화해 학습을 안정화합니다. 정규화를 블록 앞에 두는 Pre-LN 방식이 학습을 더 안정시킨다는 연구도 있습니다<span class="citation" data-cites="xiong2020layer">(<a href="#ref-xiong2020layer" role="doc-biblioref">Xiong 기타, 2020</a>)</span>.</p>
+<p>각 인코더·디코더 블록은 <strong>잔차 연결(residual connection)</strong><span class="citation" data-cites="he2016deep">(<a href="#ref-he2016deep" role="doc-biblioref">He 기타, 2016</a>)</span>과 <strong>층 정규화(layer normalization)</strong><span class="citation" data-cites="ba2016layer">(<a href="#ref-ba2016layer" role="doc-biblioref">Ba 기타, 2016</a>)</span>로 감싸여 있습니다. 잔차 연결은 입력을 출력에 더해 기울기 흐름을 돕고, 층 정규화는 각 위치의 특성을 정규화해 학습을 안정화합니다. 정규화를 블록 앞에 두는 Pre-LN 방식이 학습을 더 안정시킨다는 연구도 있습니다<span class="citation" data-cites="xiong2020layer">(<a href="#ref-xiong2020layer" role="doc-biblioref"><span class="nocase">Xiong 기타</span>, 2020</a>)</span>.</p>
 </section>
 <section id="sec-self-attention" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="sec-self-attention"><span class="header-section-number">10.3</span> 셀프 어텐션과 쿼리·키·값</h2>
@@ -541,7 +547,7 @@ Q = XW^Q, \qquad K = XW^K, \qquad V = XW^V.
 \mathbf{z}_i = \sum_{j=1}^{T}\alpha_{ij}\mathbf{v}_j, \qquad
 \alpha_{ij}=\frac{\exp(\mathbf{q}_i\cdot\mathbf{k}_j/\sqrt{d_k})}{\sum_{j'=1}^{T}\exp(\mathbf{q}_i\cdot\mathbf{k}_{j'}/\sqrt{d_k})}.
 \]</span></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn.functional <span class="im">as</span> F</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn.functional <span class="im">as</span> F</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scaled_dot_product_attention(Q, K, V, mask<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    d_k <span class="op">=</span> Q.size(<span class="op">-</span><span class="dv">1</span>)</span>
@@ -555,7 +561,7 @@ Q = XW^Q, \qquad K = XW^K, \qquad V = XW^V.
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">16</span>)</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">16</span>)</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>out, attn <span class="op">=</span> scaled_dot_product_attention(Q, K, V)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(out.shape, attn.shape)   <span class="co"># (2,5,16) (2,5,5)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(out.shape, attn.shape)   <span class="co"># (2,5,16) (2,5,5)</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="figbody">
 <p><img src="figs/ch4_attention.png" class="img-fluid" style="width:58.0%" alt="어텐션 가중치 행렬 예시"></p>
 </div>
@@ -588,7 +594,7 @@ Q = XW^Q, \qquad K = XW^K, \qquad V = XW^V.
 <div class="keybox">
 <p><strong>핵심.</strong> 셀프 어텐션은 <span class="math inline">\(\text{softmax}(QK^\top/\sqrt{d_k})V\)</span> 하나로 요약됩니다. 각 위치가 쿼리로 모든 위치의 키와 유사도를 재고, 그 가중치로 값을 모읍니다. 순환 없이 임의의 두 위치를 한 번에 연결해 병렬 처리와 장거리 의존성을 동시에 얻는 것이 트랜스포머의 핵심입니다.</p>
 </div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn <span class="im">as</span> nn</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn <span class="im">as</span> nn</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultiHeadAttention(nn.Module):</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, d_model<span class="op">=</span><span class="dv">64</span>, num_heads<span class="op">=</span><span class="dv">8</span>):</span>
@@ -610,7 +616,7 @@ Q = XW^Q, \qquad K = XW^K, \qquad V = XW^V.
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> (A <span class="op">@</span> V).transpose(<span class="dv">1</span>, <span class="dv">2</span>).contiguous().view(B, T, <span class="op">-</span><span class="dv">1</span>)</span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.Wo(out)</span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 파이토치 내장 모듈: nn.MultiheadAttention(embed_dim=64, num_heads=8, batch_first=True)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 파이토치 내장 모듈: nn.MultiheadAttention(embed_dim=64, num_heads=8, batch_first=True)</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="sec-ffn" class="level2" data-number="10.5">
@@ -674,7 +680,7 @@ PE(pos, 2i+1) = \cos\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right).
 </div>
 </div>
 </div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, math</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, math</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sinusoidal_pe(T, d_model):</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    pe <span class="op">=</span> torch.zeros(T, d_model)</span>
@@ -684,7 +690,7 @@ PE(pos, 2i+1) = \cos\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right).
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    pe[:, <span class="dv">1</span>::<span class="dv">2</span>] <span class="op">=</span> torch.cos(pos <span class="op">*</span> div)   <span class="co"># 홀수 차원: 코사인</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pe                            <span class="co"># (T, d_model)</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sinusoidal_pe(<span class="dv">50</span>, <span class="dv">64</span>).shape)       <span class="co"># torch.Size([50, 64])</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sinusoidal_pe(<span class="dv">50</span>, <span class="dv">64</span>).shape)       <span class="co"># torch.Size([50, 64])</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="figbody">
 <p><img src="figs/ch4_positional.png" class="img-fluid" style="width:82.0%" alt="사인·코사인 위치 인코딩 히트맵"></p>
 </div>
@@ -799,7 +805,7 @@ PE(pos, 2i+1) = \cos\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right).
 <section id="sec-transformer-training" class="level2" data-number="10.10">
 <h2 data-number="10.10" class="anchored" data-anchor-id="sec-transformer-training"><span class="header-section-number">10.10</span> 트랜스포머 학습의 실제</h2>
 <p>트랜스포머는 강력하지만 학습이 까다로운 편이라, 안정적으로 훈련하기 위한 몇 가지 정형화된 기법이 함께 발전했습니다. 이 기법들은 2장에서 배운 최적화·정규화 개념의 구체적 적용이기도 합니다.</p>
-<p>첫째, <strong>학습률 워밍업</strong>이 거의 필수입니다. 학습 초기에 층 정규화와 어텐션이 아직 안정되지 않은 상태에서 큰 학습률을 쓰면 발산하기 쉽습니다. 그래서 처음 수천 스텝 동안 학습률을 0에서 서서히 올린 뒤 점차 줄이는 방식을 씁니다. 정규화를 블록 앞에 두는 Pre-LN 구조를 쓰면 워밍업 없이도 비교적 안정적으로 학습된다는 연구도 있습니다<span class="citation" data-cites="xiong2020layer">(<a href="#ref-xiong2020layer" role="doc-biblioref">Xiong 기타, 2020</a>)</span>.</p>
+<p>첫째, <strong>학습률 워밍업</strong>이 거의 필수입니다. 학습 초기에 층 정규화와 어텐션이 아직 안정되지 않은 상태에서 큰 학습률을 쓰면 발산하기 쉽습니다. 그래서 처음 수천 스텝 동안 학습률을 0에서 서서히 올린 뒤 점차 줄이는 방식을 씁니다. 정규화를 블록 앞에 두는 Pre-LN 구조를 쓰면 워밍업 없이도 비교적 안정적으로 학습된다는 연구도 있습니다<span class="citation" data-cites="xiong2020layer">(<a href="#ref-xiong2020layer" role="doc-biblioref"><span class="nocase">Xiong 기타</span>, 2020</a>)</span>.</p>
 <p>둘째, <strong>드롭아웃</strong>을 여러 위치에 적용합니다. 어텐션 가중치, 각 서브층의 출력, 그리고 임베딩과 위치 인코딩의 합 등에 드롭아웃을 걸어 과적합을 막습니다. 셋째, <strong>라벨 스무딩(label smoothing)</strong>을 자주 씁니다. 정답 라벨을 1과 0의 극단이 아니라 0.9와 작은 값들로 부드럽게 만들어, 모델이 지나치게 확신하는 것을 막고 일반화를 돕습니다.</p>
 <p>넷째, 트랜스포머는 파라미터가 많아 <strong>대규모 데이터와 사전학습</strong>의 이점을 크게 받습니다. 대량의 데이터로 일반적인 표현을 미리 학습한 뒤, 목표 과제에 맞춰 미세조정하는 전이학습 패러다임이 BERT와 GPT의 성공을 이끌었습니다. 데이터가 적은 상황에서는 트랜스포머가 순환 신경망보다 오히려 불리할 수 있으므로, 데이터 규모를 함께 고려해 모델을 선택해야 합니다.</p>
 </section>
@@ -807,7 +813,7 @@ PE(pos, 2i+1) = \cos\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right).
 <h2 data-number="10.11" class="anchored" data-anchor-id="sec-transformer-ts"><span class="header-section-number">10.11</span> 트랜스포머를 시계열 예측에 적용하기</h2>
 <p>트랜스포머를 시계열에 적용하는 기본 아이디어는, 각 시점(또는 시점 구간)을 하나의 토큰처럼 다루고 위치 인코딩으로 시간 순서를 주입하는 것입니다. 예를 들어 여러 센서를 가진 IoT 설비 데이터나 전력 수요 같은 다변량 시계열에서, 과거 <span class="math inline">\(L\)</span>개 시점을 입력해 미래 <span class="math inline">\(H\)</span>개 시점을 예측하는 인코더 기반 회귀 모델을 구성할 수 있습니다.</p>
 <p>다만 자연어와 달리 시계열에는 몇 가지 고유한 고려사항이 있습니다. 첫째, 시계열의 각 시점은 이산 토큰이 아니라 연속적인 실수 값(또는 여러 채널의 벡터)이므로, 먼저 선형 변환으로 모델 차원 <span class="math inline">\(d_{\text{model}}\)</span>의 벡터로 사상하는 임베딩 단계가 필요합니다. 둘째, 시계열은 스케일이 채널마다 다르고 분포가 시간에 따라 변하는 경우가 많아, 입력 정규화가 성능에 큰 영향을 줍니다. 최근 모델들은 각 입력 구간을 정규화했다가 출력에서 되돌리는 기법으로 분포 이동에 대응합니다. 셋째, 예측은 인과적이어야 하므로, 미래 시점을 참조하지 않도록 주의해 설계해야 합니다. 이런 이유로 시계열 전용 트랜스포머들은 표준 구조를 그대로 쓰기보다 시계열의 특성에 맞게 변형합니다.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn <span class="im">as</span> nn, math</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn <span class="im">as</span> nn, math</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TSTransformer(nn.Module):</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""과거 L시점(다변량) → 미래 H시점 예측 (인코더 기반)"""</span></span>
@@ -834,7 +840,7 @@ PE(pos, 2i+1) = \cos\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right).
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> TSTransformer(n_feat<span class="op">=</span><span class="dv">3</span>, horizon<span class="op">=</span><span class="dv">5</span>)</span>
 <span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.randn(<span class="dv">8</span>, <span class="dv">48</span>, <span class="dv">3</span>)                 <span class="co"># 배치8, 과거48시점, 특성3</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model(x).shape)                     <span class="co"># torch.Size([8, 5])</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model(x).shape)                     <span class="co"># torch.Size([8, 5])</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p>이 구조에서 셀프 어텐션은 예측에 중요한 과거 시점(예: 하루 전 같은 시각, 주기적 피크)을 자동으로 골라 가중합합니다. 어텐션 가중치를 시각화하면 모델이 어떤 시점을 참고했는지 해석할 수도 있어, 예측의 근거를 살피는 데 유용합니다.</p>
 </section>
 <section id="sec-ts-transformers" class="level2" data-number="10.12">
@@ -875,7 +881,7 @@ R. Child, S. Gray, A. Radford, &amp; I. Sutskever. 2019. <span>“Generating lon
 J. Devlin, M.-W. Chang, K. Lee, &amp; K. Toutanova. 2019. <span>“BERT: Pre-training of deep bidirectional transformers for language understanding”</span>. <em>Conference of the North American Chapter of the Association for Computational Linguistics (NAACL)</em>, pp. 4171–4186.
 </div>
 <div id="ref-dosovitskiy2021image" class="csl-entry" role="listitem">
-A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, &amp; others. 2021. <span>“An image is worth 16x16 words: Transformers for image recognition at scale”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+<span class="nocase">A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, &amp; others</span>. 2021. <span>“An image is worth 16x16 words: Transformers for image recognition at scale”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
 </div>
 <div id="ref-gehring2017convolutional" class="csl-entry" role="listitem">
 J. Gehring, M. Auli, D. Grangier, D. Yarats, &amp; Y. N. Dauphin. 2017. <span>“Convolutional sequence to sequence learning”</span>. <em>International Conference on Machine Learning (ICML)</em>, pp. 1243–1252.
@@ -920,7 +926,7 @@ Q. Wen, T. Zhou, C. Zhang, W. Chen, Z. Ma, J. Yan, &amp; L. Sun. 2023. <span>“
 H. Wu, J. Xu, J. Wang, &amp; M. Long. 2021. <span>“Autoformer: Decomposition transformers with auto-correlation for long-term series forecasting”</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
 </div>
 <div id="ref-xiong2020layer" class="csl-entry" role="listitem">
-R. Xiong, Y. Yang, D. He, K. Zheng, S. Zheng, &amp; others. 2020. <span>“On layer normalization in the transformer architecture”</span>. <em>International Conference on Machine Learning (ICML)</em>, pp. 10524–10533.
+<span class="nocase">R. Xiong, Y. Yang, D. He, K. Zheng, S. Zheng, &amp; others</span>. 2020. <span>“On layer normalization in the transformer architecture”</span>. <em>International Conference on Machine Learning (ICML)</em>, pp. 10524–10533.
 </div>
 <div id="ref-zeng2023transformers" class="csl-entry" role="listitem">
 A. Zeng, M. Chen, L. Zhang, &amp; Q. Xu. 2023. <span>“Are transformers effective for time series forecasting?”</span> <em>AAAI Conference on Artificial Intelligence</em>, pp. 11121–11128.
@@ -994,13 +1000,14 @@ document.addEventListener("DOMContentLoaded", () => {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

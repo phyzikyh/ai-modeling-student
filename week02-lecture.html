@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; 모델 학습 기본 개념 – AI 모델링 실습 · 학생용</title>
+<title>4&nbsp; 모델 학습 기본 개념 – AI 모델링 실습</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -93,10 +99,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-dc2f893ab7b818674e6dd1532d8eda25.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d807e1733b757189e5f59b95ddf566f9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -130,7 +136,7 @@ div.csl-indent {
 <link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -143,7 +149,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -185,7 +191,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">AI 모델링 실습 · 학생용</a> 
+      <a href="./">AI 모델링 실습</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -537,7 +543,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>트랜스포머는 전체 시퀀스를 한 번에 병렬 처리하고, 임의의 두 위치를 직접 연결할 수 있어 장거리 의존성 포착에 강합니다. 이 구조는 자연어의 BERT<span class="citation" data-cites="devlin2019bert">(<a href="#ref-devlin2019bert" role="doc-biblioref">Devlin 기타, 2019</a>)</span>와 GPT<span class="citation" data-cites="radford2019language">(<a href="#ref-radford2019language" role="doc-biblioref">Radford 기타, 2019</a>)</span>, 나아가 이미지의 ViT<span class="citation" data-cites="dosovitskiy2021image">(<a href="#ref-dosovitskiy2021image" role="doc-biblioref">Dosovitskiy 기타, 2021</a>)</span>까지 확장되어, 오늘날 대규모 언어모델과 생성 AI의 공통 기반이 되었습니다. 트랜스포머는 4장에서 자세히 다룹니다.</p>
+<p>트랜스포머는 전체 시퀀스를 한 번에 병렬 처리하고, 임의의 두 위치를 직접 연결할 수 있어 장거리 의존성 포착에 강합니다. 이 구조는 자연어의 BERT<span class="citation" data-cites="devlin2019bert">(<a href="#ref-devlin2019bert" role="doc-biblioref">Devlin 기타, 2019</a>)</span>와 GPT<span class="citation" data-cites="radford2019language">(<a href="#ref-radford2019language" role="doc-biblioref">Radford 기타, 2019</a>)</span>, 나아가 이미지의 ViT<span class="citation" data-cites="dosovitskiy2021image">(<a href="#ref-dosovitskiy2021image" role="doc-biblioref"><span class="nocase">Dosovitskiy 기타</span>, 2021</a>)</span>까지 확장되어, 오늘날 대규모 언어모델과 생성 AI의 공통 기반이 되었습니다. 트랜스포머는 4장에서 자세히 다룹니다.</p>
 </section>
 </section>
 <section id="sec-ai-ml-dl" class="level2" data-number="4.2">
@@ -1137,7 +1143,7 @@ y=\gamma\hat{x}+\beta.
 \text{Var}(W)=\frac{2}{n_{in}}.
 \]</span></p>
 <p>깊은 선형망에서 직교 초기화가 학습 동역학에 유리하다는 분석도 있습니다<span class="citation" data-cites="saxe2014exact">(<a href="#ref-saxe2014exact" role="doc-biblioref">Saxe 기타, 2014</a>)</span>. 초기화의 효과는 실험으로 확인할 수 있습니다.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn <span class="im">as</span> nn</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn <span class="im">as</span> nn</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_deep(init: <span class="bu">str</span>, depth<span class="op">=</span><span class="dv">20</span>, width<span class="op">=</span><span class="dv">256</span>):</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    layers <span class="op">=</span> []</span>
@@ -1157,7 +1163,7 @@ y=\gamma\hat{x}+\beta.
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> init <span class="kw">in</span> [<span class="st">"bad"</span>, <span class="st">"xavier"</span>, <span class="st">"he"</span>]:</span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> make_deep(init)(x)</span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>init<span class="sc">:6s}</span><span class="ss"> -&gt; 출력 표준편차: </span><span class="sc">{</span>out<span class="sc">.</span>std()<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 'bad'는 활성값이 폭발하거나 소실되고, xavier/he는 안정적으로 유지됨</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 'bad'는 활성값이 폭발하거나 소실되고, xavier/he는 안정적으로 유지됨</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="figbody">
 <p><img src="figs/ch2_init.png" class="img-fluid" style="width:68.0%" alt="초기화별 층 통과 활성값 표준편차"></p>
 </div>
@@ -1167,7 +1173,7 @@ y=\gamma\hat{x}+\beta.
 </section>
 <section id="sec-data-pipeline" class="level2" data-number="4.13">
 <h2 data-number="4.13" class="anchored" data-anchor-id="sec-data-pipeline"><span class="header-section-number">4.13</span> 데이터 파이프라인 설계</h2>
-<p>모델만큼 중요한 것이 <strong>데이터를 모델 앞까지 나르는 파이프라인</strong>입니다. 파이토치는 이를 <code>Dataset</code>과 <code>DataLoader</code>로 분리합니다<span class="citation" data-cites="paszke2019pytorch">(<a href="#ref-paszke2019pytorch" role="doc-biblioref">Paszke 기타, 2019</a>)</span>.</p>
+<p>모델만큼 중요한 것이 <strong>데이터를 모델 앞까지 나르는 파이프라인</strong>입니다. 파이토치는 이를 <code>Dataset</code>과 <code>DataLoader</code>로 분리합니다<span class="citation" data-cites="paszke2019pytorch">(<a href="#ref-paszke2019pytorch" role="doc-biblioref"><span class="nocase">Paszke 기타</span>, 2019</a>)</span>.</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div>
@@ -1189,7 +1195,7 @@ y=\gamma\hat{x}+\beta.
 <section id="데이터셋-클래스-설계와-그-중요성" class="level3" data-number="4.13.1">
 <h3 data-number="4.13.1" class="anchored" data-anchor-id="데이터셋-클래스-설계와-그-중요성"><span class="header-section-number">4.13.1</span> 데이터셋 클래스 설계와 그 중요성</h3>
 <p><code>Dataset</code>은 “<span class="math inline">\(i\)</span>번째 샘플이 무엇인가”만 책임집니다. <code>__len__</code>(전체 크기)과 <code>__getitem__</code>(하나의 샘플)을 구현합니다. 데이터셋을 잘 설계하면 전처리·증강·캐싱을 한곳에 모아 재사용성과 재현성을 확보할 수 있습니다.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> Dataset</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> Dataset</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TabularDataset(Dataset):</span>
@@ -1203,12 +1209,12 @@ y=\gamma\hat{x}+\beta.
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.X[i]</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.transform:            <span class="co"># 표준화·증강 등을 샘플 단위로 적용</span></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> <span class="va">self</span>.transform(x)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x, <span class="va">self</span>.y[i]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x, <span class="va">self</span>.y[i]</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="데이터로더-병렬-처리와-반복자" class="level3" data-number="4.13.2">
 <h3 data-number="4.13.2" class="anchored" data-anchor-id="데이터로더-병렬-처리와-반복자"><span class="header-section-number">4.13.2</span> 데이터로더: 병렬 처리와 반복자</h3>
 <p><code>DataLoader</code>는 데이터셋을 미니배치로 묶고, 섞고, 여러 워커 프로세스로 병렬 로딩하며, 반복자를 제공합니다. 주요 인자는 <code>batch_size</code>, <code>shuffle</code>, <code>num_workers</code>, <code>pin_memory</code> 등입니다.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> DataLoader</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> DataLoader</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>loader <span class="op">=</span> DataLoader(</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    dataset, batch_size<span class="op">=</span><span class="dv">64</span>, shuffle<span class="op">=</span><span class="va">True</span>,</span>
@@ -1218,7 +1224,7 @@ y=\gamma\hat{x}+\beta.
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> xb, yb <span class="kw">in</span> loader:    <span class="co"># DataLoader는 반복자 → for 문으로 순회</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    ...</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    ...</span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>num_workers</code>를 늘리면 CPU에서 데이터를 준비하는 동안 GPU가 쉬지 않아 학습이 빨라집니다. <code>pin_memory=True</code>는 CPU→GPU 전송을 가속합니다.</p>
 </section>
 <section id="데이터셋과-데이터로더의-관계" class="level3" data-number="4.13.3">
@@ -1230,7 +1236,7 @@ y=\gamma\hat{x}+\beta.
 <h3 data-number="4.13.4" class="anchored" data-anchor-id="고급-파이프라인-이터러블-데이터셋과-collate-함수"><span class="header-section-number">4.13.4</span> 고급 파이프라인: 이터러블 데이터셋과 collate 함수</h3>
 <p>전체를 인덱스로 접근하기 어려운 대용량 스트림 데이터에는 <strong>이터러블 데이터셋(<code>IterableDataset</code>)</strong>을 씁니다. <code>__iter__</code>로 샘플을 하나씩 흘려보내므로, 로그 스트림처럼 크기를 미리 알 수 없는 데이터에 적합합니다.</p>
 <p>또한 샘플들의 길이가 서로 다를 때(문장, 가변 길이 시계열), 이들을 하나의 배치 텐서로 묶으려면 <strong>패딩</strong>이 필요합니다. 이 조립 규칙을 정의하는 것이 사용자 정의 <strong><code>collate_fn</code></strong>입니다.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.nn.utils.rnn <span class="im">import</span> pad_sequence</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> pad_collate(batch):</span>
@@ -1241,7 +1247,7 @@ y=\gamma\hat{x}+\beta.
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    labels <span class="op">=</span> torch.stack(labels)</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> padded, lengths, labels</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># loader = DataLoader(ds, batch_size=32, collate_fn=pad_collate)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># loader = DataLoader(ds, batch_size=32, collate_fn=pad_collate)</span></span></code></pre></div><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="데이터-유형별-파이프라인" class="level3" data-number="4.13.5">
 <h3 data-number="4.13.5" class="anchored" data-anchor-id="데이터-유형별-파이프라인"><span class="header-section-number">4.13.5</span> 데이터 유형별 파이프라인</h3>
@@ -1312,7 +1318,7 @@ A. Defazio, X. Yang, H. Mehta, K. Mishchenko, A. Khaled, &amp; A. Cutkosky. 2024
 J. Devlin, M.-W. Chang, K. Lee, &amp; K. Toutanova. 2019. <span>“BERT: Pre-training of deep bidirectional transformers for language understanding”</span>. <em>Conference of the North American Chapter of the Association for Computational Linguistics (NAACL)</em>, pp. 4171–4186.
 </div>
 <div id="ref-dosovitskiy2021image" class="csl-entry" role="listitem">
-A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, &amp; others. 2021. <span>“An image is worth 16x16 words: Transformers for image recognition at scale”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+<span class="nocase">A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, &amp; others</span>. 2021. <span>“An image is worth 16x16 words: Transformers for image recognition at scale”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
 </div>
 <div id="ref-dozat2016incorporating" class="csl-entry" role="listitem">
 T. Dozat. 2016. <span>“Incorporating Nesterov momentum into Adam”</span>. <em>International Conference on Learning Representations (ICLR) Workshop</em>.
@@ -1396,7 +1402,7 @@ V. Nair &amp; G. E. Hinton. 2010. <span>“Rectified linear units improve restri
 R. Pascanu, T. Mikolov, &amp; Y. Bengio. 2013. <span>“On the difficulty of training recurrent neural networks”</span>. <em>International Conference on Machine Learning (ICML)</em>, pp. 1310–1318.
 </div>
 <div id="ref-paszke2019pytorch" class="csl-entry" role="listitem">
-A. Paszke, S. Gross, F. Massa, A. Lerer, J. Bradbury, G. Chanan, T. Killeen, Z. Lin, N. Gimelshein, L. Antiga, &amp; others. 2019. <span>“PyTorch: An Imperative Style, High-Performance Deep Learning Library”</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
+<span class="nocase">A. Paszke, S. Gross, F. Massa, A. Lerer, J. Bradbury, G. Chanan, T. Killeen, Z. Lin, N. Gimelshein, L. Antiga, &amp; others</span>. 2019. <span>“PyTorch: An Imperative Style, High-Performance Deep Learning Library”</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
 </div>
 <div id="ref-polyak1964some" class="csl-entry" role="listitem">
 B. T. Polyak. 1964. <span>“Some methods of speeding up the convergence of iteration methods”</span>. <em>USSR Computational Mathematics and Mathematical Physics</em>, vol 4, pp. 1–17.
@@ -1527,13 +1533,14 @@ document.addEventListener("DOMContentLoaded", () => {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

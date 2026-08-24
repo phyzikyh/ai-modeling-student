@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>16&nbsp; 객체탐지와 최신 이미지 모델 – AI 모델링 실습 · 학생용</title>
+<title>16&nbsp; 객체탐지와 최신 이미지 모델 – AI 모델링 실습</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -58,10 +64,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-dc2f893ab7b818674e6dd1532d8eda25.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d807e1733b757189e5f59b95ddf566f9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -95,7 +101,7 @@ div.csl-indent {
 <link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -108,7 +114,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -150,7 +156,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">AI 모델링 실습 · 학생용</a> 
+      <a href="./">AI 모델링 실습</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -444,7 +450,7 @@ window.Quarto = {
 <p>컴퓨터가 이미지를 해석하는 방식은 시대에 따라 크게 변해 왔습니다. 그 흐름을 이해하면 오늘날의 딥러닝 방식이 왜 강력한지 알 수 있습니다.</p>
 <p>컴퓨터에게 이미지는 근본적으로 픽셀 값들의 격자, 즉 숫자의 배열입니다. 이 숫자들 자체에는 “고양이”나 “자동차”라는 의미가 담겨 있지 않습니다. 따라서 시각 정보를 해석한다는 것은, 이 저수준의 픽셀 값으로부터 점점 더 추상적이고 의미 있는 <strong>표현(representation)</strong>을 단계적으로 만들어 내는 과정이라 할 수 있습니다. 픽셀에서 경계선으로, 경계선에서 부분 형태로, 부분에서 물체 전체로 나아가는 계층적 해석이 핵심입니다.</p>
 <p>초기에는 사람이 이미지에서 의미 있는 <strong>특징을 직접 설계</strong>했습니다. 경계선의 방향 분포를 세는 HOG(Histogram of Oriented Gradients)<span class="citation" data-cites="dalal2005histograms">(<a href="#ref-dalal2005histograms" role="doc-biblioref">Dalal &amp; Triggs, 2005</a>)</span>나, 밝기 차이 패턴을 빠르게 계산해 얼굴을 찾는 비올라-존스 검출기<span class="citation" data-cites="viola2001rapid">(<a href="#ref-viola2001rapid" role="doc-biblioref">Viola &amp; Jones, 2001</a>)</span>가 대표적입니다. 이런 방식은 사람이 “물체의 어떤 성질이 중요한가”를 미리 정하고, 그 성질을 수치화하는 규칙을 손으로 만들었습니다. 잘 동작하는 경우도 있었지만, 조명·자세·배경이 바뀌면 성능이 크게 떨어졌고 새로운 물체마다 특징을 다시 설계해야 했습니다.</p>
-<p>딥러닝은 이 패러다임을 근본적으로 바꾸었습니다. 5장에서 본 합성곱 신경망은 <strong>특징을 사람이 설계하는 대신 데이터로부터 학습</strong>합니다. 앞쪽 층은 모서리·색 같은 저수준 특징을, 뒤쪽 층은 눈·바퀴 같은 고수준 특징을 스스로 조직합니다. 이 계층적 특징 표현이 조명이나 자세 변화에도 강인하게 작동하면서, 컴퓨터 비전의 성능이 비약적으로 향상되었습니다. 오늘날 객체탐지·분할 모델은 모두 이 CNN이 뽑아낸 특징 위에서 동작합니다. 최근에는 합성곱 대신 어텐션으로 이미지를 해석하는 트랜스포머 계열도 등장했습니다<span class="citation" data-cites="dosovitskiy2021image carion2020end">(<a href="#ref-dosovitskiy2021image" role="doc-biblioref">Dosovitskiy 기타, 2021</a>; <a href="#ref-carion2020end" role="doc-biblioref">Carion 기타, 2020</a>)</span>.</p>
+<p>딥러닝은 이 패러다임을 근본적으로 바꾸었습니다. 5장에서 본 합성곱 신경망은 <strong>특징을 사람이 설계하는 대신 데이터로부터 학습</strong>합니다. 앞쪽 층은 모서리·색 같은 저수준 특징을, 뒤쪽 층은 눈·바퀴 같은 고수준 특징을 스스로 조직합니다. 이 계층적 특징 표현이 조명이나 자세 변화에도 강인하게 작동하면서, 컴퓨터 비전의 성능이 비약적으로 향상되었습니다. 오늘날 객체탐지·분할 모델은 모두 이 CNN이 뽑아낸 특징 위에서 동작합니다. 최근에는 합성곱 대신 어텐션으로 이미지를 해석하는 트랜스포머 계열도 등장했습니다<span class="citation" data-cites="dosovitskiy2021image carion2020end">(<a href="#ref-dosovitskiy2021image" role="doc-biblioref"><span class="nocase">Dosovitskiy 기타</span>, 2021</a>; <a href="#ref-carion2020end" role="doc-biblioref">Carion 기타, 2020</a>)</span>.</p>
 </section>
 <section id="sec-tasks-compare" class="level2" data-number="16.3">
 <h2 data-number="16.3" class="anchored" data-anchor-id="sec-tasks-compare"><span class="header-section-number">16.3</span> 이미지 분류·객체탐지·분할의 관계</h2>
@@ -749,7 +755,7 @@ L.-C. Chen, G. Papandreou, I. Kokkinos, K. Murphy, &amp; A. L. Yuille. 2018. <sp
 N. Dalal &amp; B. Triggs. 2005. <span>“Histograms of oriented gradients for human detection”</span>. <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>, pp. 886–893.
 </div>
 <div id="ref-dosovitskiy2021image" class="csl-entry" role="listitem">
-A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, &amp; others. 2021. <span>“An image is worth 16x16 words: Transformers for image recognition at scale”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+<span class="nocase">A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, &amp; others</span>. 2021. <span>“An image is worth 16x16 words: Transformers for image recognition at scale”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
 </div>
 <div id="ref-everingham2010pascal" class="csl-entry" role="listitem">
 M. Everingham, L. Van Gool, C. K. I. Williams, J. Winn, &amp; A. Zisserman. 2010. <span>“The PASCAL Visual Object Classes (VOC) challenge”</span>. <em>International Journal of Computer Vision</em>, vol 88, pp. 303–338.
@@ -877,13 +883,14 @@ document.addEventListener("DOMContentLoaded", () => {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
