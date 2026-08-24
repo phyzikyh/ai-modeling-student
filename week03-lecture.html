@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>7&nbsp; RNN·LSTM·GRU 기반 시계열 모델링 – AI 모델링 실습 · 학생용</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 1em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week03-quiz.html" rel="next">
+<link href="./week02-lab.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-dc2f893ab7b818674e6dd1532d8eda25.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색",
+    "search-label": "검색"
+  }
+}</script>
+<meta name="mermaid-theme" content="default">
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="사이드바 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week03-lecture.html">3주차 · RNN·LSTM·GRU 기반 시계열 모델링</a></li><li class="breadcrumb-item"><a href="./week03-lecture.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">RNN·LSTM·GRU 기반 시계열 모델링</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="사이드바 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="검색" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">AI 모델링 실습 · 학생용</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="검색"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">머리말</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">1주차 · AI 모델 학습 개요</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">AI 모델 학습 개요</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">1주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">1주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">2주차 · 모델 학습 기본 개념</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">모델 학습 기본 개념</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">2주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">2주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">3주차 · RNN·LSTM·GRU 기반 시계열 모델링</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03-lecture.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">RNN·LSTM·GRU 기반 시계열 모델링</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">3주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">3주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">4주차 · Transformer 기반 시계열 모델링</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Transformer 기반 시계열 모델링</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">4주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">4주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">5주차 · CNN 기반 이미지 분류와 전이학습</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week05-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">CNN 기반 이미지 분류와 전이학습</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week05-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">5주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week05-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">5주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">6주차 · 객체탐지와 최신 이미지 모델</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week06-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">객체탐지와 최신 이미지 모델</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">7주차 · 생성 모델 입문</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week07-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">생성 모델 입문</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#sec-classical-ts" id="toc-sec-classical-ts" class="nav-link active" data-scroll-target="#sec-classical-ts"><span class="header-section-number">7.1</span> 시계열 데이터와 고전 모델</a>
+  <ul class="collapse">
+  <li><a href="#시계열의-구성요소와-정상성" id="toc-시계열의-구성요소와-정상성" class="nav-link" data-scroll-target="#시계열의-구성요소와-정상성"><span class="header-section-number">7.1.1</span> 시계열의 구성요소와 정상성</a></li>
+  <li><a href="#자기회귀-모델-ar" id="toc-자기회귀-모델-ar" class="nav-link" data-scroll-target="#자기회귀-모델-ar"><span class="header-section-number">7.1.2</span> 자기회귀 모델 (AR)</a></li>
+  <li><a href="#이동평균-모델-ma" id="toc-이동평균-모델-ma" class="nav-link" data-scroll-target="#이동평균-모델-ma"><span class="header-section-number">7.1.3</span> 이동평균 모델 (MA)</a></li>
+  <li><a href="#arma와-arima" id="toc-arma와-arima" class="nav-link" data-scroll-target="#arma와-arima"><span class="header-section-number">7.1.4</span> ARMA와 ARIMA</a></li>
+  </ul></li>
+  <li><a href="#sec-rnn" id="toc-sec-rnn" class="nav-link" data-scroll-target="#sec-rnn"><span class="header-section-number">7.2</span> 순환 신경망 (RNN)</a>
+  <ul class="collapse">
+  <li><a href="#rnn-셀의-수식" id="toc-rnn-셀의-수식" class="nav-link" data-scroll-target="#rnn-셀의-수식"><span class="header-section-number">7.2.1</span> RNN 셀의 수식</a></li>
+  <li><a href="#rnn의-구조-접힘과-펼침" id="toc-rnn의-구조-접힘과-펼침" class="nav-link" data-scroll-target="#rnn의-구조-접힘과-펼침"><span class="header-section-number">7.2.2</span> RNN의 구조: 접힘과 펼침</a></li>
+  <li><a href="#장기-의존성-문제" id="toc-장기-의존성-문제" class="nav-link" data-scroll-target="#장기-의존성-문제"><span class="header-section-number">7.2.3</span> 장기 의존성 문제</a></li>
+  </ul></li>
+  <li><a href="#sec-lstm" id="toc-sec-lstm" class="nav-link" data-scroll-target="#sec-lstm"><span class="header-section-number">7.3</span> 장단기 메모리 (LSTM)</a>
+  <ul class="collapse">
+  <li><a href="#lstm-셀의-구조" id="toc-lstm-셀의-구조" class="nav-link" data-scroll-target="#lstm-셀의-구조"><span class="header-section-number">7.3.1</span> LSTM 셀의 구조</a></li>
+  <li><a href="#게이트-수식과-의미" id="toc-게이트-수식과-의미" class="nav-link" data-scroll-target="#게이트-수식과-의미"><span class="header-section-number">7.3.2</span> 게이트 수식과 의미</a></li>
+  <li><a href="#파이토치-구현" id="toc-파이토치-구현" class="nav-link" data-scroll-target="#파이토치-구현"><span class="header-section-number">7.3.3</span> 파이토치 구현</a></li>
+  </ul></li>
+  <li><a href="#sec-gru" id="toc-sec-gru" class="nav-link" data-scroll-target="#sec-gru"><span class="header-section-number">7.4</span> 게이트 순환 유닛 (GRU)</a>
+  <ul class="collapse">
+  <li><a href="#gru-셀의-구조와-수식" id="toc-gru-셀의-구조와-수식" class="nav-link" data-scroll-target="#gru-셀의-구조와-수식"><span class="header-section-number">7.4.1</span> GRU 셀의 구조와 수식</a></li>
+  <li><a href="#gru와-lstm의-차이" id="toc-gru와-lstm의-차이" class="nav-link" data-scroll-target="#gru와-lstm의-차이"><span class="header-section-number">7.4.2</span> GRU와 LSTM의 차이</a></li>
+  <li><a href="#다층깊은-순환-신경망" id="toc-다층깊은-순환-신경망" class="nav-link" data-scroll-target="#다층깊은-순환-신경망"><span class="header-section-number">7.4.3</span> 다층·깊은 순환 신경망</a></li>
+  </ul></li>
+  <li><a href="#sec-bilstm" id="toc-sec-bilstm" class="nav-link" data-scroll-target="#sec-bilstm"><span class="header-section-number">7.5</span> 양방향 LSTM (BiLSTM)</a>
+  <ul class="collapse">
+  <li><a href="#장점과-단점" id="toc-장점과-단점" class="nav-link" data-scroll-target="#장점과-단점"><span class="header-section-number">7.5.1</span> 장점과 단점</a></li>
+  </ul></li>
+  <li><a href="#sec-seq-tasks" id="toc-sec-seq-tasks" class="nav-link" data-scroll-target="#sec-seq-tasks"><span class="header-section-number">7.6</span> 시퀀스 과제의 유형과 학습 기법</a>
+  <ul class="collapse">
+  <li><a href="#교사-강요와-자기회귀-생성" id="toc-교사-강요와-자기회귀-생성" class="nav-link" data-scroll-target="#교사-강요와-자기회귀-생성"><span class="header-section-number">7.6.1</span> 교사 강요와 자기회귀 생성</a></li>
+  <li><a href="#펩홀-연결과-그-변형" id="toc-펩홀-연결과-그-변형" class="nav-link" data-scroll-target="#펩홀-연결과-그-변형"><span class="header-section-number">7.6.2</span> 펩홀 연결과 그 변형</a></li>
+  <li><a href="#은닉-상태-초기화와-상태-전달" id="toc-은닉-상태-초기화와-상태-전달" class="nav-link" data-scroll-target="#은닉-상태-초기화와-상태-전달"><span class="header-section-number">7.6.3</span> 은닉 상태 초기화와 상태 전달</a></li>
+  </ul></li>
+  <li><a href="#sec-rnn-apps" id="toc-sec-rnn-apps" class="nav-link" data-scroll-target="#sec-rnn-apps"><span class="header-section-number">7.7</span> 순환 신경망 계열의 발전과 응용</a></li>
+  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">참고문헌</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week03-lecture.html">3주차 · RNN·LSTM·GRU 기반 시계열 모델링</a></li><li class="breadcrumb-item"><a href="./week03-lecture.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">RNN·LSTM·GRU 기반 시계열 모델링</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-ch3" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">RNN·LSTM·GRU 기반 시계열 모델링</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<p>이 장은 시간 순서가 있는 데이터를 다루는 순환 신경망 계열을 깊이 있게 살펴봅니다. 먼저 고전 통계 시계열 모델(AR, MA, ARMA, ARIMA)로 시계열의 언어를 익힌 뒤, 순환 신경망(RNN)의 셀과 구조, 그 한계인 장기 의존성 문제를 짚습니다. 이어서 이를 해결한 LSTM과 GRU의 게이트 수식을 하나하나 해석하고, 양방향 LSTM까지 확장합니다. 수식은 기호의 의미와 직관을 함께 설명합니다.</p>
+</blockquote>
+<section id="sec-classical-ts" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="sec-classical-ts"><span class="header-section-number">7.1</span> 시계열 데이터와 고전 모델</h2>
+<p><strong>시계열(time series)</strong>은 시간 순서로 관측된 값의 나열 <span class="math inline">\(x_1, x_2, \dots, x_T\)</span>입니다. 주가, 기온, 전력 수요, 센서 신호처럼 과거가 미래에 영향을 주는 데이터가 여기 속합니다. 시계열 예측의 목표는 과거 관측으로부터 미래 값을 추정하는 것입니다<span class="citation" data-cites="box1970time hyndman2018forecasting">(<a href="#ref-box1970time" role="doc-biblioref">Box &amp; Jenkins, 1970</a>; <a href="#ref-hyndman2018forecasting" role="doc-biblioref">Hyndman &amp; Athanasopoulos, 2018</a>)</span>.</p>
+<div class="figbody">
+<p><img src="figs/ch3_ts_forecast.png" class="img-fluid" style="width:92.0%" alt="슬라이딩 윈도 시계열 예측"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 3.1</strong> 슬라이딩 윈도 기반 시계열 예측. 과거 일정 구간(파란 입력 윈도)을 보고 그다음 미래 값(빨간 점선)을 예측합니다. 이 윈도를 한 칸씩 옮겨 가며 수많은 (입력, 정답) 쌍을 만들어 순환 신경망을 학습시킵니다.</p>
+</div>
+<section id="시계열의-구성요소와-정상성" class="level3" data-number="7.1.1">
+<h3 data-number="7.1.1" class="anchored" data-anchor-id="시계열의-구성요소와-정상성"><span class="header-section-number">7.1.1</span> 시계열의 구성요소와 정상성</h3>
+<p>시계열을 분석할 때는 흔히 데이터를 몇 가지 구성요소로 나눠 이해합니다. <strong>추세(trend)</strong>는 장기적으로 값이 오르거나 내리는 경향이고, <strong>계절성(seasonality)</strong>은 하루·일주일·일 년처럼 일정한 주기로 반복되는 패턴입니다. 여기에 규칙으로 설명되지 않는 <strong>불규칙(잡음)</strong> 성분이 더해집니다. 예컨대 전력 수요는 여름·겨울에 높아지는 계절성, 해가 갈수록 늘어나는 추세, 그리고 예측하기 어려운 일별 변동을 함께 가집니다.</p>
+<div class="figbody">
+<p><img src="figs/ch3_ts_decomp.png" class="img-fluid" style="width:82.0%" alt="시계열의 추세·계절성·잡음 분해"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 3.2</strong> 시계열의 구성요소 분해. 맨 위의 관측 시계열은 아래 세 성분—우상향하는 추세, 주기적으로 반복되는 계절성, 그리고 무작위 잡음—의 합으로 이루어집니다. 시계열 모델링은 이런 구조를 포착해 미래를 예측하는 일입니다.</p>
+</div>
+<p>시계열 모델링에서 가장 중요한 개념 중 하나가 <strong>정상성(stationarity)</strong>입니다. 정상 시계열이란 시간이 흘러도 평균·분산·자기상관 구조가 변하지 않는 시계열을 말합니다. 많은 고전 모델이 정상성을 가정하는데, 그 이유는 과거의 통계적 성질이 미래에도 유지되어야 과거로부터 미래를 추정할 수 있기 때문입니다. 추세나 계절성이 있는 시계열은 비정상적이므로, 차분이나 계절 조정으로 정상화한 뒤 모델을 적용합니다.</p>
+<p>시계열의 내부 구조를 진단하는 도구로 <strong>자기상관함수(ACF)</strong>와 <strong>편자기상관함수(PACF)</strong>가 있습니다. ACF는 시계열과 그 자신을 <span class="math inline">\(k\)</span>시점 지연시킨 것 사이의 상관을 나타내고, PACF는 그 사이의 중간 시점 영향을 제거한 순수한 상관을 나타냅니다. 두 함수의 모양을 보면 AR·MA의 차수를 가늠할 수 있어, 전통적 시계열 분석에서 모델을 고르는 근거가 됩니다. 지연 연산을 간결히 쓰기 위해 <strong>백시프트 연산자</strong> <span class="math inline">\(B\)</span>를 도입하기도 하는데, <span class="math inline">\(Bx_t = x_{t-1}\)</span>로 정의되어 <span class="math inline">\(B^k x_t = x_{t-k}\)</span>가 됩니다. 이 표기를 쓰면 1차 차분은 <span class="math inline">\(\nabla x_t = (1-B)x_t\)</span>로 간단히 표현됩니다.</p>
+</section>
+<section id="자기회귀-모델-ar" class="level3" data-number="7.1.2">
+<h3 data-number="7.1.2" class="anchored" data-anchor-id="자기회귀-모델-ar"><span class="header-section-number">7.1.2</span> 자기회귀 모델 (AR)</h3>
+<p><strong>자기회귀(AutoRegressive, AR)</strong> 모델은 현재 값을 과거 값들의 선형 결합으로 설명합니다. 차수 <span class="math inline">\(p\)</span>의 AR(<span class="math inline">\(p\)</span>)는 다음과 같습니다.</p>
+<p><span class="math display">\[
+x_t = c + \sum_{i=1}^{p}\phi_i\, x_{t-i} + \varepsilon_t,
+\]</span></p>
+<p>여기서 <span class="math inline">\(\phi_i\)</span>는 과거 <span class="math inline">\(i\)</span>시점 값의 영향력을 나타내는 계수, <span class="math inline">\(c\)</span>는 상수, <span class="math inline">\(\varepsilon_t\)</span>는 백색잡음입니다. 즉 “오늘은 최근 <span class="math inline">\(p\)</span>일의 값으로 결정된다”는 가정입니다.</p>
+</section>
+<section id="이동평균-모델-ma" class="level3" data-number="7.1.3">
+<h3 data-number="7.1.3" class="anchored" data-anchor-id="이동평균-모델-ma"><span class="header-section-number">7.1.3</span> 이동평균 모델 (MA)</h3>
+<p><strong>이동평균(Moving Average, MA)</strong> 모델은 현재 값을 과거 <strong>예측 오차(충격)</strong>들의 선형 결합으로 설명합니다. 차수 <span class="math inline">\(q\)</span>의 MA(<span class="math inline">\(q\)</span>)는 다음과 같습니다.</p>
+<p><span class="math display">\[
+x_t = c + \varepsilon_t + \sum_{j=1}^{q}\theta_j\, \varepsilon_{t-j}.
+\]</span></p>
+<p>여기서 <span class="math inline">\(\varepsilon_{t-j}\)</span>는 과거의 예측 오차이고 <span class="math inline">\(\theta_j\)</span>는 그 오차가 현재에 남기는 영향입니다. AR이 과거 “값”을, MA가 과거 “충격”을 본다는 점이 핵심 차이입니다.</p>
+</section>
+<section id="arma와-arima" class="level3" data-number="7.1.4">
+<h3 data-number="7.1.4" class="anchored" data-anchor-id="arma와-arima"><span class="header-section-number">7.1.4</span> ARMA와 ARIMA</h3>
+<p><strong>ARMA(<span class="math inline">\(p,q\)</span>)</strong>는 AR과 MA를 결합합니다.</p>
+<p><span class="math display">\[
+x_t = c + \sum_{i=1}^{p}\phi_i x_{t-i} + \varepsilon_t + \sum_{j=1}^{q}\theta_j \varepsilon_{t-j}.
+\]</span></p>
+<p>ARMA는 <strong>정상성(stationarity)</strong>, 즉 평균·분산이 시간에 따라 변하지 않는다는 가정을 필요로 합니다. 그러나 실제 시계열은 추세를 가진 경우가 많아 비정상적입니다. <strong>ARIMA(<span class="math inline">\(p,d,q\)</span>)</strong>는 원계열을 <span class="math inline">\(d\)</span>번 차분(differencing)해 정상화한 뒤 ARMA를 적용합니다. 1차 차분은 다음과 같습니다.</p>
+<p><span class="math display">\[
+\nabla x_t = x_t - x_{t-1}.
+\]</span></p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    AR["AR(p)&lt;br/&gt;과거 값"] --&gt; ARMA["ARMA(p,q)"]
+    MA["MA(q)&lt;br/&gt;과거 오차"] --&gt; ARMA
+    ARMA --&gt;|"+ d차 차분"| ARIMA["ARIMA(p,d,q)&lt;br/&gt;비정상 시계열 처리"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>이 모델들이 잘 작동하려면 조건이 필요합니다. AR 모델이 정상적이려면 계수 <span class="math inline">\(\phi_i\)</span>가 일정 조건(특성방정식의 근이 단위원 밖에 있을 것)을 만족해야 합니다. 직관적으로는, 과거 값의 영향이 시간이 지나며 점점 줄어들어야 값이 발산하지 않고 안정된다는 뜻입니다. AR(<span class="math inline">\(p\)</span>)와 MA(<span class="math inline">\(q\)</span>)의 차수 <span class="math inline">\(p, q\)</span>는 앞서 소개한 ACF·PACF의 모양을 보고 정하며, 실제 분석에서는 여러 차수를 시도해 정보 기준(AIC, BIC)으로 가장 좋은 모델을 고릅니다. 계절성이 강한 데이터에는 계절 차분과 계절 항을 더한 SARIMA로 확장하기도 합니다.</p>
+<p>고전 모델은 해석이 명확하고 데이터가 적어도 잘 작동하며, 계수 하나하나가 “며칠 전 값이 오늘에 미치는 영향”처럼 명확한 의미를 가진다는 큰 장점이 있습니다. 그러나 이들은 근본적으로 <strong>선형 관계와 정상성 가정</strong>에 묶여 있습니다. 현실의 시계열은 비선형적이고, 여러 변수가 복잡하게 상호작용하며, 시간에 따라 성질이 변하는 경우가 많습니다. 예컨대 기온·습도·요일이 전력 수요에 얽히는 비선형 관계는 선형 모델로 담기 어렵습니다. 이런 복잡한 패턴을 데이터로부터 유연하게 학습한다는 점에서 순환 신경망이 강점을 보이며, 그래서 딥러닝 기반 시계열 모델링이 발전해 왔습니다.</p>
+</section>
+</section>
+<section id="sec-rnn" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="sec-rnn"><span class="header-section-number">7.2</span> 순환 신경망 (RNN)</h2>
+<p><strong>순환 신경망(Recurrent Neural Network, RNN)</strong>은 시퀀스를 시점 순으로 처리하며, 이전까지의 정보를 <strong>은닉 상태(hidden state)</strong> <span class="math inline">\(\mathbf{h}_t\)</span>에 담아 다음 시점으로 전달합니다<span class="citation" data-cites="elman1990finding jordan1997serial">(<a href="#ref-elman1990finding" role="doc-biblioref">Elman, 1990</a>; <a href="#ref-jordan1997serial" role="doc-biblioref">Jordan, 1997</a>)</span>. 이 순환 연결이 RNN에 “기억”을 부여합니다.</p>
+<p>일반적인 피드포워드 신경망은 입력 하나를 받아 출력 하나를 내고 끝나므로, 입력들 사이의 순서 관계를 다룰 수 없습니다. 문장이나 시계열처럼 순서가 의미를 갖는 데이터에는 이것이 치명적입니다. RNN은 이 문제를 은닉 상태라는 “메모”로 해결합니다. 매 시점 현재 입력과 지금까지의 메모를 함께 읽어 새 메모를 쓰고, 이 메모가 다음 시점으로 이어집니다. 즉 은닉 상태는 처음부터 현재까지 본 모든 입력의 요약본 역할을 하며, RNN은 이 요약을 매 시점 갱신해 나갑니다. 사람이 문장을 왼쪽에서 오른쪽으로 읽으며 앞의 내용을 기억한 채 다음 단어를 이해하는 과정과 닮았습니다.</p>
+<section id="rnn-셀의-수식" class="level3" data-number="7.2.1">
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="rnn-셀의-수식"><span class="header-section-number">7.2.1</span> RNN 셀의 수식</h3>
+<p>각 시점 <span class="math inline">\(t\)</span>에서 입력 <span class="math inline">\(\mathbf{x}_t\)</span>와 이전 은닉 상태 <span class="math inline">\(\mathbf{h}_{t-1}\)</span>을 받아 새 은닉 상태를 계산합니다.</p>
+<p><span class="math display">\[
+\mathbf{h}_t = \tanh(W_{xh}\mathbf{x}_t + W_{hh}\mathbf{h}_{t-1} + \mathbf{b}_h),
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{y}_t = W_{hy}\mathbf{h}_t + \mathbf{b}_y.
+\]</span></p>
+<p>여기서 각 기호의 의미는 다음과 같습니다.</p>
+<ul>
+<li><span class="math inline">\(\mathbf{x}_t\)</span>: <span class="math inline">\(t\)</span>시점 입력 벡터</li>
+<li><span class="math inline">\(\mathbf{h}_t\)</span>: <span class="math inline">\(t\)</span>시점 은닉 상태(과거 요약)</li>
+<li><span class="math inline">\(W_{xh}\)</span>: 입력을 은닉으로 보내는 가중치</li>
+<li><span class="math inline">\(W_{hh}\)</span>: 이전 은닉을 현재 은닉으로 잇는 <strong>순환 가중치</strong>(모든 시점이 공유)</li>
+<li><span class="math inline">\(\tanh\)</span>: 은닉 상태를 <span class="math inline">\((-1,1)\)</span>로 제한하는 비선형 활성화</li>
+</ul>
+<p>이 식을 말로 풀면, 새 은닉 상태는 “현재 입력을 변환한 것”과 “이전 기억을 변환한 것”을 더한 뒤 비선형 함수를 통과시킨 결과입니다. 여기서 <span class="math inline">\(\tanh\)</span>를 쓰는 이유는 은닉 상태 값이 무한히 커지지 않도록 유계로 눌러 주기 위함입니다. 출력 <span class="math inline">\(\mathbf{y}_t\)</span>는 은닉 상태를 다시 선형 변환해 얻는데, 과제에 따라 매 시점 출력을 쓰기도 하고(다대다), 마지막 시점의 출력만 쓰기도 합니다(다대일). 이처럼 단순한 하나의 식이 시점마다 반복되며 시퀀스 전체를 처리하는 것이 순환 신경망의 우아함입니다.</p>
+<p>핵심은 <strong>가중치 <span class="math inline">\(W_{xh}, W_{hh}\)</span>가 모든 시점에서 동일하게 공유</strong>된다는 점입니다. 덕분에 임의 길이의 시퀀스를 같은 파라미터로 처리할 수 있습니다.</p>
+<p>이 <strong>파라미터 공유</strong>는 순환 신경망의 가장 중요한 설계 원리입니다. 만약 시점마다 다른 가중치를 쓴다면, 길이가 100인 시퀀스는 100벌의 가중치가 필요하고 길이가 바뀌면 모델을 새로 만들어야 합니다. 파라미터를 공유하면 시퀀스가 아무리 길어도 파라미터 수가 일정하게 유지되고, 시점에 무관하게 “같은 규칙”으로 정보를 처리한다는 귀납적 편향이 생깁니다. 이는 문장의 문법이나 시계열의 물리 법칙이 시점에 따라 달라지지 않는다는 현실과도 잘 맞습니다. 은닉 상태 <span class="math inline">\(\mathbf{h}_t\)</span>의 차원(은닉 크기)은 모델이 과거를 얼마나 풍부하게 기억할지를 정하는 중요한 하이퍼파라미터로, 클수록 표현력이 커지지만 계산과 과적합 위험도 함께 늘어납니다.</p>
+</section>
+<section id="rnn의-구조-접힘과-펼침" class="level3" data-number="7.2.2">
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="rnn의-구조-접힘과-펼침"><span class="header-section-number">7.2.2</span> RNN의 구조: 접힘과 펼침</h3>
+<p>RNN은 하나의 셀이 시간축으로 반복되는 구조입니다. 그림으로 그릴 때는 셀 하나에 자기 자신으로 돌아오는 순환 화살표를 그리는 “접힌(folded)” 형태로 나타내지만, 실제 계산을 이해할 때는 이를 시점별로 “펼친(unrolled)” 형태로 보는 것이 편합니다. 펼치면 각 시점의 셀이 옆으로 나열된 깊은 피드포워드 망처럼 보이며, 다만 모든 셀이 같은 가중치를 공유한다는 점만 다릅니다.</p>
+<div class="figbody">
+<p><img src="figs/ch3_rnn_unroll_ours.png" class="img-fluid" style="width:95.0%" alt="순환 신경망의 펼침(unroll)"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 3.3</strong> 순환 신경망을 시점별로 펼친 모습. 각 시점 <span class="math inline">\(t\)</span>에서 입력 <span class="math inline">\(x_t\)</span>와 이전 은닉 상태 <span class="math inline">\(h_{t-1}\)</span>로 새 은닉 상태 <span class="math inline">\(h_t\)</span>를 만들고(초록 가로 화살표가 은닉 상태의 전달), 필요하면 출력 <span class="math inline">\(y_t\)</span>를 냅니다. 모든 시점이 같은 가중치를 공유하는 하나의 셀이 반복되는 구조입니다.</p>
+</div>
+<p>학습은 이 펼친 그래프에 역전파를 적용하는 <strong>시간에 대한 역전파(Backpropagation Through Time, BPTT)</strong>로 이루어집니다<span class="citation" data-cites="werbos1990backpropagation williams1989learning">(<a href="#ref-werbos1990backpropagation" role="doc-biblioref">Werbos, 1990</a>; <a href="#ref-williams1989learning" role="doc-biblioref">Williams &amp; Zipser, 1989</a>)</span>. BPTT는 순전파로 전체 시퀀스의 은닉 상태를 계산해 두었다가, 마지막 시점의 손실에서 시작해 시간을 거슬러 올라가며 각 시점의 기울기를 누적합니다. 파라미터가 공유되므로, 각 시점에서 계산된 기울기가 모두 같은 가중치로 더해집니다.</p>
+<p>그러나 시퀀스가 매우 길면 전체를 거슬러 오르는 BPTT는 메모리를 많이 쓰고 계산이 느립니다. 그래서 실전에서는 일정 길이(예: 35시점)마다 그래프를 끊어 그 구간 안에서만 역전파하는 <strong>잘린 BPTT(truncated BPTT)</strong>를 씁니다. 이때 은닉 상태의 값은 다음 구간으로 넘기되 계산 그래프는 <code>detach</code>로 분리해, 역전파가 무한히 거슬러 올라가지 않게 합니다. 이는 긴 문서나 긴 신호를 다룰 때 필수적인 기법입니다.</p>
+</section>
+<section id="장기-의존성-문제" class="level3" data-number="7.2.3">
+<h3 data-number="7.2.3" class="anchored" data-anchor-id="장기-의존성-문제"><span class="header-section-number">7.2.3</span> 장기 의존성 문제</h3>
+<p>RNN은 이론상 과거 전체를 기억할 수 있지만, 실제로는 멀리 떨어진 정보를 학습하기 어렵습니다. BPTT에서 기울기가 순환 가중치를 통해 반복 곱해지며 지수적으로 소실되거나 폭발하기 때문입니다<span class="citation" data-cites="bengio1994learning hochreiter1998vanishing pascanu2013difficulty">(<a href="#ref-bengio1994learning" role="doc-biblioref">Bengio 기타, 1994</a>; <a href="#ref-hochreiter1998vanishing" role="doc-biblioref">Hochreiter, 1998</a>; <a href="#ref-pascanu2013difficulty" role="doc-biblioref">Pascanu 기타, 2013</a>)</span>.</p>
+<p>이를 수식으로 보면 문제가 분명해집니다. 시점 <span class="math inline">\(t\)</span>의 손실을 과거 시점 <span class="math inline">\(k\)</span>의 은닉 상태로 미분할 때, 연쇄법칙에 의해 그 사이 모든 시점의 야코비안이 곱해집니다.</p>
+<p><span class="math display">\[
+\frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_k} = \prod_{i=k+1}^{t} \frac{\partial \mathbf{h}_i}{\partial \mathbf{h}_{i-1}} = \prod_{i=k+1}^{t} \text{diag}(\phi'(\cdot))\, W_{hh}^\top .
+\]</span></p>
+<p>이 곱은 <span class="math inline">\(t-k\)</span>개의 항으로 이루어지는데, 각 항에 순환 가중치 <span class="math inline">\(W_{hh}\)</span>가 포함됩니다. 따라서 이 곱의 크기는 대략 <span class="math inline">\(W_{hh}\)</span>의 가장 큰 특잇값(스펙트럼 반경) <span class="math inline">\(\rho\)</span>의 <span class="math inline">\((t-k)\)</span>제곱에 비례합니다. <span class="math inline">\(\rho &lt; 1\)</span>이면 거리가 멀어질수록 기울기가 지수적으로 <strong>0으로 소실</strong>되고, <span class="math inline">\(\rho &gt; 1\)</span>이면 지수적으로 <strong>폭발</strong>합니다. 또한 <span class="math inline">\(\tanh\)</span>의 도함수 <span class="math inline">\(\phi'\)</span>가 최대 1이고 대부분 1보다 작아 소실을 더욱 부추깁니다. 결국 기본 RNN은 대략 10~20시점 정도의 짧은 의존성만 안정적으로 학습할 수 있습니다.</p>
+<div class="figbody">
+<p><img src="figs/ch3_vanishing.png" class="img-fluid" style="width:70.0%" alt="시점 간 거리에 따른 기울기 소실·폭발"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 3.4</strong> 순환 신경망의 기울기 소실과 폭발(세로축은 로그 척도). 역전파에서 기울기는 시점 간 거리 <span class="math inline">\(k\)</span>에 대해 대략 스펙트럼 반경 <span class="math inline">\(\rho\)</span>의 <span class="math inline">\(k\)</span>제곱으로 변합니다. <span class="math inline">\(\rho&lt;1\)</span>이면 기울기가 지수적으로 0에 가까워져(소실) 먼 과거를 학습하지 못하고, <span class="math inline">\(\rho&gt;1\)</span>이면 지수적으로 커져(폭발) 학습이 발산합니다.</p>
+</div>
+<p>기울기 폭발은 기울기의 크기를 일정 값으로 잘라내는 <strong>기울기 클리핑</strong>으로 비교적 쉽게 다룰 수 있지만, 소실은 정보 자체가 사라지는 것이라 근본적 해결이 어렵습니다. 이 소실 문제를 구조적으로 해결하려고 등장한 것이 바로 다음에 볼 LSTM입니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    F["먼 과거 정보"] -.-&gt;|"기울기 (Whh)^k 반복 곱"| N["현재"]
+    N --&gt; P["k가 크면&lt;br/&gt;소실 또는 폭발"]
+    style P fill:#fecaca
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>이 문제 때문에 기본 RNN은 짧은 의존성에는 강하지만 긴 문맥을 다루기 어렵습니다. 이를 구조적으로 해결한 것이 LSTM과 GRU입니다.</p>
+</section>
+</section>
+<section id="sec-lstm" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="sec-lstm"><span class="header-section-number">7.3</span> 장단기 메모리 (LSTM)</h2>
+<p><strong>LSTM(Long Short-Term Memory)</strong>은 1997년 호흐라이터와 슈미트후버가 제안한 순환 셀로, 장기 의존성 문제를 게이트 구조로 해결합니다<span class="citation" data-cites="hochreiter1997long">(<a href="#ref-hochreiter1997long" role="doc-biblioref">Hochreiter &amp; Schmidhuber, 1997</a>)</span>. 핵심 아이디어는 정보를 거의 손실 없이 나르는 <strong>셀 상태(cell state)</strong> <span class="math inline">\(\mathbf{c}_t\)</span>를 두고, <strong>게이트</strong>로 정보의 흐름을 조절하는 것입니다.</p>
+<p>LSTM을 이해하는 좋은 비유는 컴퓨터의 메모리 관리입니다. 셀 상태는 장기 기억을 담는 저장 공간이고, 세 게이트는 이 저장 공간을 관리하는 밸브입니다. 망각 게이트는 “낡은 기억을 지울지”를 결정하는 삭제 밸브, 입력 게이트는 “새 정보를 저장할지”를 결정하는 쓰기 밸브, 출력 게이트는 “저장된 것 중 무엇을 지금 꺼내 쓸지”를 결정하는 읽기 밸브에 해당합니다. 각 밸브가 0이면 완전히 닫혀 정보를 통과시키지 않고, 1이면 활짝 열려 그대로 통과시킵니다. 이 밸브들의 열림 정도를 데이터로부터 학습한다는 점이 LSTM의 핵심입니다. 중요한 정보는 오래 유지하고 불필요한 정보는 적절히 지우는 이 선택적 기억 능력이, 기본 RNN이 풀지 못한 장기 의존성 문제를 해결합니다.</p>
+<section id="lstm-셀의-구조" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="lstm-셀의-구조"><span class="header-section-number">7.3.1</span> LSTM 셀의 구조</h3>
+<p>LSTM 셀은 세 개의 게이트—망각·입력·출력—와 셀 상태로 이루어집니다. 게이트는 시그모이드 <span class="math inline">\(\sigma(\cdot)\in(0,1)\)</span>의 출력으로, 정보를 “얼마나 통과시킬지”를 0~1로 조절하는 <span class="key">밸브</span>입니다. 셀의 정확한 배선은 그림 3.5와 같습니다.</p>
+<div class="figbody">
+<p><img src="figs/ch3_lstm_arch.png" class="img-fluid" style="width:92.0%" alt="LSTM 셀 아키텍처 배선도"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 3.5</strong> LSTM 셀의 아키텍처. 위쪽의 셀 상태 하이웨이 <span class="math inline">\(c_{t-1}\to c_t\)</span>가 핵심으로, 망각 게이트 <span class="math inline">\(f_t\)</span>가 요소별 곱(<span class="math inline">\(\times\)</span>)으로 과거 기억을 얼마나 지울지 정하고, 입력 게이트 <span class="math inline">\(i_t\)</span>와 후보 <span class="math inline">\(\tilde{c}_t\)</span>의 곱이 요소별 합(<span class="math inline">\(+\)</span>)으로 새 정보를 더합니다. 갱신된 셀 상태는 <span class="math inline">\(\tanh\)</span>를 거쳐 출력 게이트 <span class="math inline">\(o_t\)</span>와 곱해져 은닉 상태 <span class="math inline">\(h_t\)</span>가 됩니다. 입력 <span class="math inline">\([h_{t-1}, x_t]\)</span>가 네 게이트에 공통으로 들어갑니다.</p>
+</div>
+</section>
+<section id="게이트-수식과-의미" class="level3" data-number="7.3.2">
+<h3 data-number="7.3.2" class="anchored" data-anchor-id="게이트-수식과-의미"><span class="header-section-number">7.3.2</span> 게이트 수식과 의미</h3>
+<p>이제 세 게이트와 상태 갱신을 수식으로 하나씩 살펴보겠습니다. 각 식은 앞서 설명한 밸브의 비유를 그대로 수학으로 옮긴 것입니다. 게이트는 모두 시그모이드를 거쳐 0과 1 사이의 값을 내고, 이 값이 요소별 곱으로 정보의 통과량을 조절합니다. 시점 <span class="math inline">\(t\)</span>에서 입력 <span class="math inline">\(\mathbf{x}_t\)</span>와 이전 은닉 <span class="math inline">\(\mathbf{h}_{t-1}\)</span>로부터 다음을 계산합니다. <span class="math inline">\(\odot\)</span>는 요소별 곱이고, <span class="math inline">\([\mathbf{h}_{t-1}, \mathbf{x}_t]\)</span>는 두 벡터를 이어 붙인 것입니다.</p>
+<p><span class="math display">\[
+\mathbf{f}_t = \sigma(W_f[\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_f) \qquad \text{(망각 게이트)}
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{i}_t = \sigma(W_i[\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_i) \qquad \text{(입력 게이트)}
+\]</span></p>
+<p><span class="math display">\[
+\tilde{\mathbf{c}}_t = \tanh(W_c[\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_c) \qquad \text{(후보 셀 상태)}
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{c}_t = \mathbf{f}_t \odot \mathbf{c}_{t-1} + \mathbf{i}_t \odot \tilde{\mathbf{c}}_t \qquad \text{(셀 상태 갱신)}
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{o}_t = \sigma(W_o[\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_o) \qquad \text{(출력 게이트)}
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{h}_t = \mathbf{o}_t \odot \tanh(\mathbf{c}_t) \qquad \text{(은닉 상태)}
+\]</span></p>
+<p>각 게이트의 의미를 해석하면 다음과 같습니다.</p>
+<ul>
+<li><strong>망각 게이트 <span class="math inline">\(\mathbf{f}_t\)</span></strong>: 이전 셀 상태 <span class="math inline">\(\mathbf{c}_{t-1}\)</span>의 각 성분을 얼마나 유지할지 결정합니다. 1에 가까우면 기억을 보존하고, 0에 가까우면 잊습니다. 이 게이트는 원 논문에 이어 추가되어 연속 예측 성능을 크게 높였습니다<span class="citation" data-cites="gers2000learning">(<a href="#ref-gers2000learning" role="doc-biblioref">Gers 기타, 2000</a>)</span>.</li>
+<li><strong>입력 게이트 <span class="math inline">\(\mathbf{i}_t\)</span>와 후보 <span class="math inline">\(\tilde{\mathbf{c}}_t\)</span></strong>: 새 정보를 얼마나 셀 상태에 쓸지 결정합니다. <span class="math inline">\(\tilde{\mathbf{c}}_t\)</span>가 “무엇을 쓸지”, <span class="math inline">\(\mathbf{i}_t\)</span>가 “얼마나 쓸지”입니다.</li>
+<li><strong>셀 상태 갱신</strong>: 과거 기억(<span class="math inline">\(\mathbf{f}_t\odot\mathbf{c}_{t-1}\)</span>)과 새 정보(<span class="math inline">\(\mathbf{i}_t\odot\tilde{\mathbf{c}}_t\)</span>)를 더합니다. 이 <strong>덧셈 구조</strong>가 기울기를 곱셈이 아닌 덧셈으로 흐르게 해 소실을 완화합니다.</li>
+<li><strong>출력 게이트 <span class="math inline">\(\mathbf{o}_t\)</span></strong>: 셀 상태 중 무엇을 은닉 상태로 내보낼지 조절합니다.</li>
+</ul>
+<p>위 여섯 개의 식은 코드로 거의 그대로 옮겨집니다. 아래는 한 시점의 LSTM 셀을 수식 그대로 구현한 것으로, 그림 3.5의 배선과 정확히 대응합니다.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lstm_cell(x, h_prev, c_prev, W, b):</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> torch.cat([h_prev, x], dim<span class="op">=-</span><span class="dv">1</span>) <span class="op">@</span> W <span class="op">+</span> b   <span class="co"># 게이트 4개를 한 번에 계산</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    f, i, g, o <span class="op">=</span> z.chunk(<span class="dv">4</span>, dim<span class="op">=-</span><span class="dv">1</span>)              <span class="co"># 4등분</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    f, i, o <span class="op">=</span> f.sigmoid(), i.sigmoid(), o.sigmoid()  <span class="co"># 세 게이트: σ</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    g <span class="op">=</span> g.tanh()                                 <span class="co"># 후보 셀 상태: tanh</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> f <span class="op">*</span> c_prev <span class="op">+</span> i <span class="op">*</span> g                       <span class="co"># 셀 상태 갱신 (⊙ 곱, + 합)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> o <span class="op">*</span> c.tanh()                             <span class="co"># 은닉 상태</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h, c</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>여기서 <code>f * c_prev</code>가 망각(과거 기억 보존), <code>i * g</code>가 입력(새 정보 추가)이고, 둘을 더해 셀 상태를 갱신합니다. 파이토치의 <code>nn.LSTM</code>은 이 계산을 시점마다 반복해 주는 최적화된 구현입니다.</p>
+<p>셀 상태가 시간축을 따라 거의 방해 없이 흐르는 이 경로를 <span class="key">상수 오차 회전(constant error carousel)</span>이라 부르며, LSTM이 장기 기억을 유지하는 핵심입니다.</p>
+<p>이 성질을 기울기 관점에서 보면 LSTM의 우수함이 드러납니다. 셀 상태 갱신식 <span class="math inline">\(\mathbf{c}_t = \mathbf{f}_t \odot \mathbf{c}_{t-1} + \mathbf{i}_t \odot \tilde{\mathbf{c}}_t\)</span>를 이전 셀 상태로 미분하면 다음과 같습니다.</p>
+<p><span class="math display">\[
+\frac{\partial \mathbf{c}_t}{\partial \mathbf{c}_{t-1}} = \mathbf{f}_t .
+\]</span></p>
+<p>기본 RNN에서는 이 자리에 순환 가중치와 활성화 도함수가 곱해져 지수적으로 작아졌지만, LSTM에서는 그 자리에 <strong>망각 게이트 <span class="math inline">\(\mathbf{f}_t\)</span>가 곧바로</strong> 놓입니다. 만약 망각 게이트가 1에 가깝게 열려 있으면, 기울기는 여러 시점을 거쳐도 거의 1이 곱해지는 셈이라 <span class="key">소실되지 않고 멀리까지 전달</span>됩니다. 즉 LSTM은 게이트를 통해 “언제 기억을 유지하고 언제 지울지”를 학습함으로써, 필요할 때 기울기 경로를 열어 두어 장기 의존성을 학습합니다. 셀 상태 갱신이 곱셈이 아니라 <strong>덧셈</strong>으로 이루어진다는 점이 이 모든 것의 출발점입니다.</p>
+<div class="keybox">
+<p><strong>핵심.</strong> LSTM이 장기 의존성을 학습하는 비결은 셀 상태의 <strong>덧셈 기반 갱신</strong>과 <strong>망각 게이트</strong>입니다. <span class="math inline">\(\partial c_t/\partial c_{t-1}=f_t\)</span>이므로, 게이트가 열려 있으면 기울기가 소실 없이 먼 과거까지 전달됩니다.</p>
+</div>
+<p>LSTM의 여러 변형을 체계적으로 비교한 연구에 따르면, 망각 게이트와 출력 활성화가 특히 중요하며, 이 두 요소를 빼면 성능이 크게 떨어집니다<span class="citation" data-cites="greff2016lstm">(<a href="#ref-greff2016lstm" role="doc-biblioref">Greff 기타, 2017</a>)</span>.</p>
+</section>
+<section id="파이토치-구현" class="level3" data-number="7.3.3">
+<h3 data-number="7.3.3" class="anchored" data-anchor-id="파이토치-구현"><span class="header-section-number">7.3.3</span> 파이토치 구현</h3>
+<p>파이토치는 <code>nn.LSTM</code>으로 이 셀을 제공합니다. 이 모듈은 시퀀스 전체를 받아 내부적으로 시점마다 게이트 연산을 반복해 주므로, 우리는 게이트를 직접 구현할 필요 없이 입력·은닉 크기·층 수만 지정하면 됩니다. 출력은 모든 시점의 은닉 상태 시퀀스와, 마지막 시점의 은닉·셀 상태입니다. 다음 값을 예측하는 회귀에서는 보통 마지막 시점의 은닉 상태만 헤드에 통과시킵니다. 사인파 시계열을 예로 구성해 봅니다.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn <span class="im">as</span> nn</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LSTMForecaster(nn.Module):</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, in_dim<span class="op">=</span><span class="dv">1</span>, hidden<span class="op">=</span><span class="dv">64</span>, num_layers<span class="op">=</span><span class="dv">2</span>):</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.lstm <span class="op">=</span> nn.LSTM(in_dim, hidden, num_layers,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                            batch_first<span class="op">=</span><span class="va">True</span>, dropout<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.head <span class="op">=</span> nn.Linear(hidden, <span class="dv">1</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):            <span class="co"># x: (B, T, in_dim)</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        out, (h_n, c_n) <span class="op">=</span> <span class="va">self</span>.lstm(x)   <span class="co"># out: (B, T, hidden)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        last <span class="op">=</span> out[:, <span class="op">-</span><span class="dv">1</span>, :]             <span class="co"># 마지막 시점의 은닉 상태</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.head(last)          <span class="co"># (B, 1) 다음 값 예측</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LSTMForecaster()</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.randn(<span class="dv">16</span>, <span class="dv">30</span>, <span class="dv">1</span>)   <span class="co"># 배치16, 길이30, 특성1</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model(x).shape)        <span class="co"># torch.Size([16, 1])</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="sec-gru" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="sec-gru"><span class="header-section-number">7.4</span> 게이트 순환 유닛 (GRU)</h2>
+<p><strong>GRU(Gated Recurrent Unit)</strong>는 2014년 조 등이 제안한 순환 셀로, LSTM을 단순화해 게이트를 둘로 줄이고 셀 상태와 은닉 상태를 하나로 합쳤습니다<span class="citation" data-cites="cho2014learning">(<a href="#ref-cho2014learning" role="doc-biblioref">Cho 기타, 2014</a>)</span>. LSTM이 세 개의 게이트와 두 종류의 상태로 강력하지만 다소 복잡하다면, GRU는 꼭 필요한 요소만 남겨 더 간결하게 같은 목적을 달성하려는 시도입니다. 파라미터가 적어 계산이 가볍고 메모리도 덜 쓰며, 데이터가 충분하지 않을 때 과적합에도 상대적으로 강합니다. 그러면서도 많은 과제에서 LSTM에 필적하는 성능을 내어, 실무에서 널리 사랑받는 선택지입니다<span class="citation" data-cites="chung2014empirical">(<a href="#ref-chung2014empirical" role="doc-biblioref">Chung 기타, 2014</a>)</span>.</p>
+<section id="gru-셀의-구조와-수식" class="level3" data-number="7.4.1">
+<h3 data-number="7.4.1" class="anchored" data-anchor-id="gru-셀의-구조와-수식"><span class="header-section-number">7.4.1</span> GRU 셀의 구조와 수식</h3>
+<p>GRU는 <strong>리셋 게이트 <span class="math inline">\(\mathbf{r}_t\)</span></strong>와 <strong>업데이트 게이트 <span class="math inline">\(\mathbf{z}_t\)</span></strong> 두 개만 사용합니다.</p>
+<p><span class="math display">\[
+\mathbf{z}_t = \sigma(W_z[\mathbf{h}_{t-1}, \mathbf{x}_t]) \qquad \text{(업데이트 게이트)}
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{r}_t = \sigma(W_r[\mathbf{h}_{t-1}, \mathbf{x}_t]) \qquad \text{(리셋 게이트)}
+\]</span></p>
+<p><span class="math display">\[
+\tilde{\mathbf{h}}_t = \tanh(W_h[\mathbf{r}_t \odot \mathbf{h}_{t-1}, \mathbf{x}_t]) \qquad \text{(후보 은닉)}
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{h}_t = (1-\mathbf{z}_t)\odot \mathbf{h}_{t-1} + \mathbf{z}_t \odot \tilde{\mathbf{h}}_t \qquad \text{(은닉 갱신)}
+\]</span></p>
+<ul>
+<li><strong>리셋 게이트 <span class="math inline">\(\mathbf{r}_t\)</span></strong>: 과거 은닉 상태를 후보 계산에 얼마나 반영할지 조절합니다. 0에 가까우면 과거를 무시하고 현재 입력에 집중해, 시퀀스의 흐름이 끊기는 지점(예: 새 문장의 시작)에서 과거 기억을 초기화하는 효과를 냅니다.</li>
+<li><strong>업데이트 게이트 <span class="math inline">\(\mathbf{z}_t\)</span></strong>: 과거 은닉과 새 후보를 얼마의 비율로 섞을지 결정합니다. LSTM의 망각·입력 게이트 역할을 하나로 통합한 것입니다. 은닉 갱신식이 <strong>볼록 결합</strong>(<span class="math inline">\(1-\mathbf{z}_t\)</span>와 <span class="math inline">\(\mathbf{z}_t\)</span>의 합이 1) 형태라는 점이 특징입니다. <span class="math inline">\(\mathbf{z}_t\)</span>가 0에 가까우면 과거 은닉을 거의 그대로 유지하는데, 이 경로가 LSTM의 셀 상태처럼 기울기를 멀리까지 전달해 장기 의존성을 학습하게 합니다.</li>
+</ul>
+<div class="figbody">
+<p><img src="figs/ch3_gru_arch.png" class="img-fluid" style="width:92.0%" alt="GRU 셀 아키텍처 배선도"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 3.6</strong> GRU 셀의 아키텍처. 리셋 게이트 <span class="math inline">\(r_t\)</span>가 과거 은닉 <span class="math inline">\(h_{t-1}\)</span>을 얼마나 반영할지 정해 후보 <span class="math inline">\(\tilde{h}_t\)</span>를 만들고, 업데이트 게이트 <span class="math inline">\(z_t\)</span>가 과거 은닉과 새 후보를 <span class="math inline">\(1-z_t\)</span> 대 <span class="math inline">\(z_t\)</span>의 비율로 섞어 <span class="math inline">\(h_t\)</span>를 만듭니다. LSTM의 셀 상태·은닉 상태가 하나로 합쳐지고 게이트가 둘로 줄어, 구조가 더 간결합니다.</p>
+</div>
+</section>
+<section id="gru와-lstm의-차이" class="level3" data-number="7.4.2">
+<h3 data-number="7.4.2" class="anchored" data-anchor-id="gru와-lstm의-차이"><span class="header-section-number">7.4.2</span> GRU와 LSTM의 차이</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 35%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>항목</th>
+<th>LSTM</th>
+<th>GRU</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>게이트 수</td>
+<td>3개 (망각·입력·출력)</td>
+<td>2개 (리셋·업데이트)</td>
+</tr>
+<tr class="even">
+<td>상태</td>
+<td>셀 상태 + 은닉 상태</td>
+<td>은닉 상태 하나</td>
+</tr>
+<tr class="odd">
+<td>파라미터</td>
+<td>많음</td>
+<td>적음(약 3/4)</td>
+</tr>
+<tr class="even">
+<td>계산 비용</td>
+<td>큼</td>
+<td>작음</td>
+</tr>
+<tr class="odd">
+<td>경향</td>
+<td>매우 긴 의존성·큰 데이터에 유리</td>
+<td>데이터가 적거나 속도 중요할 때 유리</td>
+</tr>
+</tbody>
+</table>
+<p>GRU와 LSTM의 관계는 게이트를 어떻게 배치했는지로 이해할 수 있습니다. GRU의 업데이트 게이트는 LSTM의 망각 게이트와 입력 게이트를 하나로 묶은 것에 대응합니다. 즉 “얼마나 잊을지”와 “얼마나 새로 쓸지”를 별도 게이트로 두는 대신, GRU는 <span class="math inline">\(\mathbf{z}_t\)</span>와 <span class="math inline">\(1-\mathbf{z}_t\)</span>로 그 둘을 하나로 연결해 항상 합이 1이 되게 합니다. 또 GRU는 별도의 셀 상태 없이 은닉 상태 하나로 기억을 담당하고, 출력 게이트 대신 리셋 게이트로 과거의 반영 정도를 조절합니다. 이렇게 구조를 간소화했는데도 성능이 크게 떨어지지 않는다는 사실은, 장기 의존성 학습의 핵심이 “게이트로 조절되는 덧셈 기반 상태 갱신”이라는 공통 원리에 있음을 시사합니다.</p>
+<p>어느 쪽이 항상 낫다고 단정하기는 어렵고, 과제와 데이터 규모에 따라 실험으로 선택합니다<span class="citation" data-cites="chung2014empirical">(<a href="#ref-chung2014empirical" role="doc-biblioref">Chung 기타, 2014</a>)</span>. 대체로 데이터가 매우 많거나 아주 긴 의존성이 중요하면 LSTM이, 데이터가 적거나 학습 속도가 중요하면 GRU가 유리한 경향이 있습니다. 파이토치에서는 <code>nn.LSTM</code>을 <code>nn.GRU</code>로 바꾸기만 하면 됩니다.</p>
+</section>
+<section id="다층깊은-순환-신경망" class="level3" data-number="7.4.3">
+<h3 data-number="7.4.3" class="anchored" data-anchor-id="다층깊은-순환-신경망"><span class="header-section-number">7.4.3</span> 다층·깊은 순환 신경망</h3>
+<p>지금까지는 순환층 하나를 가정했지만, 순환층을 여러 개 쌓아 <strong>깊은 순환 신경망(deep RNN)</strong>을 만들 수 있습니다. 아래층의 시점별 은닉 상태 시퀀스가 위층의 입력이 되는 구조입니다. 아래층은 원시 신호에 가까운 저수준 패턴을, 위층은 더 추상적인 고수준 패턴을 담당하도록 역할이 나뉘는 경향이 있습니다. 파이토치에서는 <code>num_layers</code> 인자로 층 수를 지정하며, 층 사이에 드롭아웃을 넣어 과적합을 막습니다. 다만 층을 너무 깊게 쌓으면 순환 신경망 특유의 학습 난이도가 커지므로, 보통 2~4층 정도가 실용적입니다. 깊이를 늘리는 것과 은닉 크기를 키우는 것은 표현력을 높이는 서로 다른 방향이며, 문제에 맞춰 균형을 찾습니다.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>gru <span class="op">=</span> nn.GRU(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">64</span>, num_layers<span class="op">=</span><span class="dv">2</span>, batch_first<span class="op">=</span><span class="va">True</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="sec-bilstm" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="sec-bilstm"><span class="header-section-number">7.5</span> 양방향 LSTM (BiLSTM)</h2>
+<p>기본 RNN·LSTM은 과거→미래 한 방향으로만 정보를 읽습니다. 그러나 어떤 시점의 의미가 <strong>앞뒤 문맥 모두</strong>에 의존하는 경우가 많습니다. 예를 들어 문장에서 어떤 단어의 뜻은 그 뒤에 오는 단어에 의해 결정되기도 합니다. “배가 고프다”와 “배가 출항한다”에서 “배”의 의미는 뒤 문맥으로 갈립니다. 이처럼 뒤 문맥이 중요한 경우, 과거만 보는 단방향 모델은 한계가 있습니다. <strong>양방향 RNN</strong>은 순방향과 역방향 두 개의 순환 신경망을 두고, 각 시점의 표현을 두 방향의 은닉 상태를 결합해 만듭니다<span class="citation" data-cites="schuster1997bidirectional graves2005framewise">(<a href="#ref-schuster1997bidirectional" role="doc-biblioref">Schuster &amp; Paliwal, 1997</a>; <a href="#ref-graves2005framewise" role="doc-biblioref">Graves &amp; Schmidhuber, 2005</a>)</span>.</p>
+<p><span class="math display">\[
+\overrightarrow{\mathbf{h}}_t = \text{LSTM}_{\text{fwd}}(\mathbf{x}_t, \overrightarrow{\mathbf{h}}_{t-1}), \qquad
+\overleftarrow{\mathbf{h}}_t = \text{LSTM}_{\text{bwd}}(\mathbf{x}_t, \overleftarrow{\mathbf{h}}_{t+1}),
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{h}_t = [\overrightarrow{\mathbf{h}}_t \,;\, \overleftarrow{\mathbf{h}}_t].
+\]</span></p>
+<p>두 방향의 은닉 상태를 이어 붙이므로(<span class="math inline">\(;\)</span>는 연결), 출력 차원은 은닉 크기의 두 배가 됩니다.</p>
+<div class="figbody">
+<p><img src="figs/ch3_bilstm_ours.png" class="img-fluid" style="width:100.0%" alt="양방향 LSTM 구조"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 3.7</strong> 양방향 LSTM(BiLSTM)의 구조. 아래 입력 <span class="math inline">\(x_t\)</span>를 <strong>순방향 LSTM</strong>(초록, 왼→오)과 <strong>역방향 LSTM</strong>(파랑, 오→왼) 두 개가 각각 읽습니다. 각 시점 <span class="math inline">\(t\)</span>에서 두 방향의 은닉 상태 <span class="math inline">\(\overrightarrow{h}_t\)</span>와 <span class="math inline">\(\overleftarrow{h}_t\)</span>를 이어 붙여(<span class="math inline">\(;\)</span>는 연결) 출력 <span class="math inline">\(h_t\)</span>를 만듭니다. 앞뒤 문맥을 모두 반영하지만, 미래 입력이 필요해 실시간 예측에는 쓸 수 없고 출력 차원은 은닉 크기의 두 배가 됩니다.</p>
+</div>
+<section id="장점과-단점" class="level3" data-number="7.5.1">
+<h3 data-number="7.5.1" class="anchored" data-anchor-id="장점과-단점"><span class="header-section-number">7.5.1</span> 장점과 단점</h3>
+<ul>
+<li><strong>장점</strong>: 각 시점이 과거와 미래 문맥을 모두 보므로, 개체명 인식·음소 분류·시계열 이상 탐지처럼 전체 시퀀스가 주어진 과제에서 성능이 좋습니다. 특히 어떤 지점의 해석이 뒤에 나오는 정보에 의존할 때 단방향 모델보다 뚜렷한 이점을 보입니다.</li>
+<li><strong>단점</strong>: 미래 정보를 필요로 하므로 <strong>실시간·온라인 예측에는 쓸 수 없습니다.</strong> 미래 값이 아직 없는 예측 상황에서는 순방향 모델만 사용해야 합니다. 또한 두 방향의 순환 신경망을 모두 돌려야 하므로 계산량과 메모리가 대략 두 배로 늘어납니다.</li>
+</ul>
+<p>정리하면, 양방향 구조는 전체 시퀀스가 미리 주어지고 각 시점을 분류·라벨링하는 과제(예: 문장 태깅, 저장된 신호의 이상 구간 탐지)에 적합하고, 미래를 예측해야 하는 과제에는 부적합합니다. 이 구분은 모델을 선택할 때 반드시 먼저 확인해야 할 기준입니다. 다음 장의 트랜스포머 인코더도 전체 시퀀스를 양방향으로 본다는 점에서 양방향 RNN과 문제의식을 공유합니다.</p>
+<p>파이토치에서는 <code>bidirectional=True</code> 한 줄로 활성화합니다. 이때 분류 헤드의 입력 차원을 은닉의 두 배로 맞춰야 합니다.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn <span class="im">as</span> nn</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BiLSTMTagger(nn.Module):</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, in_dim<span class="op">=</span><span class="dv">1</span>, hidden<span class="op">=</span><span class="dv">64</span>, n_classes<span class="op">=</span><span class="dv">2</span>):</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.bilstm <span class="op">=</span> nn.LSTM(in_dim, hidden, batch_first<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                              bidirectional<span class="op">=</span><span class="va">True</span>)          <span class="co"># 양방향</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.head <span class="op">=</span> nn.Linear(hidden<span class="op">*</span><span class="dv">2</span>, n_classes)         <span class="co"># 차원 2배 주의</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        out, _ <span class="op">=</span> <span class="va">self</span>.bilstm(x)      <span class="co"># (B, T, hidden*2)</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.head(out)        <span class="co"># 각 시점마다 분류 (B, T, n_classes)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="sec-seq-tasks" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="sec-seq-tasks"><span class="header-section-number">7.6</span> 시퀀스 과제의 유형과 학습 기법</h2>
+<p>순환 신경망은 입력과 출력의 길이 관계에 따라 여러 형태의 과제에 쓰입니다. 이 관계를 이해하면 문제에 맞는 모델 헤드와 손실을 설계할 수 있습니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    O2O["일대일&lt;br/&gt;입력1→출력1&lt;br/&gt;(이미지 분류)"]
+    O2M["일대다&lt;br/&gt;입력1→출력다수&lt;br/&gt;(이미지 캡션)"]
+    M2O["다대일&lt;br/&gt;시퀀스→출력1&lt;br/&gt;(감성 분류·다음값 예측)"]
+    M2M["다대다&lt;br/&gt;시퀀스→시퀀스&lt;br/&gt;(번역·시퀀스 라벨링)"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<ul>
+<li><strong>다대일(many-to-one)</strong>: 시퀀스 전체를 읽고 하나의 값을 출력합니다. 문장 감성 분류나 시계열의 다음 한 값 예측이 여기 속하며, 보통 마지막 시점의 은닉 상태를 헤드에 통과시킵니다.</li>
+<li><strong>다대다(many-to-many)</strong>: 입력 시퀀스의 각 시점마다 출력을 냅니다. 품사 태깅처럼 길이가 같은 경우와, 기계번역처럼 입력과 출력 길이가 다른 경우로 나뉩니다. 후자는 인코더가 입력을 하나의 벡터로 요약하고 디코더가 그것을 풀어내는 <strong>인코더-디코더(seq2seq)</strong> 구조를 씁니다<span class="citation" data-cites="sutskever2014sequence cho2014learning">(<a href="#ref-sutskever2014sequence" role="doc-biblioref">Sutskever 기타, 2014</a>; <a href="#ref-cho2014learning" role="doc-biblioref">Cho 기타, 2014</a>)</span>.</li>
+<li><strong>일대다(one-to-many)</strong>: 하나의 입력에서 시퀀스를 생성합니다. 이미지에서 설명 문장을 만드는 캡셔닝이 예입니다.</li>
+</ul>
+<section id="교사-강요와-자기회귀-생성" class="level3" data-number="7.6.1">
+<h3 data-number="7.6.1" class="anchored" data-anchor-id="교사-강요와-자기회귀-생성"><span class="header-section-number">7.6.1</span> 교사 강요와 자기회귀 생성</h3>
+<p>시퀀스를 생성하는 디코더를 학습할 때는 <strong>교사 강요(teacher forcing)</strong>를 자주 씁니다. 학습 중에는 모델이 방금 낸 예측 대신 <strong>실제 정답 토큰</strong>을 다음 시점 입력으로 넣어, 학습을 빠르고 안정적으로 만듭니다. 만약 학습 초기에 모델의 잘못된 예측을 계속 입력으로 넣으면 오차가 눈덩이처럼 불어나 학습이 매우 느려지는데, 교사 강요는 이를 막아 줍니다. 반면 추론 시에는 정답이 없으므로 모델이 낸 예측을 다시 입력으로 넣는 <strong>자기회귀(autoregressive)</strong> 방식으로 한 시점씩 생성합니다. 학습과 추론의 이 불일치는 오차가 누적되는 노출 편향(exposure bias) 문제를 낳기도 하며, 이를 완화하려고 학습 후반에 모델 예측을 섞어 넣는 스케줄드 샘플링 같은 기법이 제안되었습니다.</p>
+</section>
+<section id="펩홀-연결과-그-변형" class="level3" data-number="7.6.2">
+<h3 data-number="7.6.2" class="anchored" data-anchor-id="펩홀-연결과-그-변형"><span class="header-section-number">7.6.2</span> 펩홀 연결과 그 변형</h3>
+<p>LSTM에는 게이트가 셀 상태를 직접 들여다보게 하는 <strong>펩홀(peephole) 연결</strong> 변형도 있습니다<span class="citation" data-cites="gers2002learning">(<a href="#ref-gers2002learning" role="doc-biblioref">Gers 기타, 2002</a>)</span>. 각 게이트 계산에 <span class="math inline">\(\mathbf{c}_{t-1}\)</span>(또는 <span class="math inline">\(\mathbf{c}_t\)</span>)을 추가로 넣어 정밀한 타이밍 학습을 돕습니다. 예컨대 망각 게이트는 다음과 같이 확장됩니다.</p>
+<p><span class="math display">\[
+\mathbf{f}_t = \sigma(W_f[\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{p}_f \odot \mathbf{c}_{t-1} + \mathbf{b}_f).
+\]</span></p>
+<p>여기서 <span class="math inline">\(\mathbf{p}_f\)</span>는 펩홀 가중치입니다. 펩홀 연결은 게이트가 현재 셀 상태의 크기까지 참고해 더 정밀하게 타이밍을 조절하게 해 주며, 정확한 시간 간격을 세는 과제에서 이점이 보고되었습니다. 실무에서는 기본 LSTM으로도 충분한 경우가 많아 표준 LSTM과 GRU가 가장 널리 쓰이며, 여러 변형의 체계적 비교 연구가 이 선택을 뒷받침합니다<span class="citation" data-cites="greff2016lstm">(<a href="#ref-greff2016lstm" role="doc-biblioref">Greff 기타, 2017</a>)</span>. 최근에는 순환 구조를 대규모로 확장하려는 xLSTM 같은 시도도 이어져, 순환 신경망의 아이디어가 여전히 진화하고 있음을 보여 줍니다<span class="citation" data-cites="beck2024xlstm">(<a href="#ref-beck2024xlstm" role="doc-biblioref">Beck 기타, 2024</a>)</span>.</p>
+</section>
+<section id="은닉-상태-초기화와-상태-전달" class="level3" data-number="7.6.3">
+<h3 data-number="7.6.3" class="anchored" data-anchor-id="은닉-상태-초기화와-상태-전달"><span class="header-section-number">7.6.3</span> 은닉 상태 초기화와 상태 전달</h3>
+<p>순환 신경망을 학습할 때 초기 은닉 상태 <span class="math inline">\(\mathbf{h}_0\)</span>는 보통 0으로 둡니다. 각 배치의 시퀀스가 서로 독립적이라면 매 배치를 0에서 시작하는 것이 자연스럽습니다. 그러나 긴 시계열을 여러 구간으로 나눠 이어서 학습하는 경우, 이전 구간의 마지막 은닉 상태를 다음 구간의 초기 상태로 넘기는 <strong>상태 전달(stateful)</strong> 방식을 쓰기도 합니다. 이렇게 하면 구간을 넘어서는 문맥을 유지할 수 있습니다. 이때는 구간 경계에서 은닉 상태의 계산 그래프를 끊어(<code>detach</code>) 역전파가 무한히 거슬러 올라가지 않게 해야 합니다. 앞서 본 잘린 BPTT가 바로 이 상황에서 쓰이는 기법입니다. 이런 세부 설계가 순환 신경망의 안정적 학습에 중요한 역할을 하며, 문제의 성격에 따라 상태를 초기화할지 이어갈지를 신중히 선택해야 합니다.</p>
+</section>
+</section>
+<section id="sec-rnn-apps" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="sec-rnn-apps"><span class="header-section-number">7.7</span> 순환 신경망 계열의 발전과 응용</h2>
+<p>순환 신경망은 다양한 실제 과제로 확장되었습니다. 시퀀스-투-시퀀스 구조는 한 시퀀스를 다른 시퀀스로 변환하는 기계번역에서 큰 성과를 냈고<span class="citation" data-cites="sutskever2014sequence">(<a href="#ref-sutskever2014sequence" role="doc-biblioref">Sutskever 기타, 2014</a>)</span>, 언어 모델링에서도 오래 표준이었습니다<span class="citation" data-cites="mikolov2010recurrent">(<a href="#ref-mikolov2010recurrent" role="doc-biblioref">Mikolov 기타, 2010</a>)</span>. 음성 인식, 손글씨 인식, 악보 생성, 동영상 분석처럼 순서가 중요한 거의 모든 분야에 순환 신경망이 적용되었습니다. 시계열 예측에서는 여러 센서를 가진 산업 설비의 고장 예측, 전력·교통 수요 예측, 금융 시계열 분석 등에 폭넓게 쓰입니다. 시계열 예측에서는 장·단기 패턴을 함께 다루는 LSTNet<span class="citation" data-cites="lai2018modeling">(<a href="#ref-lai2018modeling" role="doc-biblioref">Lai 기타, 2018</a>)</span>, 확률적 예측을 하는 DeepAR<span class="citation" data-cites="salinas2020deepar">(<a href="#ref-salinas2020deepar" role="doc-biblioref">Salinas 기타, 2020</a>)</span> 등이 순환 구조를 활용했습니다. 대규모 예측 대회 결과는 통계 모델과 신경망의 결합이 강력함을 보여 주며, 어느 한 방법이 항상 최선인 것은 아니라는 교훈도 함께 줍니다<span class="citation" data-cites="makridakis2020m4">(<a href="#ref-makridakis2020m4" role="doc-biblioref">Makridakis 기타, 2020</a>)</span>. 최근에는 LSTM을 대규모로 확장한 xLSTM처럼 순환 구조를 현대적으로 재해석하려는 시도도 이어지고 있습니다<span class="citation" data-cites="beck2024xlstm">(<a href="#ref-beck2024xlstm" role="doc-biblioref">Beck 기타, 2024</a>)</span>.</p>
+<p>다만 순환 구조는 시점을 순차 처리해야 하므로 병렬화가 어렵고 매우 긴 의존성에는 여전히 한계가 있습니다. LSTM과 GRU가 기울기 소실을 크게 완화했지만, 수백~수천 시점에 이르는 아주 긴 문맥에서는 여전히 정보 전달이 어렵고, 시점을 하나씩 처리하는 특성상 GPU의 병렬 연산 능력을 충분히 살리지 못합니다. 이 두 가지 근본적 한계를 완전히 다른 방식으로 돌파한 것이 다음 장에서 다룰 트랜스포머입니다.</p>
+
+
+</section>
+<section id="bibliography" class="level1 unnumbered">
+<h1 class="unnumbered">참고문헌</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="1" role="list">
+<div id="ref-beck2024xlstm" class="csl-entry" role="listitem">
+M. Beck, K. Pöppel, M. Spanring, A. Auer, O. Prudnikova, M. Kopp, G. Klambauer, J. Brandstetter, &amp; S. Hochreiter. 2024. <span>“xLSTM: Extended long short-term memory”</span>. <em>arXiv preprint arXiv:2405.04517</em>.
+</div>
+<div id="ref-bengio1994learning" class="csl-entry" role="listitem">
+Y. Bengio, P. Simard, &amp; P. Frasconi. 1994. <span>“Learning long-term dependencies with gradient descent is difficult”</span>. <em>IEEE Transactions on Neural Networks</em>, vol 5, pp. 157–166.
+</div>
+<div id="ref-box1970time" class="csl-entry" role="listitem">
+G. E. P. Box &amp; G. M. Jenkins. 1970. <span>“Time Series Analysis: Forecasting and Control”</span>. Holden-Day.
+</div>
+<div id="ref-cho2014learning" class="csl-entry" role="listitem">
+K. Cho, B. van Merriënboer, C. Gulcehre, D. Bahdanau, F. Bougares, H. Schwenk, &amp; Y. Bengio. 2014. <span>“Learning phrase representations using RNN encoder-decoder for statistical machine translation”</span>. <em>Conference on Empirical Methods in Natural Language Processing (EMNLP)</em>, pp. 1724–1734.
+</div>
+<div id="ref-chung2014empirical" class="csl-entry" role="listitem">
+J. Chung, C. Gulcehre, K. Cho, &amp; Y. Bengio. 2014. <span>“Empirical evaluation of gated recurrent neural networks on sequence modeling”</span>. <em>arXiv preprint arXiv:1412.3555</em>.
+</div>
+<div id="ref-elman1990finding" class="csl-entry" role="listitem">
+J. L. Elman. 1990. <span>“Finding structure in time”</span>. <em>Cognitive Science</em>, vol 14, pp. 179–211.
+</div>
+<div id="ref-gers2000learning" class="csl-entry" role="listitem">
+F. A. Gers, J. Schmidhuber, &amp; F. Cummins. 2000. <span>“Learning to forget: Continual prediction with LSTM”</span>. <em>Neural Computation</em>, vol 12, pp. 2451–2471.
+</div>
+<div id="ref-gers2002learning" class="csl-entry" role="listitem">
+F. A. Gers, N. N. Schraudolph, &amp; J. Schmidhuber. 2002. <span>“Learning precise timing with LSTM recurrent networks”</span>. <em>Journal of Machine Learning Research</em>, vol 3, pp. 115–143.
+</div>
+<div id="ref-graves2005framewise" class="csl-entry" role="listitem">
+A. Graves &amp; J. Schmidhuber. 2005. <span>“Framewise phoneme classification with bidirectional LSTM and other neural network architectures”</span>. <em>Neural Networks</em>, vol 18, pp. 602–610.
+</div>
+<div id="ref-greff2016lstm" class="csl-entry" role="listitem">
+K. Greff, R. K. Srivastava, J. Koutnı́k, B. R. Steunebrink, &amp; J. Schmidhuber. 2017. <span>“LSTM: A search space odyssey”</span>. <em>IEEE Transactions on Neural Networks and Learning Systems</em>, vol 28, pp. 2222–2232.
+</div>
+<div id="ref-hochreiter1998vanishing" class="csl-entry" role="listitem">
+S. Hochreiter. 1998. <span>“The vanishing gradient problem during learning recurrent neural nets and problem solutions”</span>. <em>International Journal of Uncertainty, Fuzziness and Knowledge-Based Systems</em>, pp. 107–116.
+</div>
+<div id="ref-hochreiter1997long" class="csl-entry" role="listitem">
+S. Hochreiter &amp; J. Schmidhuber. 1997. <span>“Long short-term memory”</span>. <em>Neural Computation</em>, vol 9, pp. 1735–1780. https://doi.org/<a href="https://doi.org/10.1162/neco.1997.9.8.1735">10.1162/neco.1997.9.8.1735</a>
+</div>
+<div id="ref-hyndman2018forecasting" class="csl-entry" role="listitem">
+R. J. Hyndman &amp; G. Athanasopoulos. 2018. <span>“Forecasting: Principles and Practice”</span>. OTexts.
+</div>
+<div id="ref-jordan1997serial" class="csl-entry" role="listitem">
+M. I. Jordan. 1997. <span>“Serial order: A parallel distributed processing approach”</span>. <em>Advances in Psychology</em>, vol 121, pp. 471–495.
+</div>
+<div id="ref-lai2018modeling" class="csl-entry" role="listitem">
+G. Lai, W.-C. Chang, Y. Yang, &amp; H. Liu. 2018. <span>“Modeling long- and short-term temporal patterns with deep neural networks”</span>. <em>ACM SIGIR Conference on Research and Development in Information Retrieval</em>, pp. 95–104.
+</div>
+<div id="ref-makridakis2020m4" class="csl-entry" role="listitem">
+S. Makridakis, E. Spiliotis, &amp; V. Assimakopoulos. 2020. <span>“The M4 competition: 100,000 time series and 61 forecasting methods”</span>. <em>International Journal of Forecasting</em>, vol 36, pp. 54–74.
+</div>
+<div id="ref-mikolov2010recurrent" class="csl-entry" role="listitem">
+T. Mikolov, M. Karafiát, L. Burget, J. Černocký, &amp; S. Khudanpur. 2010. <span>“Recurrent neural network based language model”</span>. <em>INTERSPEECH</em>, pp. 1045–1048.
+</div>
+<div id="ref-pascanu2013difficulty" class="csl-entry" role="listitem">
+R. Pascanu, T. Mikolov, &amp; Y. Bengio. 2013. <span>“On the difficulty of training recurrent neural networks”</span>. <em>International Conference on Machine Learning (ICML)</em>, pp. 1310–1318.
+</div>
+<div id="ref-salinas2020deepar" class="csl-entry" role="listitem">
+D. Salinas, V. Flunkert, J. Gasthaus, &amp; T. Januschowski. 2020. <span>“DeepAR: Probabilistic forecasting with autoregressive recurrent networks”</span>. <em>International Journal of Forecasting</em>, vol 36, pp. 1181–1191.
+</div>
+<div id="ref-schuster1997bidirectional" class="csl-entry" role="listitem">
+M. Schuster &amp; K. K. Paliwal. 1997. <span>“Bidirectional recurrent neural networks”</span>. <em>IEEE Transactions on Signal Processing</em>, vol 45, pp. 2673–2681.
+</div>
+<div id="ref-sutskever2014sequence" class="csl-entry" role="listitem">
+I. Sutskever, O. Vinyals, &amp; Q. V. Le. 2014. <span>“Sequence to sequence learning with neural networks”</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
+</div>
+<div id="ref-werbos1990backpropagation" class="csl-entry" role="listitem">
+P. J. Werbos. 1990. <span>“Backpropagation through time: What it does and how to do it”</span>. <em>Proceedings of the IEEE</em>, vol 78, pp. 1550–1560.
+</div>
+<div id="ref-williams1989learning" class="csl-entry" role="listitem">
+R. J. Williams &amp; D. Zipser. 1989. <span>“A learning algorithm for continually running fully recurrent neural networks”</span>. <em>Neural Computation</em>, vol 1, pp. 270–280.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".quiz-item input[type='checkbox']").forEach((box) => {
+    box.disabled = false;
+    box.removeAttribute("disabled");
+  });
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "복사완료!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "복사완료!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./week02-lab.html" class="pagination-link" aria-label="2주차 코딩 실습">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">2주차 코딩 실습</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./week03-quiz.html" class="pagination-link" aria-label="3주차 연습문제">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">3주차 연습문제</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>AI 모델링 실습</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>2026-2학기</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

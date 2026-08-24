@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>10&nbsp; Transformer 기반 시계열 모델링 – AI 모델링 실습 · 학생용</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 1em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week04-quiz.html" rel="next">
+<link href="./week03-lab.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-dc2f893ab7b818674e6dd1532d8eda25.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색",
+    "search-label": "검색"
+  }
+}</script>
+<meta name="mermaid-theme" content="default">
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="사이드바 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week04-lecture.html">4주차 · Transformer 기반 시계열 모델링</a></li><li class="breadcrumb-item"><a href="./week04-lecture.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Transformer 기반 시계열 모델링</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="사이드바 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="검색" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">AI 모델링 실습 · 학생용</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="검색"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">머리말</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">1주차 · AI 모델 학습 개요</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">AI 모델 학습 개요</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">1주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">1주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">2주차 · 모델 학습 기본 개념</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">모델 학습 기본 개념</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">2주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">2주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">3주차 · RNN·LSTM·GRU 기반 시계열 모델링</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">RNN·LSTM·GRU 기반 시계열 모델링</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">3주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">3주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">4주차 · Transformer 기반 시계열 모델링</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04-lecture.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Transformer 기반 시계열 모델링</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">4주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">4주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">5주차 · CNN 기반 이미지 분류와 전이학습</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week05-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">CNN 기반 이미지 분류와 전이학습</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week05-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">5주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week05-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">5주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">6주차 · 객체탐지와 최신 이미지 모델</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week06-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">객체탐지와 최신 이미지 모델</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">7주차 · 생성 모델 입문</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week07-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">생성 모델 입문</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#sec-transformer-motivation" id="toc-sec-transformer-motivation" class="nav-link active" data-scroll-target="#sec-transformer-motivation"><span class="header-section-number">10.1</span> 순환 신경망의 한계와 트랜스포머의 등장</a></li>
+  <li><a href="#sec-transformer-arch" id="toc-sec-transformer-arch" class="nav-link" data-scroll-target="#sec-transformer-arch"><span class="header-section-number">10.2</span> 트랜스포머의 전체 구조</a></li>
+  <li><a href="#sec-self-attention" id="toc-sec-self-attention" class="nav-link" data-scroll-target="#sec-self-attention"><span class="header-section-number">10.3</span> 셀프 어텐션과 쿼리·키·값</a>
+  <ul class="collapse">
+  <li><a href="#쿼리-키-값의-의미" id="toc-쿼리-키-값의-의미" class="nav-link" data-scroll-target="#쿼리-키-값의-의미"><span class="header-section-number">10.3.1</span> 쿼리, 키, 값의 의미</a></li>
+  <li><a href="#스케일드-닷-프로덕트-어텐션" id="toc-스케일드-닷-프로덕트-어텐션" class="nav-link" data-scroll-target="#스케일드-닷-프로덕트-어텐션"><span class="header-section-number">10.3.2</span> 스케일드 닷-프로덕트 어텐션</a></li>
+  </ul></li>
+  <li><a href="#sec-multihead" id="toc-sec-multihead" class="nav-link" data-scroll-target="#sec-multihead"><span class="header-section-number">10.4</span> 멀티 헤드 어텐션</a>
+  <ul class="collapse">
+  <li><a href="#연산-구조" id="toc-연산-구조" class="nav-link" data-scroll-target="#연산-구조"><span class="header-section-number">10.4.1</span> 연산 구조</a></li>
+  </ul></li>
+  <li><a href="#sec-ffn" id="toc-sec-ffn" class="nav-link" data-scroll-target="#sec-ffn"><span class="header-section-number">10.5</span> 위치별 피드포워드와 블록의 완성</a></li>
+  <li><a href="#sec-positional-encoding" id="toc-sec-positional-encoding" class="nav-link" data-scroll-target="#sec-positional-encoding"><span class="header-section-number">10.6</span> 위치 인코딩</a>
+  <ul class="collapse">
+  <li><a href="#단순-방식과-그-문제" id="toc-단순-방식과-그-문제" class="nav-link" data-scroll-target="#단순-방식과-그-문제"><span class="header-section-number">10.6.1</span> 단순 방식과 그 문제</a></li>
+  <li><a href="#사인코사인-위치-인코딩" id="toc-사인코사인-위치-인코딩" class="nav-link" data-scroll-target="#사인코사인-위치-인코딩"><span class="header-section-number">10.6.2</span> 사인·코사인 위치 인코딩</a></li>
+  <li><a href="#학습-가능한-위치-인코딩과-상대-위치" id="toc-학습-가능한-위치-인코딩과-상대-위치" class="nav-link" data-scroll-target="#학습-가능한-위치-인코딩과-상대-위치"><span class="header-section-number">10.6.3</span> 학습 가능한 위치 인코딩과 상대 위치</a></li>
+  </ul></li>
+  <li><a href="#sec-enc-dec" id="toc-sec-enc-dec" class="nav-link" data-scroll-target="#sec-enc-dec"><span class="header-section-number">10.7</span> 인코더와 디코더의 역할</a></li>
+  <li><a href="#sec-complexity" id="toc-sec-complexity" class="nav-link" data-scroll-target="#sec-complexity"><span class="header-section-number">10.8</span> 순환 신경망과의 계산 비교</a></li>
+  <li><a href="#sec-attn-interpret" id="toc-sec-attn-interpret" class="nav-link" data-scroll-target="#sec-attn-interpret"><span class="header-section-number">10.9</span> 어텐션의 해석 가능성</a></li>
+  <li><a href="#sec-transformer-training" id="toc-sec-transformer-training" class="nav-link" data-scroll-target="#sec-transformer-training"><span class="header-section-number">10.10</span> 트랜스포머 학습의 실제</a></li>
+  <li><a href="#sec-transformer-ts" id="toc-sec-transformer-ts" class="nav-link" data-scroll-target="#sec-transformer-ts"><span class="header-section-number">10.11</span> 트랜스포머를 시계열 예측에 적용하기</a></li>
+  <li><a href="#sec-ts-transformers" id="toc-sec-ts-transformers" class="nav-link" data-scroll-target="#sec-ts-transformers"><span class="header-section-number">10.12</span> 시계열을 위한 트랜스포머 변형 모델</a></li>
+  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">참고문헌</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week04-lecture.html">4주차 · Transformer 기반 시계열 모델링</a></li><li class="breadcrumb-item"><a href="./week04-lecture.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Transformer 기반 시계열 모델링</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-ch4" class="quarto-section-identifier"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Transformer 기반 시계열 모델링</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<p>이 장은 순환 없이 오직 어텐션만으로 시퀀스를 처리하는 트랜스포머를 다룹니다. 순환 신경망의 한계에서 출발해 셀프 어텐션과 멀티 헤드 어텐션의 연산을 수식으로 자세히 풀고, 순서 정보를 주입하는 위치 인코딩을 여러 방식으로 비교합니다. 인코더와 디코더 각각의 역할을 정리한 뒤, 트랜스포머를 시계열 예측에 적용하는 방법과 대표적인 시계열 특화 변형 모델들을 소개합니다.</p>
+</blockquote>
+<section id="sec-transformer-motivation" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="sec-transformer-motivation"><span class="header-section-number">10.1</span> 순환 신경망의 한계와 트랜스포머의 등장</h2>
+<p>3장의 LSTM·GRU는 장기 의존성 문제를 상당히 완화했지만, 순환 구조 자체에서 오는 두 가지 근본 한계가 남습니다.</p>
+<ul>
+<li><strong>순차 처리로 인한 병렬화 불가</strong>: 시점 <span class="math inline">\(t\)</span>의 은닉 상태는 <span class="math inline">\(t-1\)</span>의 결과에 의존하므로, 시퀀스를 한 시점씩 순서대로 계산해야 합니다. 이는 GPU의 병렬 연산 능력을 충분히 활용하지 못하게 합니다.</li>
+<li><strong>긴 거리 정보 전달의 병목</strong>: 멀리 떨어진 두 시점을 연결하려면 그 사이의 모든 은닉 상태를 거쳐야 합니다. 경로가 길수록 정보가 희석됩니다.</li>
+</ul>
+<p>어텐션 메커니즘은 원래 이 병목을 완화하기 위해 순환 신경망 위에 얹혀 등장했습니다. 기존 순환 신경망 기반 번역 모델은 입력 문장 전체를 하나의 고정 크기 벡터로 압축한 뒤 그것만으로 번역을 생성했는데, 문장이 길어지면 이 하나의 벡터에 모든 정보를 담기 어려워 성능이 떨어졌습니다. 바다나우 등은 이 문제를 해결하려고, 디코더가 매 시점 인코더의 모든 위치를 참조해 지금 필요한 부분에 <strong>정렬(alignment)</strong>하는 어텐션을 제안했습니다<span class="citation" data-cites="bahdanau2015neural">(<a href="#ref-bahdanau2015neural" role="doc-biblioref">Bahdanau 기타, 2015</a>)</span>. 이제 디코더는 하나의 압축 벡터가 아니라 입력 전체를 필요에 따라 골라볼 수 있게 되었습니다. 루옹 등이 이 아이디어를 여러 형태로 다듬으며 어텐션은 시퀀스 모델의 표준 요소로 자리 잡았습니다<span class="citation" data-cites="luong2015effective">(<a href="#ref-luong2015effective" role="doc-biblioref">Luong 기타, 2015</a>)</span>. 2017년 바스와니 등은 여기서 한 걸음 더 나아가, <strong>순환을 완전히 제거하고 어텐션만으로</strong> 시퀀스를 처리하는 트랜스포머를 제안했습니다<span class="citation" data-cites="vaswani2017attention">(<a href="#ref-vaswani2017attention" role="doc-biblioref">Vaswani 기타, 2017</a>)</span>.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    RNN["순환 신경망&lt;br/&gt;시점별 순차 처리"] --&gt;|"어텐션 추가"| SEQ2SEQ["seq2seq + 어텐션&lt;br/&gt;정렬 학습"]
+    SEQ2SEQ --&gt;|"순환 제거"| TF["트랜스포머&lt;br/&gt;어텐션만으로 병렬 처리"]
+    style TF fill:#bbf7d0
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>트랜스포머는 임의의 두 위치를 <strong>한 번의 연산으로 직접 연결</strong>하고, 전체 시퀀스를 동시에 처리해 병렬성이 뛰어납니다. 이 성질 덕분에 대규모 데이터로 사전학습하는 BERT<span class="citation" data-cites="devlin2019bert">(<a href="#ref-devlin2019bert" role="doc-biblioref">Devlin 기타, 2019</a>)</span>, GPT<span class="citation" data-cites="radford2019language">(<a href="#ref-radford2019language" role="doc-biblioref">Radford 기타, 2019</a>)</span>, 이미지의 ViT<span class="citation" data-cites="dosovitskiy2021image">(<a href="#ref-dosovitskiy2021image" role="doc-biblioref">Dosovitskiy 기타, 2021</a>)</span>까지 확장되었습니다.</p>
+<p>두 접근의 차이를 조금 더 구체적으로 보겠습니다. 순환 신경망에서 문장의 첫 단어 정보가 마지막 단어에 도달하려면, 그 사이 모든 시점의 은닉 상태를 순서대로 통과해야 합니다. 길이가 100이면 100단계를 거쳐야 하고, 그 과정에서 정보가 희석되거나 소실됩니다. 반면 셀프 어텐션에서는 첫 단어와 마지막 단어가 어텐션 한 번으로 직접 이어지므로, 거리가 아무리 멀어도 정보 전달 경로는 항상 한 단계입니다. 또한 순환 신경망은 시점을 순서대로 처리해야 해서 GPU의 수천 코어를 놀리지만, 트랜스포머는 모든 위치를 동시에 계산하므로 병렬 하드웨어를 완전히 활용합니다. “순차 처리의 병목”과 “장거리 전달의 병목”이라는 순환 신경망의 두 약점을, 트랜스포머는 어텐션이라는 하나의 메커니즘으로 동시에 해결한 것입니다.</p>
+</section>
+<section id="sec-transformer-arch" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="sec-transformer-arch"><span class="header-section-number">10.2</span> 트랜스포머의 전체 구조</h2>
+<p>원 논문의 트랜스포머는 <span class="key">인코더-디코더</span> 구조입니다. 인코더는 입력 시퀀스를 문맥이 반영된 표현으로 변환하고, 디코더는 그 표현과 지금까지 생성한 출력을 바탕으로 다음 토큰을 만듭니다. 전체 아키텍처는 그림 4.1과 같습니다.</p>
+<div class="figbody">
+<p><img src="figs/ch4_transformer_arch.png" class="img-fluid" style="width:88.0%" alt="트랜스포머 인코더-디코더 아키텍처"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 4.1</strong> 트랜스포머 인코더-디코더 아키텍처. 인코더 블록(왼쪽)은 멀티 헤드 셀프 어텐션과 피드포워드를 각각 Add &amp; Norm으로 감싸 <span class="math inline">\(N\)</span>번 반복합니다. 디코더 블록(오른쪽)은 여기에 미래를 가리는 마스크드 셀프 어텐션과, 인코더 출력을 키·값으로 참조하는 인코더-디코더 어텐션을 더합니다. 마지막 선형 + 소프트맥스가 다음 토큰의 확률을 냅니다.</p>
+</div>
+<p>각 인코더·디코더 블록은 <strong>잔차 연결(residual connection)</strong><span class="citation" data-cites="he2016deep">(<a href="#ref-he2016deep" role="doc-biblioref">He 기타, 2016</a>)</span>과 <strong>층 정규화(layer normalization)</strong><span class="citation" data-cites="ba2016layer">(<a href="#ref-ba2016layer" role="doc-biblioref">Ba 기타, 2016</a>)</span>로 감싸여 있습니다. 잔차 연결은 입력을 출력에 더해 기울기 흐름을 돕고, 층 정규화는 각 위치의 특성을 정규화해 학습을 안정화합니다. 정규화를 블록 앞에 두는 Pre-LN 방식이 학습을 더 안정시킨다는 연구도 있습니다<span class="citation" data-cites="xiong2020layer">(<a href="#ref-xiong2020layer" role="doc-biblioref">Xiong 기타, 2020</a>)</span>.</p>
+</section>
+<section id="sec-self-attention" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="sec-self-attention"><span class="header-section-number">10.3</span> 셀프 어텐션과 쿼리·키·값</h2>
+<p>트랜스포머의 심장은 <strong>셀프 어텐션(self-attention)</strong>입니다. 시퀀스의 각 위치가 <strong>자기 자신을 포함한 모든 위치</strong>를 바라보며, 무엇에 주목할지를 스스로 결정합니다.</p>
+<section id="쿼리-키-값의-의미" class="level3" data-number="10.3.1">
+<h3 data-number="10.3.1" class="anchored" data-anchor-id="쿼리-키-값의-의미"><span class="header-section-number">10.3.1</span> 쿼리, 키, 값의 의미</h3>
+<p>각 입력 벡터로부터 세 가지 벡터를 만듭니다. 이는 정보 검색의 비유로 이해하면 명확합니다.</p>
+<ul>
+<li><strong>쿼리(Query) <span class="math inline">\(\mathbf{q}\)</span></strong>: “나는 무엇을 찾고 있는가”—현재 위치가 던지는 질문.</li>
+<li><strong>키(Key) <span class="math inline">\(\mathbf{k}\)</span></strong>: “나는 무엇을 담고 있는가”—각 위치가 내거는 색인.</li>
+<li><strong>값(Value) <span class="math inline">\(\mathbf{v}\)</span></strong>: “실제로 전달할 내용”—주목받았을 때 넘겨줄 정보.</li>
+</ul>
+<p>입력 행렬 <span class="math inline">\(X\in\mathbb{R}^{T\times d}\)</span>에 학습 가능한 가중치를 곱해 셋을 만듭니다.</p>
+<p><span class="math display">\[
+Q = XW^Q, \qquad K = XW^K, \qquad V = XW^V.
+\]</span></p>
+<p>여기서 <span class="math inline">\(W^Q, W^K, W^V\)</span>는 학습되는 투영 행렬입니다. 같은 입력 <span class="math inline">\(X\)</span>에서 출발하지만 서로 다른 세 행렬을 곱하므로, 하나의 입력이 “질문용”, “색인용”, “내용용”이라는 세 가지 다른 역할의 벡터로 변환됩니다. 셀프 어텐션이라는 이름은 쿼리·키·값이 모두 <strong>같은 시퀀스</strong>에서 나온다는 데서 붙었습니다. 반면 디코더의 인코더-디코더 어텐션에서는 쿼리는 디코더에서, 키와 값은 인코더에서 나오는데, 이를 교차 어텐션이라 부릅니다. 어느 경우든 연산의 형태는 동일하고, 다만 쿼리·키·값이 어디서 오는가만 다릅니다. 이 세 행렬이 학습을 통해 조정되면서, 모델은 “무엇을 기준으로 어디에 주목할지”를 데이터로부터 스스로 배웁니다.</p>
+<p>쿼리와 키의 유사도가 클수록 그 위치의 값을 더 많이 가져옵니다. “질문(쿼리)에 잘 맞는 색인(키)을 가진 위치의 내용(값)을 많이 참고한다”는 것이 핵심 직관입니다.</p>
+<p>이 구조는 데이터베이스 검색에 비유하면 명확합니다. 일반적인 딕셔너리 검색은 쿼리와 키가 정확히 일치하는 하나의 값만 꺼냅니다. 어텐션은 이를 부드럽게 만든 것으로, 쿼리와 모든 키의 <strong>유사도에 비례해</strong> 여러 값을 가중 평균해 꺼냅니다. 즉 “가장 비슷한 하나”가 아니라 “비슷한 정도에 따라 섞은 것”을 반환하는 소프트한 검색입니다. 이 덕분에 미분이 가능해져 신경망 안에서 학습될 수 있습니다.</p>
+<p>어텐션의 유사도를 재는 방식에는 여러 가지가 있습니다. 초기 어텐션은 쿼리와 키를 작은 신경망에 넣어 점수를 내는 <strong>가법 어텐션(additive attention)</strong>을 썼습니다<span class="citation" data-cites="bahdanau2015neural">(<a href="#ref-bahdanau2015neural" role="doc-biblioref">Bahdanau 기타, 2015</a>)</span>. 트랜스포머는 대신 쿼리와 키의 내적을 쓰는 <strong>곱셈(dot-product) 어텐션</strong>을 채택했는데, 내적은 행렬 곱으로 한 번에 계산되어 GPU에서 훨씬 빠르기 때문입니다. 큰 차원에서 내적 값이 커지는 문제만 스케일링으로 보정하면, 곱셈 어텐션이 속도와 성능을 모두 잡습니다.</p>
+</section>
+<section id="스케일드-닷-프로덕트-어텐션" class="level3" data-number="10.3.2">
+<h3 data-number="10.3.2" class="anchored" data-anchor-id="스케일드-닷-프로덕트-어텐션"><span class="header-section-number">10.3.2</span> 스케일드 닷-프로덕트 어텐션</h3>
+<p>어텐션 가중치는 쿼리와 키의 내적으로 계산합니다. 내적이 클수록 두 벡터가 비슷하다는 뜻입니다. 차원 <span class="math inline">\(d_k\)</span>가 커지면 내적의 크기가 커져 소프트맥스가 포화하므로, <span class="math inline">\(\sqrt{d_k}\)</span>로 나눠 <strong>스케일</strong>합니다.</p>
+<p><span class="math inline">\(\sqrt{d_k}\)</span>로 나누는 이유는 분산으로 설명됩니다. 쿼리와 키의 각 성분이 평균 0, 분산 1인 독립 확률변수라고 가정하면, 두 벡터의 내적 <span class="math inline">\(\mathbf{q}\cdot\mathbf{k} = \sum_{i=1}^{d_k} q_i k_i\)</span>의 분산은 <span class="math inline">\(d_k\)</span>가 됩니다. 즉 차원이 커질수록 내적 값이 평균적으로 <span class="math inline">\(\sqrt{d_k}\)</span>배만큼 커집니다. 이렇게 값이 커지면 소프트맥스의 입력이 극단으로 치우쳐, 한 위치에만 확률이 몰리고 나머지는 0에 가까워지는 포화가 일어납니다. 포화한 소프트맥스는 기울기가 거의 0이라 학습이 멈춥니다. <span class="math inline">\(\sqrt{d_k}\)</span>로 나누면 내적의 분산이 다시 1로 정규화되어, 소프트맥스가 적당한 기울기를 유지합니다. 작아 보이는 이 스케일링이 트랜스포머 학습의 안정성에 결정적입니다.</p>
+<div class="figbody">
+<p><img src="figs/ch4_scaling.png" class="img-fluid" style="width:82.0%" alt="스케일링 전후 소프트맥스 가중치"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 4.2</strong> 스케일링의 효과(<span class="math inline">\(d_k=128\)</span>). (a) <span class="math inline">\(\sqrt{d_k}\)</span>로 나누지 않으면 내적 값이 커져 소프트맥스가 한 위치에만 확률을 몰아주는 포화 상태가 되고, 이때 기울기가 거의 0이라 학습이 멈춥니다. (b) <span class="math inline">\(\sqrt{d_k}\)</span>로 스케일링하면 가중치가 여러 위치에 적절히 분산되어 학습이 안정됩니다.</p>
+</div>
+<p><span class="math display">\[
+\text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V.
+\]</span></p>
+<p>이 식을 단계별로 해석하면 다음과 같습니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A["Q · Kᵀ&lt;br/&gt;모든 쌍의 유사도 점수"] --&gt; B["÷ √d_k&lt;br/&gt;스케일 조정"]
+    B --&gt; C["softmax&lt;br/&gt;행별 확률(가중치)"]
+    C --&gt; D["× V&lt;br/&gt;값의 가중합"]
+    D --&gt; E["출력: 문맥 반영 표현"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<ol type="1">
+<li><span class="math inline">\(QK^\top\)</span>: 모든 위치 쌍의 유사도 점수 행렬 <span class="math inline">\((T\times T)\)</span>을 만듭니다. <span class="math inline">\((i,j)\)</span> 성분은 위치 <span class="math inline">\(i\)</span>의 쿼리와 위치 <span class="math inline">\(j\)</span>의 키의 내적입니다.</li>
+<li><span class="math inline">\(\div\sqrt{d_k}\)</span>: 점수를 스케일해 기울기를 안정화합니다.</li>
+<li><span class="math inline">\(\text{softmax}\)</span>: 각 행을 확률 분포로 바꿔, 위치 <span class="math inline">\(i\)</span>가 각 위치에 주는 <strong>어텐션 가중치</strong>를 얻습니다. 한 행의 가중치 합은 1입니다.</li>
+<li><span class="math inline">\(\times V\)</span>: 가중치로 값들을 가중합해, 위치 <span class="math inline">\(i\)</span>의 문맥 반영 표현을 만듭니다.</li>
+</ol>
+<p>이 과정을 위치 하나의 관점에서 다시 정리하면 이해가 분명해집니다. 위치 <span class="math inline">\(i\)</span>는 자신의 쿼리 <span class="math inline">\(\mathbf{q}_i\)</span>를 모든 위치의 키와 비교해 유사도 점수를 얻고, 이를 소프트맥스로 정규화해 가중치 <span class="math inline">\(\alpha_{ij}\)</span>를 만듭니다. 그런 다음 이 가중치로 모든 위치의 값 <span class="math inline">\(\mathbf{v}_j\)</span>를 가중 평균해 자신의 새 표현을 만듭니다. 즉 각 위치는 “나에게 중요한 위치들의 정보를 중요도만큼 모아” 자신을 갱신하는 것입니다. 위치 <span class="math inline">\(i\)</span>의 출력은 명시적으로 다음과 같이 쓸 수 있습니다. 여기서 <span class="math inline">\(\alpha_{ij}\)</span>가 어텐션 가중치입니다.</p>
+<p><span class="math display">\[
+\mathbf{z}_i = \sum_{j=1}^{T}\alpha_{ij}\mathbf{v}_j, \qquad
+\alpha_{ij}=\frac{\exp(\mathbf{q}_i\cdot\mathbf{k}_j/\sqrt{d_k})}{\sum_{j'=1}^{T}\exp(\mathbf{q}_i\cdot\mathbf{k}_{j'}/\sqrt{d_k})}.
+\]</span></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scaled_dot_product_attention(Q, K, V, mask<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    d_k <span class="op">=</span> Q.size(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    scores <span class="op">=</span> Q <span class="op">@</span> K.transpose(<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>) <span class="op">/</span> d_k<span class="op">**</span><span class="fl">0.5</span>   <span class="co"># (..., T, T)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> mask <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        scores <span class="op">=</span> scores.masked_fill(mask <span class="op">==</span> <span class="dv">0</span>, <span class="bu">float</span>(<span class="st">"-inf"</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    weights <span class="op">=</span> F.softmax(scores, dim<span class="op">=-</span><span class="dv">1</span>)           <span class="co"># 어텐션 가중치</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> weights <span class="op">@</span> V, weights</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">16</span>)   <span class="co"># (배치, 길이, d_k)</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">16</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">16</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>out, attn <span class="op">=</span> scaled_dot_product_attention(Q, K, V)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(out.shape, attn.shape)   <span class="co"># (2,5,16) (2,5,5)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="figbody">
+<p><img src="figs/ch4_attention.png" class="img-fluid" style="width:58.0%" alt="어텐션 가중치 행렬 예시"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 4.3</strong> 어텐션 가중치 행렬 <span class="math inline">\(\alpha_{ij}\)</span>의 예시. 각 행은 하나의 쿼리 위치가 모든 키 위치를 얼마나 참고하는지를 나타내며, 한 행의 합은 1입니다(밝을수록 큰 가중치). 이 예시에서는 각 위치가 인접한 위치들과, 특히 2번·9번 위치(중요한 토큰)에 크게 주목하고 있습니다. 이렇게 어텐션 가중치를 시각화하면 모델이 무엇에 주목했는지 해석할 수 있습니다.</p>
+</div>
+</section>
+</section>
+<section id="sec-multihead" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="sec-multihead"><span class="header-section-number">10.4</span> 멀티 헤드 어텐션</h2>
+<p>하나의 어텐션은 한 종류의 관계만 포착합니다. <strong>멀티 헤드 어텐션(multi-head attention)</strong>은 어텐션을 <span class="math inline">\(h\)</span>개 병렬로 두어, 서로 다른 부분 공간에서 서로 다른 관계(예: 문법적 의존, 장거리 상관)를 동시에 학습합니다<span class="citation" data-cites="vaswani2017attention">(<a href="#ref-vaswani2017attention" role="doc-biblioref">Vaswani 기타, 2017</a>)</span>.</p>
+<section id="연산-구조" class="level3" data-number="10.4.1">
+<h3 data-number="10.4.1" class="anchored" data-anchor-id="연산-구조"><span class="header-section-number">10.4.1</span> 연산 구조</h3>
+<p>전체 차원 <span class="math inline">\(d_{\text{model}}\)</span>을 <span class="math inline">\(h\)</span>개 헤드로 나눠 각 헤드가 <span class="math inline">\(d_k=d_{\text{model}}/h\)</span> 차원에서 어텐션을 수행합니다.</p>
+<p><span class="math display">\[
+\text{head}_i = \text{Attention}(QW_i^Q,\, KW_i^K,\, VW_i^V),
+\]</span></p>
+<p><span class="math display">\[
+\text{MultiHead}(Q,K,V) = \text{Concat}(\text{head}_1,\dots,\text{head}_h)\,W^O.
+\]</span></p>
+<p>각 헤드는 독립적인 투영 가중치 <span class="math inline">\(W_i^Q, W_i^K, W_i^V\)</span>로 입력을 자기만의 부분 공간에 사상한 뒤 어텐션을 계산하고, 모든 헤드의 출력을 이어 붙여 최종 투영 <span class="math inline">\(W^O\)</span>를 거칩니다. 스케일드 닷-프로덕트 어텐션과 멀티 헤드 어텐션의 정확한 연산 구조는 그림 4.4와 같습니다.</p>
+<div class="figbody">
+<p><img src="figs/ch4_attention_arch.png" class="img-fluid" style="width:100.0%" alt="스케일드 닷-프로덕트 및 멀티 헤드 어텐션 구조"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 4.4</strong> 어텐션의 연산 구조. (a) 스케일드 닷-프로덕트 어텐션: <span class="math inline">\(Q\)</span>와 <span class="math inline">\(K\)</span>의 내적을 <span class="math inline">\(\sqrt{d_k}\)</span>로 나눈 뒤 소프트맥스를 취하고, 그 가중치로 <span class="math inline">\(V\)</span>를 가중합합니다. (b) 멀티 헤드 어텐션: <span class="math inline">\(Q,K,V\)</span>를 각각 선형 변환해 <span class="math inline">\(h\)</span>개의 헤드로 나누고, 각 헤드에서 (a)의 어텐션을 병렬로 수행한 뒤 이어 붙여(Concat) 최종 선형 변환 <span class="math inline">\(W^O\)</span>를 거칩니다.</p>
+</div>
+<p>여러 헤드가 각자 다른 위치·패턴에 주목하므로, 모델은 하나의 어텐션으로는 담기 어려운 다양한 관계를 병렬로 표현할 수 있습니다.</p>
+<p>멀티 헤드가 필요한 이유를 조금 더 생각해 보겠습니다. 하나의 어텐션은 소프트맥스로 가중치를 만들기 때문에, 사실상 각 위치가 “한 가지 기준”으로 다른 위치들을 바라봅니다. 그러나 언어나 시계열에는 동시에 고려해야 할 관계가 여럿입니다. 예컨대 한 단어는 문법적으로는 앞의 주어와, 의미적으로는 뒤의 목적어와 연결될 수 있습니다. 헤드를 여러 개 두면 어떤 헤드는 문법적 관계에, 어떤 헤드는 의미적 관계에, 어떤 헤드는 장거리 상관에 특화되어, 서로 다른 기준을 병렬로 포착합니다. 각 헤드가 전체 차원을 나눠 쓰므로 계산량은 단일 어텐션과 비슷하게 유지되면서도 표현력은 크게 늘어난다는 점이 이 설계의 묘미입니다. 학습이 끝난 뒤 각 헤드의 어텐션 패턴을 들여다보면, 실제로 헤드마다 역할이 분화되어 있는 것을 관찰할 수 있습니다.</p>
+<div class="keybox">
+<p><strong>핵심.</strong> 셀프 어텐션은 <span class="math inline">\(\text{softmax}(QK^\top/\sqrt{d_k})V\)</span> 하나로 요약됩니다. 각 위치가 쿼리로 모든 위치의 키와 유사도를 재고, 그 가중치로 값을 모읍니다. 순환 없이 임의의 두 위치를 한 번에 연결해 병렬 처리와 장거리 의존성을 동시에 얻는 것이 트랜스포머의 핵심입니다.</p>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn <span class="im">as</span> nn</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultiHeadAttention(nn.Module):</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, d_model<span class="op">=</span><span class="dv">64</span>, num_heads<span class="op">=</span><span class="dv">8</span>):</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> d_model <span class="op">%</span> num_heads <span class="op">==</span> <span class="dv">0</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.h, <span class="va">self</span>.d_k <span class="op">=</span> num_heads, d_model <span class="op">//</span> num_heads</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.Wq <span class="op">=</span> nn.Linear(d_model, d_model)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.Wk <span class="op">=</span> nn.Linear(d_model, d_model)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.Wv <span class="op">=</span> nn.Linear(d_model, d_model)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.Wo <span class="op">=</span> nn.Linear(d_model, d_model)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x, mask<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        B, T, _ <span class="op">=</span> x.shape</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> split(t): <span class="cf">return</span> t.view(B, T, <span class="va">self</span>.h, <span class="va">self</span>.d_k).transpose(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        Q, K, V <span class="op">=</span> split(<span class="va">self</span>.Wq(x)), split(<span class="va">self</span>.Wk(x)), split(<span class="va">self</span>.Wv(x))</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        scores <span class="op">=</span> Q <span class="op">@</span> K.transpose(<span class="op">-</span><span class="dv">2</span>,<span class="op">-</span><span class="dv">1</span>) <span class="op">/</span> <span class="va">self</span>.d_k<span class="op">**</span><span class="fl">0.5</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> mask <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>            scores <span class="op">=</span> scores.masked_fill(mask <span class="op">==</span> <span class="dv">0</span>, <span class="bu">float</span>(<span class="st">"-inf"</span>))</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        A <span class="op">=</span> scores.softmax(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> (A <span class="op">@</span> V).transpose(<span class="dv">1</span>, <span class="dv">2</span>).contiguous().view(B, T, <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.Wo(out)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 파이토치 내장 모듈: nn.MultiheadAttention(embed_dim=64, num_heads=8, batch_first=True)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="sec-ffn" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="sec-ffn"><span class="header-section-number">10.5</span> 위치별 피드포워드와 블록의 완성</h2>
+<p>어텐션 서브층 뒤에는 <strong>위치별 피드포워드 신경망(position-wise feed-forward network)</strong>이 이어집니다. 이는 각 위치의 표현에 <strong>독립적으로 동일하게</strong> 적용되는 두 층짜리 MLP로, 어텐션이 섞어 놓은 정보를 위치마다 비선형으로 가공합니다.</p>
+<p><span class="math display">\[
+\text{FFN}(\mathbf{x}) = \max(0,\ \mathbf{x}W_1 + \mathbf{b}_1)\,W_2 + \mathbf{b}_2.
+\]</span></p>
+<p>보통 중간 차원을 <span class="math inline">\(d_{\text{model}}\)</span>의 네 배 정도로 크게 잡아 표현력을 높입니다. 어텐션이 “위치 간 정보 교환”을 담당한다면, 피드포워드는 “위치 내 정보 변환”을 담당한다고 볼 수 있습니다. 두 서브층이 번갈아 작동하면서, 어텐션으로 모은 정보를 피드포워드가 비선형으로 가공하고, 다시 그 결과를 다음 블록의 어텐션이 섞는 과정이 반복됩니다. 흥미롭게도 트랜스포머 파라미터의 상당 부분이 이 피드포워드 층에 있으며, 최근 연구들은 이 층이 일종의 지식 저장소 역할을 한다고 해석하기도 합니다. 즉 어텐션만큼이나 피드포워드도 트랜스포머의 성능에 중요한 기여를 합니다. 하나의 인코더 블록은 결국 다음 순서로 구성됩니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+    I["입력"] --&gt; A["멀티 헤드 셀프 어텐션"]
+    A --&gt; AN1["Add(잔차) &amp; LayerNorm"]
+    I -.-&gt;|"잔차 연결"| AN1
+    AN1 --&gt; F["위치별 피드포워드"]
+    F --&gt; AN2["Add(잔차) &amp; LayerNorm"]
+    AN1 -.-&gt;|"잔차 연결"| AN2
+    AN2 --&gt; O["출력"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>이 블록을 <span class="math inline">\(N\)</span>개 쌓아 인코더를 만들고, 디코더도 마스크드 어텐션과 인코더-디코더 어텐션을 포함해 유사하게 구성합니다. 잔차 연결과 층 정규화가 각 서브층을 감싸는 이 반복 구조가 트랜스포머의 뼈대입니다.</p>
+<p>잔차 연결과 층 정규화의 역할을 좀 더 짚어 보겠습니다. <strong>잔차 연결</strong>은 서브층의 출력에 그 입력을 더하는 것으로, <span class="math inline">\(\mathbf{x} + \text{Sublayer}(\mathbf{x})\)</span> 형태입니다<span class="citation" data-cites="he2016deep">(<a href="#ref-he2016deep" role="doc-biblioref">He 기타, 2016</a>)</span>. 이렇게 하면 역전파 시 기울기가 서브층을 우회하는 지름길을 갖게 되어, 층을 아주 깊게 쌓아도 기울기 소실 없이 학습할 수 있습니다. 서브층은 “입력을 얼마나 바꿀지(잔차)”만 학습하면 되므로 최적화도 쉬워집니다. <strong>층 정규화</strong>는 각 위치의 특성 벡터를 평균 0, 분산 1로 정규화해 학습을 안정화합니다. 배치 정규화와 달리 배치 크기에 의존하지 않아, 문장 길이가 제각각인 시퀀스 모델에 적합합니다. 이 두 장치 덕분에 트랜스포머는 수십 개의 층을 안정적으로 쌓을 수 있습니다.</p>
+</section>
+<section id="sec-positional-encoding" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="sec-positional-encoding"><span class="header-section-number">10.6</span> 위치 인코딩</h2>
+<p>셀프 어텐션은 위치에 무관하게 모든 쌍을 동등하게 봅니다. 즉 입력 순서를 바꿔도 출력이 같은 <strong>순서 불변</strong> 성질이 있어, 순서 정보를 따로 넣어 주어야 합니다. 이를 위한 것이 <strong>위치 인코딩(positional encoding)</strong>입니다.</p>
+<section id="단순-방식과-그-문제" class="level3" data-number="10.6.1">
+<h3 data-number="10.6.1" class="anchored" data-anchor-id="단순-방식과-그-문제"><span class="header-section-number">10.6.1</span> 단순 방식과 그 문제</h3>
+<p>가장 단순하게는 위치를 정수 <span class="math inline">\(0,1,2,\dots\)</span>로 더할 수 있지만, 값이 무한히 커져 학습이 불안정합니다. 이를 <span class="math inline">\([0,1]\)</span>로 정규화하면 크기 문제는 줄지만, 시퀀스 길이에 따라 인접 위치 간 간격이 달라져 일관성이 없습니다. 따라서 크기가 유한하면서도 위치 간 상대 관계를 일관되게 표현하는 방식이 필요합니다.</p>
+</section>
+<section id="사인코사인-위치-인코딩" class="level3" data-number="10.6.2">
+<h3 data-number="10.6.2" class="anchored" data-anchor-id="사인코사인-위치-인코딩"><span class="header-section-number">10.6.2</span> 사인·코사인 위치 인코딩</h3>
+<p>원 논문은 서로 다른 주파수의 사인·코사인 함수를 사용합니다<span class="citation" data-cites="vaswani2017attention">(<a href="#ref-vaswani2017attention" role="doc-biblioref">Vaswani 기타, 2017</a>)</span>. 위치 <span class="math inline">\(pos\)</span>와 차원 인덱스 <span class="math inline">\(i\)</span>에 대해,</p>
+<p><span class="math display">\[
+PE(pos, 2i) = \sin\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right), \qquad
+PE(pos, 2i+1) = \cos\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right).
+\]</span></p>
+<p>낮은 차원은 빠르게 진동하고 높은 차원은 천천히 진동해, 여러 해상도로 위치를 표현합니다. 이는 마치 시계의 초침·분침·시침이 서로 다른 속도로 돌며 시각을 나타내는 것과 비슷합니다. 여러 주파수의 조합으로 각 위치가 고유한 벡터를 갖게 됩니다.</p>
+<p>이 방식의 뛰어난 점은 <strong>상대 위치</strong>를 자연스럽게 담는다는 것입니다. 사인·코사인의 삼각함수 덧셈 정리에 의해, 어떤 고정 오프셋 <span class="math inline">\(k\)</span>에 대해 <span class="math inline">\(PE(pos+k)\)</span>는 <span class="math inline">\(PE(pos)\)</span>에 회전 행렬을 곱한 형태, 즉 <span class="math inline">\(PE(pos)\)</span>의 선형 변환으로 표현됩니다. 이는 “두 위치가 얼마나 떨어져 있는가”라는 상대적 거리 정보를 모델이 선형 연산만으로 추출할 수 있음을 뜻합니다. 시계열에서 “24시간 전”이나 “일주일 전” 같은 상대적 시차가 중요한데, 이 성질이 그런 주기적 관계를 포착하는 데 도움을 줍니다. 또한 값이 항상 <span class="math inline">\([-1,1]\)</span>에 유계이고, 학습 때 보지 못한 더 긴 시퀀스로도 자연스럽게 외삽할 수 있어, 임의 길이의 입력을 다룰 수 있습니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    T1["토큰 임베딩"] --&gt; ADD(("+"))
+    P1["사인·코사인&lt;br/&gt;위치 인코딩"] --&gt; ADD
+    ADD --&gt; R["위치 정보가 포함된 입력"]
+    style ADD fill:#fde68a
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, math</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sinusoidal_pe(T, d_model):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    pe <span class="op">=</span> torch.zeros(T, d_model)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> torch.arange(T).unsqueeze(<span class="dv">1</span>).<span class="bu">float</span>()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    div <span class="op">=</span> torch.exp(torch.arange(<span class="dv">0</span>, d_model, <span class="dv">2</span>).<span class="bu">float</span>() <span class="op">*</span> (<span class="op">-</span>math.log(<span class="fl">10000.0</span>)<span class="op">/</span>d_model))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    pe[:, <span class="dv">0</span>::<span class="dv">2</span>] <span class="op">=</span> torch.sin(pos <span class="op">*</span> div)   <span class="co"># 짝수 차원: 사인</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    pe[:, <span class="dv">1</span>::<span class="dv">2</span>] <span class="op">=</span> torch.cos(pos <span class="op">*</span> div)   <span class="co"># 홀수 차원: 코사인</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pe                            <span class="co"># (T, d_model)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sinusoidal_pe(<span class="dv">50</span>, <span class="dv">64</span>).shape)       <span class="co"># torch.Size([50, 64])</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="figbody">
+<p><img src="figs/ch4_positional.png" class="img-fluid" style="width:82.0%" alt="사인·코사인 위치 인코딩 히트맵"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 4.5</strong> 사인·코사인 위치 인코딩. 가로축은 임베딩 차원, 세로축은 시퀀스 위치이며 색은 인코딩 값입니다. 낮은 차원(왼쪽)은 위치에 따라 빠르게 진동하고 높은 차원(오른쪽)은 천천히 변합니다. 이렇게 여러 주파수를 조합해 각 위치가 고유한 벡터를 갖게 되며, 서로 다른 위치 사이의 상대적 거리도 자연스럽게 표현됩니다.</p>
+</div>
+</section>
+<section id="학습-가능한-위치-인코딩과-상대-위치" class="level3" data-number="10.6.3">
+<h3 data-number="10.6.3" class="anchored" data-anchor-id="학습-가능한-위치-인코딩과-상대-위치"><span class="header-section-number">10.6.3</span> 학습 가능한 위치 인코딩과 상대 위치</h3>
+<p>위치별 벡터를 파라미터로 두고 <strong>학습</strong>하는 방식도 널리 쓰입니다. BERT가 이 방식을 채택했습니다<span class="citation" data-cites="devlin2019bert">(<a href="#ref-devlin2019bert" role="doc-biblioref">Devlin 기타, 2019</a>)</span>. 데이터에 맞게 최적화되지만, 학습 때 본 최대 길이를 넘어서면 외삽이 어렵습니다. 한편 절대 위치 대신 두 위치의 <strong>상대적 거리</strong>를 인코딩하는 방식<span class="citation" data-cites="shaw2018self">(<a href="#ref-shaw2018self" role="doc-biblioref">Shaw 기타, 2018</a>)</span>과, 회전 변환으로 상대 위치를 주입하는 RoPE<span class="citation" data-cites="su2024roformer">(<a href="#ref-su2024roformer" role="doc-biblioref">Su 기타, 2024</a>)</span>는 긴 시퀀스와 시계열에서 특히 유용합니다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>방식</th>
+<th>장점</th>
+<th>단점</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>사인·코사인(고정)</td>
+<td>외삽 가능, 파라미터 없음</td>
+<td>데이터 적응성 낮음</td>
+</tr>
+<tr class="even">
+<td>학습 가능(절대)</td>
+<td>데이터 적응적</td>
+<td>최대 길이 초과 시 취약</td>
+</tr>
+<tr class="odd">
+<td>상대 위치 / RoPE</td>
+<td>장거리·시계열에 강함</td>
+<td>구현 복잡</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="sec-enc-dec" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="sec-enc-dec"><span class="header-section-number">10.7</span> 인코더와 디코더의 역할</h2>
+<p>인코더와 디코더는 어텐션을 쓰는 방식이 다릅니다.</p>
+<ul>
+<li><strong>인코더</strong>는 입력 시퀀스 전체를 양방향으로 보는 <strong>양방향 셀프 어텐션</strong>을 사용합니다. 각 위치가 앞뒤 문맥을 모두 참조해, 입력을 문맥이 풍부한 표현으로 인코딩합니다. 분류·표현 학습(BERT류)에 적합합니다.</li>
+<li><strong>디코더</strong>는 두 종류의 어텐션을 씁니다. 첫째는 <strong>마스크드 셀프 어텐션</strong>으로, 미래 위치를 가려(<span class="math inline">\(-\infty\)</span>로 마스킹) 현재까지의 출력만 보게 합니다. 이는 예측 시 미래를 미리 보지 못하게 하는 <strong>인과성(causality)</strong>을 강제합니다. 둘째는 <strong>인코더-디코더 어텐션</strong>으로, 디코더의 쿼리가 인코더 출력을 키·값으로 참조해 입력 정보를 가져옵니다.</li>
+</ul>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    subgraph E["인코더"]
+        EA["양방향 셀프 어텐션&lt;br/&gt;(전체 문맥 참조)"]
+    end
+    subgraph D["디코더"]
+        DA["마스크드 셀프 어텐션&lt;br/&gt;(미래 차단, 인과성)"]
+        DC["인코더-디코더 어텐션&lt;br/&gt;(입력 참조)"]
+    end
+    E --&gt;|"키·값"| DC
+    DA --&gt; DC
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>마스킹은 미래 위치의 어텐션 점수를 <span class="math inline">\(-\infty\)</span>로 만들어 소프트맥스 후 가중치를 0으로 보내는 방식으로 구현됩니다. 과제에 따라 인코더만(BERT), 디코더만(GPT), 또는 둘 다(번역, 예측)를 씁니다.</p>
+<p>이 세 가지 구성은 목적이 서로 다릅니다. <strong>인코더만 쓰는 구조</strong>는 입력 전체를 양방향으로 이해하는 데 특화되어, 문장 분류나 표현 학습처럼 입력을 깊이 이해해야 하는 과제에 적합합니다. BERT가 대표적입니다<span class="citation" data-cites="devlin2019bert">(<a href="#ref-devlin2019bert" role="doc-biblioref">Devlin 기타, 2019</a>)</span>. <strong>디코더만 쓰는 구조</strong>는 마스크드 어텐션으로 왼쪽에서 오른쪽으로 다음 토큰을 예측하는 데 특화되어, 텍스트 생성이나 언어 모델링에 쓰입니다. GPT가 대표적입니다<span class="citation" data-cites="radford2019language">(<a href="#ref-radford2019language" role="doc-biblioref">Radford 기타, 2019</a>)</span>. <strong>인코더-디코더 구조</strong>는 입력 시퀀스를 이해해 다른 시퀀스로 변환하는 번역·요약, 그리고 과거 시계열로 미래를 예측하는 과제에 적합합니다. 시계열 예측에서는 인코더로 과거 구간을 요약하고 디코더로 미래 구간을 생성하는 구성을 자주 씁니다. 어떤 구조를 고를지는 결국 “입력을 이해할 것인가, 출력을 생성할 것인가, 둘 다인가”라는 질문에 답하는 데서 결정됩니다.</p>
+</section>
+<section id="sec-complexity" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="sec-complexity"><span class="header-section-number">10.8</span> 순환 신경망과의 계산 비교</h2>
+<p>트랜스포머가 왜 병렬 처리에 유리한지는 계산 복잡도로 명확히 드러납니다. 시퀀스 길이 <span class="math inline">\(L\)</span>, 표현 차원 <span class="math inline">\(d\)</span>에 대해 두 구조를 비교합니다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>항목</th>
+<th>순환 신경망</th>
+<th>셀프 어텐션(트랜스포머)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>층당 계산 복잡도</td>
+<td><span class="math inline">\(O(L\cdot d^2)\)</span></td>
+<td><span class="math inline">\(O(L^2\cdot d)\)</span></td>
+</tr>
+<tr class="even">
+<td>순차 연산 횟수</td>
+<td><span class="math inline">\(O(L)\)</span></td>
+<td><span class="math inline">\(O(1)\)</span></td>
+</tr>
+<tr class="odd">
+<td>두 위치 간 최대 경로 길이</td>
+<td><span class="math inline">\(O(L)\)</span></td>
+<td><span class="math inline">\(O(1)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>핵심은 세 번째 행입니다. 순환 신경망에서 멀리 떨어진 두 시점을 연결하려면 <span class="math inline">\(L\)</span>번의 순차 단계를 거쳐야 하지만, 셀프 어텐션은 임의의 두 위치를 <strong>한 번의 연산으로 직접</strong> 연결합니다. 경로가 짧을수록 기울기가 잘 전달되어 장거리 의존성 학습이 쉬워집니다. 또한 순차 연산이 <span class="math inline">\(O(1)\)</span>이라 시퀀스 전체를 병렬로 처리할 수 있습니다.</p>
+<p>다만 어텐션은 길이의 제곱에 비례하는 <span class="math inline">\(O(L^2)\)</span> 비용을 치릅니다. 모든 위치 쌍의 유사도를 계산해야 하므로, 길이가 두 배가 되면 연산과 메모리가 네 배로 늘어납니다. 시퀀스가 수백 정도인 자연어에서는 큰 문제가 아니지만, 수천~수만 시점에 이르는 긴 시계열에서는 이 제곱 비용이 심각한 병목이 됩니다. 반면 순환 신경망은 길이에 선형으로 비례하는 비용만 듭니다. 따라서 매우 긴 시퀀스에서는 트랜스포머의 병렬성 이점과 제곱 비용 사이에 절충이 필요하며, 이 절충을 개선하려는 시도가 뒤에서 볼 효율적 어텐션 변형들입니다.</p>
+<div class="figbody">
+<p><img src="figs/ch4_complexity.png" class="img-fluid" style="width:64.0%" alt="RNN과 셀프 어텐션의 연산량 비교"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 4.6</strong> 시퀀스 길이에 따른 연산량. 순환 신경망은 길이 <span class="math inline">\(L\)</span>에 선형으로 비례(<span class="math inline">\(O(L)\)</span>)하지만, 셀프 어텐션은 모든 위치 쌍의 유사도를 계산하므로 <span class="math inline">\(L\)</span>의 제곱에 비례(<span class="math inline">\(O(L^2)\)</span>)합니다. 시퀀스가 길어질수록 어텐션의 제곱 비용이 급격히 커져 병목이 됩니다.</p>
+</div>
+</section>
+<section id="sec-attn-interpret" class="level2" data-number="10.9">
+<h2 data-number="10.9" class="anchored" data-anchor-id="sec-attn-interpret"><span class="header-section-number">10.9</span> 어텐션의 해석 가능성</h2>
+<p>셀프 어텐션의 부수적 장점은 <strong>해석 가능성</strong>입니다. 순환 신경망의 은닉 상태는 정보가 뒤섞여 있어 해석하기 어렵지만, 어텐션 가중치 행렬 <span class="math inline">\(\alpha_{ij}\)</span>는 “위치 <span class="math inline">\(i\)</span>가 위치 <span class="math inline">\(j\)</span>를 얼마나 참고했는가”를 직접 보여 줍니다. 이를 히트맵으로 시각화하면, 모델이 예측에 어떤 시점을 근거로 삼았는지 살필 수 있습니다. 예컨대 전력 수요 예측에서 모델이 24시간 전 같은 시각이나 일주일 전 같은 요일에 큰 가중치를 준다면, 일간·주간 주기성을 포착했다고 해석할 수 있습니다. 다만 어텐션 가중치가 곧 인과적 중요도라고 단정하기는 어려우며, 해석은 보조적 근거로 신중하게 사용해야 합니다.</p>
+</section>
+<section id="sec-transformer-training" class="level2" data-number="10.10">
+<h2 data-number="10.10" class="anchored" data-anchor-id="sec-transformer-training"><span class="header-section-number">10.10</span> 트랜스포머 학습의 실제</h2>
+<p>트랜스포머는 강력하지만 학습이 까다로운 편이라, 안정적으로 훈련하기 위한 몇 가지 정형화된 기법이 함께 발전했습니다. 이 기법들은 2장에서 배운 최적화·정규화 개념의 구체적 적용이기도 합니다.</p>
+<p>첫째, <strong>학습률 워밍업</strong>이 거의 필수입니다. 학습 초기에 층 정규화와 어텐션이 아직 안정되지 않은 상태에서 큰 학습률을 쓰면 발산하기 쉽습니다. 그래서 처음 수천 스텝 동안 학습률을 0에서 서서히 올린 뒤 점차 줄이는 방식을 씁니다. 정규화를 블록 앞에 두는 Pre-LN 구조를 쓰면 워밍업 없이도 비교적 안정적으로 학습된다는 연구도 있습니다<span class="citation" data-cites="xiong2020layer">(<a href="#ref-xiong2020layer" role="doc-biblioref">Xiong 기타, 2020</a>)</span>.</p>
+<p>둘째, <strong>드롭아웃</strong>을 여러 위치에 적용합니다. 어텐션 가중치, 각 서브층의 출력, 그리고 임베딩과 위치 인코딩의 합 등에 드롭아웃을 걸어 과적합을 막습니다. 셋째, <strong>라벨 스무딩(label smoothing)</strong>을 자주 씁니다. 정답 라벨을 1과 0의 극단이 아니라 0.9와 작은 값들로 부드럽게 만들어, 모델이 지나치게 확신하는 것을 막고 일반화를 돕습니다.</p>
+<p>넷째, 트랜스포머는 파라미터가 많아 <strong>대규모 데이터와 사전학습</strong>의 이점을 크게 받습니다. 대량의 데이터로 일반적인 표현을 미리 학습한 뒤, 목표 과제에 맞춰 미세조정하는 전이학습 패러다임이 BERT와 GPT의 성공을 이끌었습니다. 데이터가 적은 상황에서는 트랜스포머가 순환 신경망보다 오히려 불리할 수 있으므로, 데이터 규모를 함께 고려해 모델을 선택해야 합니다.</p>
+</section>
+<section id="sec-transformer-ts" class="level2" data-number="10.11">
+<h2 data-number="10.11" class="anchored" data-anchor-id="sec-transformer-ts"><span class="header-section-number">10.11</span> 트랜스포머를 시계열 예측에 적용하기</h2>
+<p>트랜스포머를 시계열에 적용하는 기본 아이디어는, 각 시점(또는 시점 구간)을 하나의 토큰처럼 다루고 위치 인코딩으로 시간 순서를 주입하는 것입니다. 예를 들어 여러 센서를 가진 IoT 설비 데이터나 전력 수요 같은 다변량 시계열에서, 과거 <span class="math inline">\(L\)</span>개 시점을 입력해 미래 <span class="math inline">\(H\)</span>개 시점을 예측하는 인코더 기반 회귀 모델을 구성할 수 있습니다.</p>
+<p>다만 자연어와 달리 시계열에는 몇 가지 고유한 고려사항이 있습니다. 첫째, 시계열의 각 시점은 이산 토큰이 아니라 연속적인 실수 값(또는 여러 채널의 벡터)이므로, 먼저 선형 변환으로 모델 차원 <span class="math inline">\(d_{\text{model}}\)</span>의 벡터로 사상하는 임베딩 단계가 필요합니다. 둘째, 시계열은 스케일이 채널마다 다르고 분포가 시간에 따라 변하는 경우가 많아, 입력 정규화가 성능에 큰 영향을 줍니다. 최근 모델들은 각 입력 구간을 정규화했다가 출력에서 되돌리는 기법으로 분포 이동에 대응합니다. 셋째, 예측은 인과적이어야 하므로, 미래 시점을 참조하지 않도록 주의해 설계해야 합니다. 이런 이유로 시계열 전용 트랜스포머들은 표준 구조를 그대로 쓰기보다 시계열의 특성에 맞게 변형합니다.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, torch.nn <span class="im">as</span> nn, math</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TSTransformer(nn.Module):</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""과거 L시점(다변량) → 미래 H시점 예측 (인코더 기반)"""</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, n_feat<span class="op">=</span><span class="dv">1</span>, d_model<span class="op">=</span><span class="dv">64</span>, nhead<span class="op">=</span><span class="dv">8</span>, layers<span class="op">=</span><span class="dv">3</span>, horizon<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.input_proj <span class="op">=</span> nn.Linear(n_feat, d_model)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        enc <span class="op">=</span> nn.TransformerEncoderLayer(d_model, nhead, batch_first<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                                         dim_feedforward<span class="op">=</span><span class="dv">128</span>, dropout<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.encoder <span class="op">=</span> nn.TransformerEncoder(enc, num_layers<span class="op">=</span>layers)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.head <span class="op">=</span> nn.Linear(d_model, horizon)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.d_model <span class="op">=</span> d_model</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _pe(<span class="va">self</span>, T, device):</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        pe <span class="op">=</span> torch.zeros(T, <span class="va">self</span>.d_model, device<span class="op">=</span>device)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        pos <span class="op">=</span> torch.arange(T, device<span class="op">=</span>device).unsqueeze(<span class="dv">1</span>).<span class="bu">float</span>()</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        div <span class="op">=</span> torch.exp(torch.arange(<span class="dv">0</span>, <span class="va">self</span>.d_model, <span class="dv">2</span>, device<span class="op">=</span>device).<span class="bu">float</span>()</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                        <span class="op">*</span> (<span class="op">-</span>math.log(<span class="fl">10000.0</span>)<span class="op">/</span><span class="va">self</span>.d_model))</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        pe[:, <span class="dv">0</span>::<span class="dv">2</span>] <span class="op">=</span> torch.sin(pos<span class="op">*</span>div)<span class="op">;</span> pe[:, <span class="dv">1</span>::<span class="dv">2</span>] <span class="op">=</span> torch.cos(pos<span class="op">*</span>div)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pe</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):                 <span class="co"># x: (B, L, n_feat)</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="va">self</span>.input_proj(x)            <span class="co"># (B, L, d_model)</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> h <span class="op">+</span> <span class="va">self</span>._pe(h.size(<span class="dv">1</span>), h.device)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="va">self</span>.encoder(h)               <span class="co"># (B, L, d_model)</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.head(h[:, <span class="op">-</span><span class="dv">1</span>, :])     <span class="co"># (B, horizon)</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> TSTransformer(n_feat<span class="op">=</span><span class="dv">3</span>, horizon<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.randn(<span class="dv">8</span>, <span class="dv">48</span>, <span class="dv">3</span>)                 <span class="co"># 배치8, 과거48시점, 특성3</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model(x).shape)                     <span class="co"># torch.Size([8, 5])</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이 구조에서 셀프 어텐션은 예측에 중요한 과거 시점(예: 하루 전 같은 시각, 주기적 피크)을 자동으로 골라 가중합합니다. 어텐션 가중치를 시각화하면 모델이 어떤 시점을 참고했는지 해석할 수도 있어, 예측의 근거를 살피는 데 유용합니다.</p>
+</section>
+<section id="sec-ts-transformers" class="level2" data-number="10.12">
+<h2 data-number="10.12" class="anchored" data-anchor-id="sec-ts-transformers"><span class="header-section-number">10.12</span> 시계열을 위한 트랜스포머 변형 모델</h2>
+<p>표준 트랜스포머를 긴 시계열에 그대로 쓰면 두 가지 문제가 있습니다. 첫째, 셀프 어텐션의 계산·메모리 비용이 시퀀스 길이 <span class="math inline">\(L\)</span>에 대해 <span class="math inline">\(O(L^2)\)</span>로 커집니다. 장기 예측을 위해 긴 과거를 입력하려면 이 비용이 감당하기 어려워집니다. 둘째, 표준 어텐션은 모든 위치를 동등하게 보므로, 시계열 특유의 추세·계절성 같은 구조를 명시적으로 다루지 못합니다. 이 두 문제를 해결하려는 변형 모델들이 시계열 예측 분야에서 활발히 제안되어 왔으며, 크게 효율적 어텐션 계열과 시계열 분해 결합 계열로 나눌 수 있습니다<span class="citation" data-cites="wen2023transformers">(<a href="#ref-wen2023transformers" role="doc-biblioref">Wen 기타, 2023</a>)</span>.</p>
+<div class="figbody">
+<p><img src="figs/ch4_ts_transformer_ours.png" class="img-fluid" style="width:96.0%" alt="시계열 트랜스포머 계보"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 4.7</strong> 시계열 트랜스포머의 계보. 표준 트랜스포머(2017)의 이차 복잡도와 시계열 특성을 겨냥해 네 방향으로 변형이 발전했습니다. <strong>효율적 어텐션</strong>(LogSparse·Informer·Pyraformer)은 <span class="math inline">\(O(L^2)\)</span> 비용을 낮추고, <strong>시계열 분해 결합</strong>(Autoformer·FEDformer)은 추세·계절성을 명시적으로 다루며, <strong>표현·패치화</strong>(PatchTST)는 여러 시점을 패치 토큰으로 묶고, <strong>해석·불확실성</strong>(TFT)은 해석 가능성과 다지평 예측을 겨냥합니다.</p>
+</div>
+<ul>
+<li><strong>효율적 어텐션 계열</strong>: LogSparse Transformer는 희소 어텐션으로 비용을 줄였고<span class="citation" data-cites="li2019enhancing">(<a href="#ref-li2019enhancing" role="doc-biblioref">Li 기타, 2019</a>)</span>, <strong>Informer</strong>는 ProbSparse 어텐션으로 긴 시퀀스 예측을 <span class="math inline">\(O(L\log L)\)</span>로 낮췄습니다<span class="citation" data-cites="zhou2021informer">(<a href="#ref-zhou2021informer" role="doc-biblioref">Zhou 기타, 2021</a>)</span>. Pyraformer는 피라미드형 어텐션으로 다중 해상도를 저비용으로 다룹니다<span class="citation" data-cites="liu2022pyraformer">(<a href="#ref-liu2022pyraformer" role="doc-biblioref">Liu 기타, 2022</a>)</span>. 일반 도메인의 Reformer<span class="citation" data-cites="kitaev2020reformer">(<a href="#ref-kitaev2020reformer" role="doc-biblioref">Kitaev 기타, 2020</a>)</span>, Longformer<span class="citation" data-cites="beltagy2020longformer">(<a href="#ref-beltagy2020longformer" role="doc-biblioref">Beltagy 기타, 2020</a>)</span>, Sparse Transformer<span class="citation" data-cites="child2019generating">(<a href="#ref-child2019generating" role="doc-biblioref">Child 기타, 2019</a>)</span>도 같은 계열의 아이디어입니다.</li>
+<li><strong>시계열 분해 결합 계열</strong>: <strong>Autoformer</strong>는 시계열을 추세와 계절 성분으로 분해하고 자기상관 기반 어텐션을 사용합니다<span class="citation" data-cites="wu2021autoformer">(<a href="#ref-wu2021autoformer" role="doc-biblioref">Wu 기타, 2021</a>)</span>. <strong>FEDformer</strong>는 주파수 영역에서 어텐션을 수행해 효율과 정확도를 함께 얻습니다<span class="citation" data-cites="zhou2022fedformer">(<a href="#ref-zhou2022fedformer" role="doc-biblioref">Zhou 기타, 2022</a>)</span>.</li>
+<li><strong>표현·패치화 계열</strong>: <strong>PatchTST</strong>는 시계열을 여러 시점으로 이루어진 패치 단위 토큰으로 잘라 처리해, 지역 패턴을 잘 담고 긴 예측에서 강한 성능을 보입니다<span class="citation" data-cites="nie2023time">(<a href="#ref-nie2023time" role="doc-biblioref">Nie 기타, 2023</a>)</span>.</li>
+<li><strong>해석 가능·다지평 계열</strong>: <strong>Temporal Fusion Transformer(TFT)</strong>는 정적 변수와 시변 변수를 함께 다루고 변수 선택·어텐션 해석을 제공해, 예측뿐 아니라 “무엇이 예측에 기여했는가”까지 설명합니다<span class="citation" data-cites="lim2021temporal">(<a href="#ref-lim2021temporal" role="doc-biblioref">Lim 기타, 2021</a>)</span>.</li>
+</ul>
+<p>한편, 이런 복잡한 트랜스포머가 단순한 선형 모델보다 항상 낫지는 않다는 비판적 연구도 있습니다. DLinear는 간단한 분해+선형 구조로 여러 벤치마크에서 경쟁력 있는 결과를 보여, 모델 선택 시 단순 기준선과의 비교가 중요함을 일깨웁니다<span class="citation" data-cites="zeng2023transformers">(<a href="#ref-zeng2023transformers" role="doc-biblioref">Zeng 기타, 2023</a>)</span>. 초기 합성곱 기반 시퀀스 모델<span class="citation" data-cites="gehring2017convolutional">(<a href="#ref-gehring2017convolutional" role="doc-biblioref">Gehring 기타, 2017</a>)</span>까지 포함해, 시퀀스 모델링에는 다양한 대안이 공존합니다. 실무에서는 데이터 규모·예측 지평·해석 요구를 고려해 여러 후보를 비교하는 것이 바람직합니다. 트랜스포머가 강력한 도구인 것은 분명하지만, 항상 정답은 아니며 문제의 성격에 맞는 모델을 실증적으로 선택하는 태도가 중요합니다. 결국 3장의 순환 신경망과 4장의 트랜스포머는 시계열을 다루는 서로 다른 강점을 가진 두 축이며, 데이터와 과제에 따라 이 둘 사이에서, 또는 둘의 결합에서 최적의 해법을 찾게 됩니다.</p>
+
+
+</section>
+<section id="bibliography" class="level1 unnumbered">
+<h1 class="unnumbered">참고문헌</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="1" role="list">
+<div id="ref-ba2016layer" class="csl-entry" role="listitem">
+J. L. Ba, J. R. Kiros, &amp; G. E. Hinton. 2016. <span>“Layer normalization”</span>. <em>arXiv preprint arXiv:1607.06450</em>.
+</div>
+<div id="ref-bahdanau2015neural" class="csl-entry" role="listitem">
+D. Bahdanau, K. Cho, &amp; Y. Bengio. 2015. <span>“Neural machine translation by jointly learning to align and translate”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+</div>
+<div id="ref-beltagy2020longformer" class="csl-entry" role="listitem">
+I. Beltagy, M. E. Peters, &amp; A. Cohan. 2020. <span>“Longformer: The long-document transformer”</span>. <em>arXiv preprint arXiv:2004.05150</em>.
+</div>
+<div id="ref-child2019generating" class="csl-entry" role="listitem">
+R. Child, S. Gray, A. Radford, &amp; I. Sutskever. 2019. <span>“Generating long sequences with sparse transformers”</span>. <em>arXiv preprint arXiv:1904.10509</em>.
+</div>
+<div id="ref-devlin2019bert" class="csl-entry" role="listitem">
+J. Devlin, M.-W. Chang, K. Lee, &amp; K. Toutanova. 2019. <span>“BERT: Pre-training of deep bidirectional transformers for language understanding”</span>. <em>Conference of the North American Chapter of the Association for Computational Linguistics (NAACL)</em>, pp. 4171–4186.
+</div>
+<div id="ref-dosovitskiy2021image" class="csl-entry" role="listitem">
+A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, &amp; others. 2021. <span>“An image is worth 16x16 words: Transformers for image recognition at scale”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+</div>
+<div id="ref-gehring2017convolutional" class="csl-entry" role="listitem">
+J. Gehring, M. Auli, D. Grangier, D. Yarats, &amp; Y. N. Dauphin. 2017. <span>“Convolutional sequence to sequence learning”</span>. <em>International Conference on Machine Learning (ICML)</em>, pp. 1243–1252.
+</div>
+<div id="ref-he2016deep" class="csl-entry" role="listitem">
+K. He, X. Zhang, S. Ren, &amp; J. Sun. 2016. <span>“Deep residual learning for image recognition”</span>. <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>, pp. 770–778.
+</div>
+<div id="ref-kitaev2020reformer" class="csl-entry" role="listitem">
+N. Kitaev, Ł. Kaiser, &amp; A. Levskaya. 2020. <span>“Reformer: The efficient transformer”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+</div>
+<div id="ref-li2019enhancing" class="csl-entry" role="listitem">
+S. Li, X. Jin, Y. Xuan, X. Zhou, W. Chen, Y.-X. Wang, &amp; X. Yan. 2019. <span>“Enhancing the locality and breaking the memory bottleneck of transformer on time series forecasting”</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
+</div>
+<div id="ref-lim2021temporal" class="csl-entry" role="listitem">
+B. Lim, S. Ö. Arık, N. Loeff, &amp; T. Pfister. 2021. <span>“Temporal fusion transformers for interpretable multi-horizon time series forecasting”</span>. <em>International Journal of Forecasting</em>, vol 37, pp. 1748–1764.
+</div>
+<div id="ref-liu2022pyraformer" class="csl-entry" role="listitem">
+S. Liu, H. Yu, C. Liao, J. Li, W. Lin, A. X. Liu, &amp; S. Dustdar. 2022. <span>“Pyraformer: Low-complexity pyramidal attention for long-range time series modeling and forecasting”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+</div>
+<div id="ref-luong2015effective" class="csl-entry" role="listitem">
+M.-T. Luong, H. Pham, &amp; C. D. Manning. 2015. <span>“Effective approaches to attention-based neural machine translation”</span>. <em>Conference on Empirical Methods in Natural Language Processing (EMNLP)</em>, pp. 1412–1421.
+</div>
+<div id="ref-nie2023time" class="csl-entry" role="listitem">
+Y. Nie, N. H. Nguyen, P. Sinthong, &amp; J. Kalagnanam. 2023. <span>“A time series is worth 64 words: Long-term forecasting with transformers”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+</div>
+<div id="ref-radford2019language" class="csl-entry" role="listitem">
+A. Radford, J. Wu, R. Child, D. Luan, D. Amodei, &amp; I. Sutskever. 2019. <span>“Language models are unsupervised multitask learners”</span>. <em>OpenAI Technical Report</em>.
+</div>
+<div id="ref-shaw2018self" class="csl-entry" role="listitem">
+P. Shaw, J. Uszkoreit, &amp; A. Vaswani. 2018. <span>“Self-attention with relative position representations”</span>. <em>Conference of the North American Chapter of the Association for Computational Linguistics (NAACL)</em>, pp. 464–468.
+</div>
+<div id="ref-su2024roformer" class="csl-entry" role="listitem">
+J. Su, M. Ahmed, Y. Lu, S. Pan, W. Bo, &amp; Y. Liu. 2024. <span>“RoFormer: Enhanced transformer with rotary position embedding”</span>. <em>Neurocomputing</em>, vol 568, pp. 127063.
+</div>
+<div id="ref-vaswani2017attention" class="csl-entry" role="listitem">
+A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, Ł. Kaiser, &amp; I. Polosukhin. 2017. <span>“Attention is all you need”</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
+</div>
+<div id="ref-wen2023transformers" class="csl-entry" role="listitem">
+Q. Wen, T. Zhou, C. Zhang, W. Chen, Z. Ma, J. Yan, &amp; L. Sun. 2023. <span>“Transformers in time series: A survey”</span>. <em>International Joint Conference on Artificial Intelligence (IJCAI)</em>.
+</div>
+<div id="ref-wu2021autoformer" class="csl-entry" role="listitem">
+H. Wu, J. Xu, J. Wang, &amp; M. Long. 2021. <span>“Autoformer: Decomposition transformers with auto-correlation for long-term series forecasting”</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
+</div>
+<div id="ref-xiong2020layer" class="csl-entry" role="listitem">
+R. Xiong, Y. Yang, D. He, K. Zheng, S. Zheng, &amp; others. 2020. <span>“On layer normalization in the transformer architecture”</span>. <em>International Conference on Machine Learning (ICML)</em>, pp. 10524–10533.
+</div>
+<div id="ref-zeng2023transformers" class="csl-entry" role="listitem">
+A. Zeng, M. Chen, L. Zhang, &amp; Q. Xu. 2023. <span>“Are transformers effective for time series forecasting?”</span> <em>AAAI Conference on Artificial Intelligence</em>, pp. 11121–11128.
+</div>
+<div id="ref-zhou2021informer" class="csl-entry" role="listitem">
+H. Zhou, S. Zhang, J. Peng, S. Zhang, J. Li, H. Xiong, &amp; W. Zhang. 2021. <span>“Informer: Beyond efficient transformer for long sequence time-series forecasting”</span>. <em>AAAI Conference on Artificial Intelligence</em>, pp. 11106–11115.
+</div>
+<div id="ref-zhou2022fedformer" class="csl-entry" role="listitem">
+T. Zhou, Z. Ma, Q. Wen, X. Wang, L. Sun, &amp; R. Jin. 2022. <span>“FEDformer: Frequency enhanced decomposed transformer for long-term series forecasting”</span>. <em>International Conference on Machine Learning (ICML)</em>, pp. 27268–27286.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".quiz-item input[type='checkbox']").forEach((box) => {
+    box.disabled = false;
+    box.removeAttribute("disabled");
+  });
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "복사완료!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "복사완료!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./week03-lab.html" class="pagination-link" aria-label="3주차 코딩 실습">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">3주차 코딩 실습</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./week04-quiz.html" class="pagination-link" aria-label="4주차 연습문제">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">4주차 연습문제</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>AI 모델링 실습</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>2026-2학기</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

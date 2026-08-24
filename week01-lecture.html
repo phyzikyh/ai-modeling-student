@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; AI 모델 학습 개요 – AI 모델링 실습 · 학생용</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 1em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week01-quiz.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-dc2f893ab7b818674e6dd1532d8eda25.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색",
+    "search-label": "검색"
+  }
+}</script>
+<meta name="mermaid-theme" content="default">
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="사이드바 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week01-lecture.html">1주차 · AI 모델 학습 개요</a></li><li class="breadcrumb-item"><a href="./week01-lecture.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">AI 모델 학습 개요</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="사이드바 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="검색" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">AI 모델링 실습 · 학생용</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="검색"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">머리말</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">1주차 · AI 모델 학습 개요</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01-lecture.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">AI 모델 학습 개요</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">1주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">1주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">2주차 · 모델 학습 기본 개념</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">모델 학습 기본 개념</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">2주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">2주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">3주차 · RNN·LSTM·GRU 기반 시계열 모델링</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">RNN·LSTM·GRU 기반 시계열 모델링</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">3주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">3주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">4주차 · Transformer 기반 시계열 모델링</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Transformer 기반 시계열 모델링</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">4주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">4주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">5주차 · CNN 기반 이미지 분류와 전이학습</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week05-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">CNN 기반 이미지 분류와 전이학습</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week05-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">5주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week05-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">5주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">6주차 · 객체탐지와 최신 이미지 모델</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week06-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">객체탐지와 최신 이미지 모델</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">7주차 · 생성 모델 입문</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week07-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">생성 모델 입문</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#sec-what-is-training" id="toc-sec-what-is-training" class="nav-link active" data-scroll-target="#sec-what-is-training"><span class="header-section-number">1.1</span> 모델 학습이란 무엇인가</a></li>
+  <li><a href="#sec-env" id="toc-sec-env" class="nav-link" data-scroll-target="#sec-env"><span class="header-section-number">1.2</span> 딥러닝 개발 환경 구성</a>
+  <ul class="collapse">
+  <li><a href="#gpu-계산-스택의-계층-구조" id="toc-gpu-계산-스택의-계층-구조" class="nav-link" data-scroll-target="#gpu-계산-스택의-계층-구조"><span class="header-section-number">1.2.1</span> GPU 계산 스택의 계층 구조</a></li>
+  <li><a href="#nvidia-드라이버-설치와-확인" id="toc-nvidia-드라이버-설치와-확인" class="nav-link" data-scroll-target="#nvidia-드라이버-설치와-확인"><span class="header-section-number">1.2.2</span> NVIDIA 드라이버 설치와 확인</a></li>
+  <li><a href="#아나콘다-가상환경-생성과-파이토치-설치" id="toc-아나콘다-가상환경-생성과-파이토치-설치" class="nav-link" data-scroll-target="#아나콘다-가상환경-생성과-파이토치-설치"><span class="header-section-number">1.2.3</span> 아나콘다 가상환경 생성과 파이토치 설치</a></li>
+  </ul></li>
+  <li><a href="#sec-array-tensor" id="toc-sec-array-tensor" class="nav-link" data-scroll-target="#sec-array-tensor"><span class="header-section-number">1.3</span> 넘파이 배열과 파이토치 텐서</a>
+  <ul class="collapse">
+  <li><a href="#생성과-기본-속성" id="toc-생성과-기본-속성" class="nav-link" data-scroll-target="#생성과-기본-속성"><span class="header-section-number">1.3.1</span> 생성과 기본 속성</a></li>
+  <li><a href="#인덱싱슬라이싱모양-변경" id="toc-인덱싱슬라이싱모양-변경" class="nav-link" data-scroll-target="#인덱싱슬라이싱모양-변경"><span class="header-section-number">1.3.2</span> 인덱싱·슬라이싱·모양 변경</a></li>
+  <li><a href="#텐서의-내부-구조-저장소와-스트라이드" id="toc-텐서의-내부-구조-저장소와-스트라이드" class="nav-link" data-scroll-target="#텐서의-내부-구조-저장소와-스트라이드"><span class="header-section-number">1.3.3</span> 텐서의 내부 구조: 저장소와 스트라이드</a></li>
+  <li><a href="#메모리-공유-뷰와-복사" id="toc-메모리-공유-뷰와-복사" class="nav-link" data-scroll-target="#메모리-공유-뷰와-복사"><span class="header-section-number">1.3.4</span> 메모리 공유: 뷰와 복사</a></li>
+  </ul></li>
+  <li><a href="#sec-numpy-linalg" id="toc-sec-numpy-linalg" class="nav-link" data-scroll-target="#sec-numpy-linalg"><span class="header-section-number">1.4</span> 넘파이를 활용한 선형 연산</a>
+  <ul class="collapse">
+  <li><a href="#노름과-거리-그리고-그-의미" id="toc-노름과-거리-그리고-그-의미" class="nav-link" data-scroll-target="#노름과-거리-그리고-그-의미"><span class="header-section-number">1.4.1</span> 노름과 거리, 그리고 그 의미</a></li>
+  </ul></li>
+  <li><a href="#sec-tensor-linalg" id="toc-sec-tensor-linalg" class="nav-link" data-scroll-target="#sec-tensor-linalg"><span class="header-section-number">1.5</span> 텐서를 활용한 선형 연산</a></li>
+  <li><a href="#sec-broadcasting" id="toc-sec-broadcasting" class="nav-link" data-scroll-target="#sec-broadcasting"><span class="header-section-number">1.6</span> 브로드캐스팅과 2차원 연산 비교</a></li>
+  <li><a href="#sec-device" id="toc-sec-device" class="nav-link" data-scroll-target="#sec-device"><span class="header-section-number">1.7</span> CPU와 GPU, 그리고 장치 이동</a>
+  <ul class="collapse">
+  <li><a href="#gpu-메모리와-성능-고려사항" id="toc-gpu-메모리와-성능-고려사항" class="nav-link" data-scroll-target="#gpu-메모리와-성능-고려사항"><span class="header-section-number">1.7.1</span> GPU 메모리와 성능 고려사항</a></li>
+  <li><a href="#자료형과-재현성" id="toc-자료형과-재현성" class="nav-link" data-scroll-target="#자료형과-재현성"><span class="header-section-number">1.7.2</span> 자료형과 재현성</a></li>
+  </ul></li>
+  <li><a href="#sec-autograd" id="toc-sec-autograd" class="nav-link" data-scroll-target="#sec-autograd"><span class="header-section-number">1.8</span> 자동미분 맛보기</a>
+  <ul class="collapse">
+  <li><a href="#계산-그래프와-리프-텐서" id="toc-계산-그래프와-리프-텐서" class="nav-link" data-scroll-target="#계산-그래프와-리프-텐서"><span class="header-section-number">1.8.1</span> 계산 그래프와 리프 텐서</a></li>
+  <li><a href="#기울기-추적을-멈추는-방법" id="toc-기울기-추적을-멈추는-방법" class="nav-link" data-scroll-target="#기울기-추적을-멈추는-방법"><span class="header-section-number">1.8.2</span> 기울기 추적을 멈추는 방법</a></li>
+  </ul></li>
+  <li><a href="#sec-training-loop" id="toc-sec-training-loop" class="nav-link" data-scroll-target="#sec-training-loop"><span class="header-section-number">1.9</span> 학습 루프 템플릿: 이진 분류 MLP</a>
+  <ul class="collapse">
+  <li><a href="#전체-학습-파이프라인" id="toc-전체-학습-파이프라인" class="nav-link" data-scroll-target="#전체-학습-파이프라인"><span class="header-section-number">1.9.1</span> 전체 학습 파이프라인</a></li>
+  <li><a href="#문제와-데이터-정의" id="toc-문제와-데이터-정의" class="nav-link" data-scroll-target="#문제와-데이터-정의"><span class="header-section-number">1.9.2</span> 문제와 데이터 정의</a></li>
+  <li><a href="#dataset과-dataloader" id="toc-dataset과-dataloader" class="nav-link" data-scroll-target="#dataset과-dataloader"><span class="header-section-number">1.9.3</span> Dataset과 DataLoader</a></li>
+  <li><a href="#mlp-모델-정의" id="toc-mlp-모델-정의" class="nav-link" data-scroll-target="#mlp-모델-정의"><span class="header-section-number">1.9.4</span> MLP 모델 정의</a></li>
+  <li><a href="#손실-함수옵티마이저학습률-스케줄러" id="toc-손실-함수옵티마이저학습률-스케줄러" class="nav-link" data-scroll-target="#손실-함수옵티마이저학습률-스케줄러"><span class="header-section-number">1.9.5</span> 손실 함수·옵티마이저·학습률 스케줄러</a></li>
+  <li><a href="#학습검증테스트-루프" id="toc-학습검증테스트-루프" class="nav-link" data-scroll-target="#학습검증테스트-루프"><span class="header-section-number">1.9.6</span> 학습·검증·테스트 루프</a></li>
+  <li><a href="#템플릿을-다른-문제로-확장하기" id="toc-템플릿을-다른-문제로-확장하기" class="nav-link" data-scroll-target="#템플릿을-다른-문제로-확장하기"><span class="header-section-number">1.9.7</span> 템플릿을 다른 문제로 확장하기</a></li>
+  <li><a href="#배치스텝에폭과-학습-동역학" id="toc-배치스텝에폭과-학습-동역학" class="nav-link" data-scroll-target="#배치스텝에폭과-학습-동역학"><span class="header-section-number">1.9.8</span> 배치·스텝·에폭과 학습 동역학</a></li>
+  </ul></li>
+  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">참고문헌</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week01-lecture.html">1주차 · AI 모델 학습 개요</a></li><li class="breadcrumb-item"><a href="./week01-lecture.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">AI 모델 학습 개요</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-ch1" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">AI 모델 학습 개요</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<p>이 장에서는 딥러닝을 실습하기 위한 개발 환경을 갖추고, 넘파이 배열과 파이토치 텐서로 수치 연산을 다루는 방법을 익힙니다. 이어서 CPU와 GPU의 차이를 이해하고 데이터를 GPU로 올리는 방법을 배운 뒤, 이진 분류 다층 퍼셉트론(MLP)을 학습시키는 <strong>재사용 가능한 학습 루프 템플릿</strong>을 완성합니다. 이 템플릿은 앞으로 모든 장에서 뼈대로 재사용됩니다.</p>
+</blockquote>
+<section id="sec-what-is-training" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="sec-what-is-training"><span class="header-section-number">1.1</span> 모델 학습이란 무엇인가</h2>
+<p>본격적인 실습에 앞서, “모델을 학습시킨다”는 말의 의미를 분명히 해 둘 필요가 있습니다. 인공지능 모델은 결국 입력을 출력으로 바꾸는 하나의 <strong>함수</strong>입니다. 예컨대 사진을 받아 개인지 고양이인지 확률을 내놓거나, 과거 기온을 받아 내일 기온을 예측하는 함수입니다. 이 함수의 동작은 수많은 <strong>파라미터(가중치)</strong>에 의해 결정되는데, 학습이란 이 파라미터를 데이터에 맞게 조정해, 함수가 원하는 입출력 관계를 잘 흉내 내도록 만드는 과정입니다.</p>
+<p>이 과정은 세 가지 요소로 이루어집니다. 첫째는 <strong>모델</strong>로, 어떤 형태의 함수를 쓸지 정하는 구조입니다. 둘째는 <strong>손실 함수</strong>로, 현재 함수의 예측이 정답과 얼마나 다른지를 하나의 숫자로 재는 척도입니다. 셋째는 <strong>최적화</strong>로, 손실을 줄이는 방향으로 파라미터를 조금씩 바꾸는 절차입니다. 이 셋이 맞물려, 처음에는 아무렇게나 초기화된 함수가 데이터를 반복해 보면서 점점 정답에 가까운 함수로 변해 갑니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    D["데이터 (입력, 정답)"] --&gt; M["모델 (함수)"]
+    M --&gt; P["예측"]
+    P --&gt; L["손실 함수 (예측 vs 정답)"]
+    L --&gt; O["최적화 (파라미터 조정)"]
+    O -.-&gt;|"반복"| M
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>딥러닝이 특별한 이유는, 이 함수를 여러 층으로 깊게 쌓아 데이터로부터 <strong>유용한 표현까지 스스로 학습</strong>한다는 점입니다. 사람이 일일이 특징을 설계하던 전통적 방식과 달리, 딥러닝은 원시 데이터에서 필요한 특징을 자동으로 뽑아냅니다. 이 장에서 만드는 학습 루프 템플릿은 바로 이 “모델·손실·최적화”의 반복을 코드로 옮긴 것입니다. 그 전에, 이 모든 계산이 실제로 돌아가는 개발 환경부터 갖추겠습니다.</p>
+</section>
+<section id="sec-env" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="sec-env"><span class="header-section-number">1.2</span> 딥러닝 개발 환경 구성</h2>
+<p>딥러닝 모델은 수백만 개의 파라미터에 대해 행렬 곱셈과 미분을 반복합니다. 이런 계산은 수천 개의 코어가 같은 연산을 동시에 수행하는 <strong>GPU(Graphics Processing Unit)</strong>에서 극적으로 빨라집니다. 딥러닝의 실질적 부흥이 GPU 학습과 함께 시작되었다는 사실은 여러 이정표 연구에서 확인됩니다<span class="citation" data-cites="krizhevsky2012imagenet lecun2015deep">(<a href="#ref-krizhevsky2012imagenet" role="doc-biblioref">Krizhevsky 기타, 2012</a>; <a href="#ref-lecun2015deep" role="doc-biblioref">LeCun 기타, 2015</a>)</span>. 따라서 첫 단계는 GPU를 파이토치가 사용할 수 있도록 소프트웨어 스택을 올바르게 쌓는 것입니다.</p>
+<section id="gpu-계산-스택의-계층-구조" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="gpu-계산-스택의-계층-구조"><span class="header-section-number">1.2.1</span> GPU 계산 스택의 계층 구조</h3>
+<p>GPU를 딥러닝에 쓰기까지는 여러 소프트웨어 계층이 순서대로 맞물려야 합니다. 아래로 갈수록 하드웨어에 가깝고, 위로 갈수록 사용자 코드에 가깝습니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TD
+    A["사용자 코드&lt;br/&gt;파이토치 (torch)"] --&gt; B["cuDNN&lt;br/&gt;딥러닝 연산 라이브러리"]
+    B --&gt; C["CUDA Toolkit&lt;br/&gt;GPU 병렬 연산 API"]
+    C --&gt; D["NVIDIA 드라이버&lt;br/&gt;OS ↔ GPU 통신"]
+    D --&gt; E["NVIDIA GPU 하드웨어"]
+    style A fill:#dbeafe
+    style E fill:#fde68a
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>각 계층의 역할은 다음과 같습니다.</p>
+<ul>
+<li><strong>NVIDIA 드라이버</strong>: 운영체제가 GPU와 통신하도록 하는 최하위 소프트웨어입니다. 가장 먼저 설치하며, 사용하려는 CUDA 버전이 요구하는 최소 드라이버 버전 이상이어야 합니다.</li>
+<li><strong>CUDA Toolkit</strong>: GPU에서 일반 계산(General-Purpose GPU)을 수행하기 위한 API와 컴파일러입니다. 파이토치 바이너리는 특정 CUDA 버전에 맞춰 빌드되어 배포됩니다.</li>
+<li><strong>cuDNN</strong>: 합성곱·순환 연산 등 딥러닝 핵심 연산을 GPU에 최적화한 라이브러리입니다. 파이토치가 내부적으로 호출합니다.</li>
+<li><strong>파이토치</strong>: 우리가 직접 다루는 최상위 계층으로, 텐서 연산과 자동미분, 신경망 모듈을 제공합니다<span class="citation" data-cites="paszke2019pytorch">(<a href="#ref-paszke2019pytorch" role="doc-biblioref">Paszke 기타, 2019</a>)</span>. 텐서플로 같은 다른 프레임워크<span class="citation" data-cites="abadi2016tensorflow">(<a href="#ref-abadi2016tensorflow" role="doc-biblioref">Abadi 기타, 2016</a>)</span>도 널리 쓰이지만, 이 교재는 파이썬 코드가 그대로 실행되는 명령형(imperative) 방식이라 학습과 디버깅이 직관적인 파이토치를 사용합니다.</li>
+</ul>
+</section>
+<section id="nvidia-드라이버-설치와-확인" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="nvidia-드라이버-설치와-확인"><span class="header-section-number">1.2.2</span> NVIDIA 드라이버 설치와 확인</h3>
+<p>먼저 그래픽 카드에 맞는 최신 드라이버를 NVIDIA 공식 사이트에서 내려받아 설치합니다. 설치 후 터미널(명령 프롬프트)에서 다음 명령으로 드라이버와 GPU 상태를 확인합니다.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nvidia-smi</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이 명령은 GPU 모델명, 드라이버 버전, 그리고 화면 오른쪽 위에 <strong>CUDA Version</strong>을 표시합니다. 여기 표시되는 CUDA 버전은 “이 드라이버가 지원하는 최대 CUDA 버전”을 뜻하며, 파이토치가 요구하는 CUDA 런타임 버전이 이 값 이하이면 정상적으로 동작합니다.</p>
+</section>
+<section id="아나콘다-가상환경-생성과-파이토치-설치" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="아나콘다-가상환경-생성과-파이토치-설치"><span class="header-section-number">1.2.3</span> 아나콘다 가상환경 생성과 파이토치 설치</h3>
+<p>프로젝트마다 라이브러리 버전이 충돌하지 않도록 <strong>가상환경</strong>을 분리합니다. 딥러닝 프로젝트는 파이토치·넘파이·쿠다 버전이 서로 얽혀 있어, 한 프로젝트에서 버전을 올리면 다른 프로젝트가 깨지는 일이 흔합니다. 가상환경은 프로젝트별로 독립된 라이브러리 공간을 주어 이런 충돌을 원천 차단하고, 실험을 재현 가능하게 만듭니다. 아나콘다(Anaconda) 또는 더 가벼운 미니콘다(Miniconda)를 설치한 뒤, 다음과 같이 파이썬 3.10 환경을 만들고 활성화합니다.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) 가상환경 생성 (파이썬 3.10)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> aimodel python=3.10 <span class="at">-y</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) 환경 활성화</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate aimodel</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) CUDA 지원 파이토치 설치 (CUDA 12.1 예시)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#    설치 명령은 pytorch.org의 "Get Started"에서 자신의 CUDA 버전에 맞춰 복사합니다.</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install torch torchvision torchaudio <span class="at">--index-url</span> https://download.pytorch.org/whl/cu121</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4) 실습에 자주 쓰는 라이브러리</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install numpy matplotlib scikit-learn</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>설치가 끝나면 파이토치가 GPU를 인식하는지 반드시 확인합니다. 아래 스크립트가 <code>True</code>와 GPU 이름을 출력하면 환경 구성이 완료된 것입니다.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"PyTorch 버전:"</span>, torch.__version__)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"CUDA 사용 가능:"</span>, torch.cuda.is_available())</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> torch.cuda.is_available():</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"GPU 이름:"</span>, torch.cuda.get_device_name(<span class="dv">0</span>))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"CUDA 런타임 버전:"</span>, torch.version.cuda)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+GPU가 없다면
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>GPU가 없어도 이 교재의 모든 코드는 CPU에서 동작합니다. 뒤에서 소개할 <code>device</code> 변수만 <code>"cpu"</code>로 두면 됩니다. 다만 학습 속도는 느려집니다. 구글 코랩(Colab)처럼 무료 GPU를 제공하는 환경을 활용하는 것도 좋은 대안입니다.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-array-tensor" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="sec-array-tensor"><span class="header-section-number">1.3</span> 넘파이 배열과 파이토치 텐서</h2>
+<p>수치 계산의 기본 자료구조는 넘파이의 <code>ndarray</code>와 파이토치의 <code>tensor</code>입니다. 둘 다 <strong>같은 자료형의 원소가 규칙적으로 나열된 다차원 격자</strong>라는 점에서 개념이 같습니다<span class="citation" data-cites="harris2020numpy">(<a href="#ref-harris2020numpy" role="doc-biblioref">Harris 기타, 2020</a>)</span>. 결정적 차이는 두 가지입니다. 첫째, 텐서는 GPU로 올려 병렬 연산할 수 있습니다. 둘째, 텐서는 연산 이력을 기록해 <strong>자동미분</strong>을 지원합니다. 이 두 성질이 텐서를 딥러닝의 핵심 자료구조로 만듭니다.</p>
+<p>텐서를 이해하는 출발점은 <span class="key">랭크(rank), 즉 차원의 개수</span>입니다. 숫자 하나(스칼라)는 0차원, 숫자의 나열(벡터)은 1차원, 표(행렬)는 2차원이며, 여기에 축을 하나씩 더할수록 차원이 올라갑니다. 각 축의 크기를 나열한 것이 <strong>모양(shape)</strong>입니다. 그림 1.1은 0차원부터 6차원까지의 텐서를 큐브로 나타낸 것입니다.</p>
+<div class="figbody">
+<p><img src="figs/ch1_tensor_ranks.png" class="img-fluid" style="width:100.0%" alt="0D~6D 텐서의 랭크와 모양"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 1.1</strong> 텐서의 랭크(차원)와 모양. 스칼라(0D)는 하나의 값, 벡터(1D)는 한 줄, 행렬(2D)은 평면, 3D 텐서는 정육면체로 표현됩니다. 4D 이상은 3D 텐서(정육면체)를 다시 여러 개 늘어놓은 것으로, 축이 하나 늘 때마다 데이터가 한 방향으로 반복됩니다. 예를 들어 컬러 이미지 한 장은 (높이, 너비, 채널)의 3D 텐서이고, 이런 이미지를 배치로 묶으면 (배치, 높이, 너비, 채널)의 4D 텐서가 됩니다.</p>
+</div>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    subgraph NP["넘파이 ndarray"]
+        N1["CPU 메모리"]
+        N2["빠른 수치 연산"]
+    end
+    subgraph TS["파이토치 tensor"]
+        T1["CPU 또는 GPU 메모리"]
+        T2["자동미분(autograd)"]
+        T3["신경망 학습"]
+    end
+    NP --&gt;|"torch.from_numpy()"| TS
+    TS --&gt;|".numpy()"| NP
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<section id="생성과-기본-속성" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="생성과-기본-속성"><span class="header-section-number">1.3.1</span> 생성과 기본 속성</h3>
+<p>배열과 텐서는 리스트, 난수, 규칙적 수열 등 다양한 방법으로 만듭니다. 텐서의 핵심 속성은 모양을 뜻하는 <code>shape</code>, 자료형을 뜻하는 <code>dtype</code>, 그리고 위치를 뜻하는 <code>device</code>입니다.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 넘파이 배열</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]], dtype<span class="op">=</span>np.float32)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(a.shape, a.dtype)          <span class="co"># (2, 3) float32</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 파이토치 텐서 (여러 생성 방법)</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">3.</span>], [<span class="fl">4.</span>, <span class="fl">5.</span>, <span class="fl">6.</span>]])</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> torch.zeros(<span class="dv">2</span>, <span class="dv">3</span>)            <span class="co"># 0으로 채운 텐서</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>o <span class="op">=</span> torch.ones(<span class="dv">2</span>, <span class="dv">3</span>)            <span class="co"># 1로 채운 텐서</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">3</span>)          <span class="co"># 표준정규분포 난수</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>seq <span class="op">=</span> torch.arange(<span class="dv">0</span>, <span class="dv">6</span>).reshape(<span class="dv">2</span>, <span class="dv">3</span>)   <span class="co"># 0..5를 2x3으로</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t.shape, t.dtype, t.device)   <span class="co"># torch.Size([2, 3]) torch.float32 cpu</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="인덱싱슬라이싱모양-변경" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="인덱싱슬라이싱모양-변경"><span class="header-section-number">1.3.2</span> 인덱싱·슬라이싱·모양 변경</h3>
+<p>넘파이와 텐서는 인덱싱·슬라이싱 문법이 거의 같습니다. 모양을 바꾸는 <code>reshape</code>, 차원을 추가·제거하는 <code>unsqueeze</code>/<code>squeeze</code>, 축을 바꾸는 <code>transpose</code>를 자주 씁니다.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.arange(<span class="dv">12</span>).reshape(<span class="dv">3</span>, <span class="dv">4</span>)   <span class="co"># 3행 4열</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x[<span class="dv">0</span>])        <span class="co"># 첫 번째 행</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x[:, <span class="dv">1</span>])     <span class="co"># 두 번째 열</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x[<span class="dv">1</span>, <span class="dv">2</span>])     <span class="co"># 1행 2열 원소</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x.reshape(<span class="dv">2</span>, <span class="dv">6</span>)          <span class="co"># 모양 변경 (원소 수 유지)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> x.unsqueeze(<span class="dv">0</span>)          <span class="co"># (1, 3, 4) — 맨 앞에 차원 추가</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> u.squeeze(<span class="dv">0</span>)           <span class="co"># (3, 4)   — 크기 1인 차원 제거</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>xt <span class="op">=</span> x.transpose(<span class="dv">0</span>, <span class="dv">1</span>)      <span class="co"># (4, 3)  — 두 축 교환</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="텐서의-내부-구조-저장소와-스트라이드" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="텐서의-내부-구조-저장소와-스트라이드"><span class="header-section-number">1.3.3</span> 텐서의 내부 구조: 저장소와 스트라이드</h3>
+<p>텐서를 깊이 이해하려면 그 내부 표현을 알아야 합니다. 파이토치 텐서는 실제로 두 부분으로 나뉩니다. 하나는 값을 1차원으로 나열해 담은 <strong>저장소(storage)</strong>이고, 다른 하나는 그 1차원 데이터를 다차원으로 해석하는 <strong>메타데이터</strong>입니다. 메타데이터에는 모양(<code>shape</code>), 그리고 각 차원으로 한 칸 이동할 때 저장소에서 몇 칸을 건너뛰어야 하는지를 나타내는 <strong>스트라이드(stride)</strong>가 포함됩니다.</p>
+<p>예를 들어 <span class="math inline">\(3\times4\)</span> 텐서는 저장소에 12개의 값이 연속으로 놓이고, 스트라이드는 <span class="math inline">\((4, 1)\)</span>이 됩니다. 이는 “행 방향으로 한 칸 가려면 4칸을, 열 방향으로 한 칸 가려면 1칸을 건너뛴다”는 뜻입니다. 이 구조 덕분에 <code>reshape</code>나 <code>transpose</code> 같은 연산은 실제 데이터를 복사하지 않고 <strong>메타데이터만 바꾸어</strong> 같은 저장소를 다르게 바라보게 합니다. 그래서 이런 연산은 매우 빠릅니다.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.arange(<span class="dv">12</span>).reshape(<span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.stride())        <span class="co"># (4, 1)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>xt <span class="op">=</span> x.transpose(<span class="dv">0</span>, <span class="dv">1</span>)   <span class="co"># 데이터 복사 없이 스트라이드만 (1, 4)로 변경</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(xt.stride())       <span class="co"># (1, 4)</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(xt.is_contiguous())<span class="co"># False — 메모리 순서와 논리적 순서가 어긋남</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>전치처럼 스트라이드가 뒤바뀐 텐서는 메모리상 연속이 아니게 되어(<code>is_contiguous()</code>가 <code>False</code>), 일부 연산에서 <code>contiguous()</code>로 실제 재배치를 요구하기도 합니다. 이런 내부 동작을 이해하면, 왜 어떤 연산은 빠르고 어떤 연산은 메모리 복사를 유발하는지 예측할 수 있습니다.</p>
+</section>
+<section id="메모리-공유-뷰와-복사" class="level3" data-number="1.3.4">
+<h3 data-number="1.3.4" class="anchored" data-anchor-id="메모리-공유-뷰와-복사"><span class="header-section-number">1.3.4</span> 메모리 공유: 뷰와 복사</h3>
+<p>앞의 성질 때문에, 넘파이 배열과 텐서를 오갈 때 <strong>메모리를 공유</strong>하는 경우가 많습니다. <code>torch.from_numpy</code>나 <code>.numpy()</code>로 변환하면 두 객체가 같은 메모리를 가리켜, 한쪽을 바꾸면 다른 쪽도 바뀝니다. 이는 효율적이지만 의도치 않은 부작용을 낳을 수 있어 주의해야 합니다.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np, torch</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([<span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">3.</span>])</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> torch.from_numpy(a)   <span class="co"># 메모리 공유</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>t[<span class="dv">0</span>] <span class="op">=</span> <span class="fl">99.0</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(a)                  <span class="co"># [99.  2.  3.] — 넘파이도 바뀜</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> t.clone()             <span class="co"># 완전한 복사(메모리 분리)</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>b[<span class="dv">0</span>] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t[<span class="dv">0</span>])               <span class="co"># tensor(99.) — t는 영향 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>값을 안전하게 독립적으로 다루려면 <code>.clone()</code>으로 명시적으로 복사합니다. 반대로 대용량 데이터를 다룰 때는 복사를 피해 메모리를 아끼는 것이 성능에 유리합니다. 이처럼 “언제 데이터가 복사되고 언제 공유되는가”를 아는 것은 효율적인 딥러닝 코드 작성의 기본기입니다.</p>
+</section>
+</section>
+<section id="sec-numpy-linalg" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="sec-numpy-linalg"><span class="header-section-number">1.4</span> 넘파이를 활용한 선형 연산</h2>
+<p>선형대수는 신경망의 언어입니다. 한 층의 순전파가 곧 <strong>행렬-벡터 곱셈에 편향을 더하는 아핀 변환</strong>이기 때문입니다. 넘파이로 벡터 내적, 행렬 곱, 전치, 역행렬 같은 기본 연산을 먼저 정리합니다.</p>
+<p>벡터 <span class="math inline">\(\mathbf{a},\mathbf{b}\in\mathbb{R}^n\)</span>의 내적은 다음과 같이 정의됩니다.</p>
+<p><span class="math display">\[
+\mathbf{a}\cdot\mathbf{b} = \sum_{i=1}^{n} a_i b_i .
+\]</span></p>
+<p>행렬 <span class="math inline">\(A\in\mathbb{R}^{m\times k}\)</span>와 <span class="math inline">\(B\in\mathbb{R}^{k\times n}\)</span>의 곱 <span class="math inline">\(C=AB\in\mathbb{R}^{m\times n}\)</span>의 각 원소는 다음과 같습니다.</p>
+<p><span class="math display">\[
+C_{ij} = \sum_{p=1}^{k} A_{ip} B_{pj}.
+\]</span></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([<span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">3.</span>])</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> np.array([<span class="fl">4.</span>, <span class="fl">5.</span>, <span class="fl">6.</span>])</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.dot(a, b))        <span class="co"># 내적: 1*4 + 2*5 + 3*6 = 32</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> np.array([[<span class="fl">1.</span>, <span class="fl">2.</span>], [<span class="fl">3.</span>, <span class="fl">4.</span>]])</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> np.array([[<span class="fl">5.</span>, <span class="fl">6.</span>], [<span class="fl">7.</span>, <span class="fl">8.</span>]])</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A <span class="op">@</span> B)              <span class="co"># 행렬 곱 (파이썬 @ 연산자)</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A.T)               <span class="co"># 전치</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.linalg.inv(A))    <span class="co"># 역행렬</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>행렬 곱은 신경망 한 층의 계산 그 자체입니다. 입력 <span class="math inline">\(\mathbf{x}\)</span>, 가중치 <span class="math inline">\(W\)</span>, 편향 <span class="math inline">\(\mathbf{b}\)</span>에 대해 층의 출력은 <span class="math inline">\(\mathbf{y}=W\mathbf{x}+\mathbf{b}\)</span>로 표현됩니다. 이 아핀 변환을 여러 겹 쌓고 사이에 비선형 함수를 끼우는 것이 곧 다층 신경망입니다.</p>
+<section id="노름과-거리-그리고-그-의미" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="노름과-거리-그리고-그-의미"><span class="header-section-number">1.4.1</span> 노름과 거리, 그리고 그 의미</h3>
+<p>선형대수에서 벡터의 <strong>크기</strong>를 재는 도구가 <strong>노름(norm)</strong>입니다. 딥러닝에서 노름은 손실의 크기, 기울기의 크기, 가중치의 크기를 측정하는 데 두루 쓰입니다. 가장 흔한 것은 L2 노름과 L1 노름입니다.</p>
+<p><span class="math display">\[
+\lVert \mathbf{x} \rVert_2 = \sqrt{\sum_{i} x_i^2}, \qquad
+\lVert \mathbf{x} \rVert_1 = \sum_{i} \lvert x_i \rvert .
+\]</span></p>
+<p>L2 노름은 원점에서의 유클리드 거리로, 큰 성분에 더 민감합니다. L1 노름은 성분의 절댓값 합으로, 이상치에 덜 민감하고 희소성을 유도하는 성질이 있습니다. 이 차이는 2장에서 볼 L2·L1 정규화의 성질로 직접 이어집니다. 두 벡터 사이의 거리는 차의 노름 <span class="math inline">\(\lVert \mathbf{a}-\mathbf{b}\rVert\)</span>로 정의되며, 회귀의 평균제곱오차가 바로 예측과 정답 벡터의 L2 거리의 제곱에 비례합니다.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">3.</span>, <span class="op">-</span><span class="fl">4.</span>])</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.linalg.norm(x, <span class="bu">ord</span><span class="op">=</span><span class="dv">2</span>))   <span class="co"># 5.0  (√(9+16))</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.linalg.norm(x, <span class="bu">ord</span><span class="op">=</span><span class="dv">1</span>))   <span class="co"># 7.0  (3+4)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>또한 두 벡터의 방향적 유사성은 <strong>코사인 유사도</strong> <span class="math inline">\(\cos\theta = \dfrac{\mathbf{a}\cdot\mathbf{b}}{\lVert\mathbf{a}\rVert\,\lVert\mathbf{b}\rVert}\)</span>로 잽니다. 이는 4장의 어텐션에서 쿼리와 키의 유사도를 재는 내적의 직관과 맞닿아 있습니다. 이렇게 노름·내적·거리는 신경망 곳곳에서 반복해 등장하는 기본 언어입니다.</p>
+</section>
+</section>
+<section id="sec-tensor-linalg" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="sec-tensor-linalg"><span class="header-section-number">1.5</span> 텐서를 활용한 선형 연산</h2>
+<p>같은 연산을 파이토치 텐서로 수행합니다. 문법은 넘파이와 매우 비슷하지만, 이 연산들이 그대로 GPU에서 실행되고 자동미분으로 이어질 수 있다는 점이 다릅니다.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> torch.tensor([<span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">3.</span>])</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> torch.tensor([<span class="fl">4.</span>, <span class="fl">5.</span>, <span class="fl">6.</span>])</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.dot(a, b))     <span class="co"># 내적: 32</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>, <span class="fl">2.</span>], [<span class="fl">3.</span>, <span class="fl">4.</span>]])</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> torch.tensor([[<span class="fl">5.</span>, <span class="fl">6.</span>], [<span class="fl">7.</span>, <span class="fl">8.</span>]])</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A <span class="op">@</span> B)              <span class="co"># 행렬 곱</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.matmul(A, B))   <span class="co"># 동일한 결과</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A.T)               <span class="co"># 전치</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.linalg.inv(A))   <span class="co"># 역행렬</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>여러 개의 샘플을 한 번에 처리하는 딥러닝에서는 <strong>배치 행렬 곱</strong>이 흔합니다. 예를 들어 크기가 <span class="math inline">\((B, m, k)\)</span>와 <span class="math inline">\((B, k, n)\)</span>인 두 텐서를 곱하면, 각 배치별로 행렬 곱이 수행되어 <span class="math inline">\((B, m, n)\)</span>이 됩니다. <code>torch.bmm</code>이나 <code>@</code> 연산자가 이를 처리합니다.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.randn(<span class="dv">8</span>, <span class="dv">3</span>, <span class="dv">4</span>)   <span class="co"># 배치 8개, 각 3x4 행렬</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> torch.randn(<span class="dv">8</span>, <span class="dv">4</span>, <span class="dv">5</span>)   <span class="co"># 배치 8개, 각 4x5 행렬</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> torch.bmm(X, Y)       <span class="co"># (8, 3, 5): 배치별 행렬 곱</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Z.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="sec-broadcasting" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="sec-broadcasting"><span class="header-section-number">1.6</span> 브로드캐스팅과 2차원 연산 비교</h2>
+<p>모양이 다른 두 배열을 산술 연산할 때, 넘파이와 파이토치는 <strong>브로드캐스팅(broadcasting)</strong> 규칙에 따라 작은 배열을 자동으로 확장해 모양을 맞춥니다. 규칙은 뒤쪽 축부터 비교하여, 두 축의 크기가 같거나 둘 중 하나가 1이면 호환된다는 것입니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TD
+    A["행렬 (3, 3)"] --- OP(("+"))
+    B["행벡터 (1, 3)"] --- OP
+    OP --&gt; C["결과 (3, 3)&lt;br/&gt;행벡터가 각 행에 더해짐"]
+    style OP fill:#fde68a
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>다음 예는 <span class="math inline">\(3\times3\)</span> 행렬에 길이 3짜리 행벡터를 더하는 상황입니다. 행벡터가 세 행 모두에 복제되어 더해집니다. 이때 실제로 메모리를 복제하지 않고 계산만 확장하므로 메모리 효율이 좋습니다.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> np.arange(<span class="dv">9</span>).reshape(<span class="dv">3</span>, <span class="dv">3</span>).astype(np.float32)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> np.array([<span class="fl">10.</span>, <span class="fl">20.</span>, <span class="fl">30.</span>])</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(M <span class="op">+</span> v)     <span class="co"># v가 각 행에 브로드캐스팅되어 더해짐</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 파이토치도 동일한 규칙</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>Mt <span class="op">=</span> torch.arange(<span class="dv">9</span>).reshape(<span class="dv">3</span>, <span class="dv">3</span>).<span class="bu">float</span>()</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>vt <span class="op">=</span> torch.tensor([<span class="fl">10.</span>, <span class="fl">20.</span>, <span class="fl">30.</span>])</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Mt <span class="op">+</span> vt)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 열벡터로 브로드캐스팅하려면 (3,1) 모양으로 만든다</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>col <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>], [<span class="fl">2.</span>], [<span class="fl">3.</span>]])   <span class="co"># (3, 1)</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Mt <span class="op">+</span> col)   <span class="co"># 각 열에 더해짐</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>넘파이와 파이토치의 2차원 브로드캐스팅 동작은 규칙이 동일합니다. 표로 비교하면 다음과 같습니다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>연산</th>
+<th>넘파이</th>
+<th>파이토치</th>
+<th>결과 모양</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>행렬 + 스칼라</td>
+<td><code>M + 5</code></td>
+<td><code>Mt + 5</code></td>
+<td>(3, 3)</td>
+</tr>
+<tr class="even">
+<td>행렬 + 행벡터 (1,3)</td>
+<td><code>M + v</code></td>
+<td><code>Mt + vt</code></td>
+<td>(3, 3)</td>
+</tr>
+<tr class="odd">
+<td>행렬 + 열벡터 (3,1)</td>
+<td><code>M + v[:,None]</code></td>
+<td><code>Mt + col</code></td>
+<td>(3, 3)</td>
+</tr>
+<tr class="even">
+<td>요소별 곱</td>
+<td><code>M * M</code></td>
+<td><code>Mt * Mt</code></td>
+<td>(3, 3)</td>
+</tr>
+<tr class="odd">
+<td>행렬 곱</td>
+<td><code>M @ M</code></td>
+<td><code>Mt @ Mt</code></td>
+<td>(3, 3)</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+요소별 곱과 행렬 곱은 다릅니다
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>*</code>는 <strong>요소별 곱(element-wise)</strong>이고 <code>@</code>는 <strong>행렬 곱</strong>입니다. 신경망 코드에서 이 둘을 혼동하면 모양은 맞아도 완전히 다른 계산이 되어 학습이 되지 않습니다.</p>
+</div>
+</div>
+</section>
+<section id="sec-device" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="sec-device"><span class="header-section-number">1.7</span> CPU와 GPU, 그리고 장치 이동</h2>
+<p>CPU는 소수의 강력한 코어로 복잡하고 순차적인 작업을 잘 처리합니다. 반면 GPU는 수천 개의 단순한 코어로 <strong>같은 연산을 대량의 데이터에 동시에</strong> 적용하는 데 최적화되어 있습니다. 딥러닝의 행렬 곱은 후자에 정확히 들어맞기 때문에, 큰 모델일수록 GPU가 압도적으로 빠릅니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    subgraph CPU["CPU"]
+        C1["소수의 강력한 코어"]
+        C2["순차·분기 작업에 강함"]
+    end
+    subgraph GPU["GPU"]
+        G1["수천 개의 단순 코어"]
+        G2["대규모 병렬 연산에 강함"]
+    end
+    D["데이터/모델"] --&gt;|".to(device)"| GPU
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>파이토치에서 텐서나 모델을 GPU로 옮길 때는 <code>.to(device)</code>를 사용합니다. 관례적으로 아래처럼 <code>device</code>를 한 번 정의해두고, 모든 텐서와 모델을 같은 장치로 보냅니다. <strong>연산에 참여하는 텐서들은 반드시 같은 장치에 있어야</strong> 하며, 그렇지 않으면 오류가 발생합니다.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"사용 장치:"</span>, device)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.randn(<span class="dv">1000</span>, <span class="dv">1000</span>)      <span class="co"># 기본은 CPU에 생성</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>x_gpu <span class="op">=</span> x.to(device)            <span class="co"># GPU로 이동 (GPU가 있으면)</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 연산 결과도 같은 장치에 생성된다</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>y_gpu <span class="op">=</span> x_gpu <span class="op">@</span> x_gpu</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 결과를 다시 CPU로 가져와 넘파이로 변환</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>y_cpu <span class="op">=</span> y_gpu.detach().cpu().numpy()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>GPU 메모리는 CPU 메모리와 물리적으로 분리되어 있어, CPU-GPU 간 데이터 전송에는 비용이 듭니다. 따라서 <strong>학습 루프 안에서 불필요하게 장치를 오가지 않도록</strong> 설계하는 것이 성능의 핵심입니다. 큰 모델을 학습할 때는 반정밀도(FP16) 연산을 섞어 메모리와 속도를 개선하는 혼합 정밀도 학습도 널리 쓰입니다<span class="citation" data-cites="micikevicius2018mixed">(<a href="#ref-micikevicius2018mixed" role="doc-biblioref">Micikevicius 기타, 2018</a>)</span>.</p>
+<section id="gpu-메모리와-성능-고려사항" class="level3" data-number="1.7.1">
+<h3 data-number="1.7.1" class="anchored" data-anchor-id="gpu-메모리와-성능-고려사항"><span class="header-section-number">1.7.1</span> GPU 메모리와 성능 고려사항</h3>
+<p>GPU를 효과적으로 쓰려면 몇 가지 원리를 이해해야 합니다. 첫째, GPU는 <strong>연산이 데이터 전송을 상쇄할 만큼 충분히 클 때</strong> 이득이 큽니다. 작은 텐서 하나를 GPU에 올려 더하는 연산은 오히려 전송 비용 때문에 CPU보다 느릴 수 있습니다. 대량의 행렬 곱처럼 연산 밀도가 높을 때 GPU의 병렬성이 빛을 발합니다.</p>
+<p>둘째, GPU 연산은 기본적으로 <strong>비동기(asynchronous)</strong>로 실행됩니다. 파이썬이 <code>y = x @ x</code>를 호출하면 GPU에 작업을 예약하고 즉시 다음 줄로 넘어가며, 실제 계산은 GPU가 뒤에서 수행합니다. 그래서 정확한 시간 측정에는 <code>torch.cuda.synchronize()</code>로 동기화가 필요합니다. 셋째, GPU 메모리는 유한하므로, 배치 크기가 너무 크면 “메모리 부족(out of memory)” 오류가 납니다. 이때는 배치 크기를 줄이거나, 여러 작은 배치의 기울기를 누적해 큰 배치처럼 갱신하는 <strong>기울기 누적(gradient accumulation)</strong> 기법을 씁니다.</p>
+<p>넷째, 데이터 전송을 가속하려면 CPU 쪽 데이터를 <strong>고정 메모리(pinned memory)</strong>에 두는 것이 좋습니다. 데이터로더의 <code>pin_memory=True</code>가 이 역할을 합니다. 이런 세부 사항들이 모여 실제 학습 속도를 크게 좌우하므로, 모델 구조만큼이나 데이터가 흐르는 경로를 최적화하는 안목이 중요합니다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>상황</th>
+<th>권장 대응</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>작은 텐서·잦은 CPU↔︎GPU 이동</td>
+<td>연산을 모아 한 번에 GPU에서 처리</td>
+</tr>
+<tr class="even">
+<td>메모리 부족</td>
+<td>배치 축소, 기울기 누적, 혼합 정밀도</td>
+</tr>
+<tr class="odd">
+<td>느린 데이터 로딩</td>
+<td><code>num_workers</code> 증가, <code>pin_memory=True</code></td>
+</tr>
+<tr class="even">
+<td>시간 측정 부정확</td>
+<td><code>torch.cuda.synchronize()</code> 후 측정</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="자료형과-재현성" class="level3" data-number="1.7.2">
+<h3 data-number="1.7.2" class="anchored" data-anchor-id="자료형과-재현성"><span class="header-section-number">1.7.2</span> 자료형과 재현성</h3>
+<p>텐서의 자료형(<code>dtype</code>)은 계산의 정밀도와 메모리를 좌우합니다. 딥러닝에서는 대부분 32비트 부동소수점(<code>float32</code>)을 기본으로 쓰고, 라벨이나 인덱스에는 정수형(<code>int64</code>, 파이토치의 <code>long</code>)을 씁니다. 부동소수점 정밀도를 낮추면(예: <code>float16</code>) 메모리와 속도가 개선되지만 수치 안정성이 떨어질 수 있어, 학습에서는 혼합 정밀도로 신중히 다룹니다<span class="citation" data-cites="micikevicius2018mixed">(<a href="#ref-micikevicius2018mixed" role="doc-biblioref">Micikevicius 기타, 2018</a>)</span>.</p>
+<p>또한 실험을 <strong>재현</strong>하려면 난수 시드를 고정해야 합니다. 파이토치·넘파이·파이썬의 난수 생성기를 각각 고정하고, 필요하면 데이터로더의 워커 시드까지 통제합니다.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, numpy <span class="im">as</span> np, random</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> set_seed(seed<span class="op">=</span><span class="dv">42</span>):</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    random.seed(seed)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    np.random.seed(seed)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    torch.manual_seed(seed)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    torch.cuda.manual_seed_all(seed)   <span class="co"># GPU 사용 시</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>set_seed(<span class="dv">42</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>재현성은 실험 결과를 신뢰하고 서로 비교하기 위한 전제입니다. 특히 옵티마이저나 초기화를 바꿔 성능을 비교할 때는, 시드를 고정해야 성능 차이가 우연이 아닌 변경에서 비롯된 것임을 확인할 수 있습니다.</p>
+</section>
+</section>
+<section id="sec-autograd" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="sec-autograd"><span class="header-section-number">1.8</span> 자동미분 맛보기</h2>
+<p>파이토치의 가장 강력한 기능은 <strong>자동미분(automatic differentiation)</strong>입니다<span class="citation" data-cites="baydin2018automatic">(<a href="#ref-baydin2018automatic" role="doc-biblioref">Baydin 기타, 2018</a>)</span>. 텐서에 <code>requires_grad=True</code>를 주면, 그 텐서가 참여한 모든 연산이 <strong>계산 그래프</strong>로 기록됩니다. 이후 <code>.backward()</code>를 호출하면 연쇄법칙에 따라 각 텐서에 대한 기울기가 자동으로 계산되어 <code>.grad</code>에 저장됩니다. 신경망 학습을 지탱하는 역전파 알고리즘이 바로 이 원리로 구현됩니다<span class="citation" data-cites="rumelhart1986learning">(<a href="#ref-rumelhart1986learning" role="doc-biblioref">Rumelhart 기타, 1986</a>)</span>.</p>
+<p>간단한 예로 <span class="math inline">\(f(x) = x^2 + 3x\)</span>의 <span class="math inline">\(x=2\)</span>에서의 미분값을 구해 봅니다. 손으로 계산하면 <span class="math inline">\(f'(x)=2x+3\)</span>이므로 <span class="math inline">\(f'(2)=7\)</span>입니다.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(<span class="fl">2.0</span>, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span><span class="op">*</span>x</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>f.backward()          <span class="co"># df/dx 계산</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad)        <span class="co"># tensor(7.) — 2*2 + 3</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이 자동미분 덕분에 우리는 복잡한 신경망의 기울기를 손으로 유도할 필요 없이, 순전파만 정의하면 역전파가 자동으로 처리됩니다.</p>
+<section id="계산-그래프와-리프-텐서" class="level3" data-number="1.8.1">
+<h3 data-number="1.8.1" class="anchored" data-anchor-id="계산-그래프와-리프-텐서"><span class="header-section-number">1.8.1</span> 계산 그래프와 리프 텐서</h3>
+<p>자동미분의 핵심은 순전파 동안 만들어지는 <strong>동적 계산 그래프</strong>입니다. 파이토치는 연산이 실행될 때마다 그래프를 그때그때 확장하는 “define-by-run” 방식을 씁니다. 그래프의 노드는 텐서와 연산이고, 각 연산은 자신의 역방향 기울기 계산 함수를 기억합니다. <code>.backward()</code>를 호출하면 이 그래프를 출력에서 입력 방향으로 거슬러 올라가며 연쇄법칙을 적용합니다.</p>
+<p>사용자가 직접 만든, 미분의 대상이 되는 텐서를 <strong>리프 텐서(leaf tensor)</strong>라 부릅니다. 모델의 가중치가 대표적입니다. 리프가 아닌 중간 텐서에는 기본적으로 기울기가 저장되지 않습니다. 또한 한 번 <code>.backward()</code>를 하면 그래프가 해제되므로, 매 미니배치마다 순전파로 그래프를 새로 만들고 역전파하는 과정을 반복합니다.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>, <span class="fl">2.0</span>], requires_grad<span class="op">=</span><span class="va">True</span>)   <span class="co"># 리프 텐서(가중치 역할)</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">3.0</span>, <span class="fl">4.0</span>])</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> (w <span class="op">*</span> x).<span class="bu">sum</span>()      <span class="co"># 계산 그래프가 만들어짐</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>loss.backward()           <span class="co"># w에 대한 기울기 계산</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w.grad)             <span class="co"># tensor([3., 4.]) — d(loss)/dw = x</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="기울기-추적을-멈추는-방법" class="level3" data-number="1.8.2">
+<h3 data-number="1.8.2" class="anchored" data-anchor-id="기울기-추적을-멈추는-방법"><span class="header-section-number">1.8.2</span> 기울기 추적을 멈추는 방법</h3>
+<p>평가나 추론처럼 기울기가 필요 없는 상황에서는 그래프를 만들지 않는 것이 메모리와 속도에 유리합니다. <code>torch.no_grad()</code> 블록은 그 안의 연산에 대해 그래프 생성을 끕니다. 또 특정 텐서를 그래프에서 떼어내려면 <code>.detach()</code>를 씁니다. 이는 순환 신경망에서 은닉 상태를 구간마다 끊거나, 계산 결과를 넘파이로 안전하게 가져올 때 자주 쓰입니다.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>], requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> w <span class="op">*</span> <span class="dv">2</span>          <span class="co"># 그래프를 만들지 않음 → 역전파 대상 아님</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> (w <span class="op">*</span> <span class="dv">3</span>).detach()   <span class="co"># z는 값은 갖되 그래프와 분리됨</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이처럼 자동미분의 켜고 끔을 이해하면, 불필요한 메모리 사용을 막고 학습과 평가를 명확히 분리할 수 있습니다. 다음 절에서 이 모든 요소를 실제 학습 루프에 녹여 넣습니다.</p>
+</section>
+</section>
+<section id="sec-training-loop" class="level2" data-number="1.9">
+<h2 data-number="1.9" class="anchored" data-anchor-id="sec-training-loop"><span class="header-section-number">1.9</span> 학습 루프 템플릿: 이진 분류 MLP</h2>
+<p>이제 앞의 요소들을 모아 <strong>이진 분류를 학습하는 다층 퍼셉트론(MLP)</strong>을 만들고, 재사용 가능한 학습 루프 템플릿을 완성합니다. 다층 퍼셉트론은 아핀 변환과 비선형 활성화를 번갈아 쌓은 구조로, 은닉층이 하나만 있어도 임의의 연속 함수를 근사할 수 있다는 이론적 근거가 있습니다<span class="citation" data-cites="hornik1989multilayer cybenko1989approximation">(<a href="#ref-hornik1989multilayer" role="doc-biblioref">Hornik 기타, 1989</a>; <a href="#ref-cybenko1989approximation" role="doc-biblioref">Cybenko, 1989</a>)</span>. 딥러닝의 이론적 배경과 실무 기법은 여러 표준 교재에 체계적으로 정리되어 있습니다<span class="citation" data-cites="goodfellow2016deep">(<a href="#ref-goodfellow2016deep" role="doc-biblioref">Goodfellow 기타, 2016</a>)</span>.</p>
+<section id="전체-학습-파이프라인" class="level3" data-number="1.9.1">
+<h3 data-number="1.9.1" class="anchored" data-anchor-id="전체-학습-파이프라인"><span class="header-section-number">1.9.1</span> 전체 학습 파이프라인</h3>
+<p>학습은 데이터 준비부터 평가까지 하나의 파이프라인으로 흐릅니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    D["원시 데이터"] --&gt; SP["train/val/test 분할"]
+    SP --&gt; DS["Dataset"]
+    DS --&gt; DL["DataLoader&lt;br/&gt;미니배치"]
+    DL --&gt; M["MLP 모델"]
+    M --&gt; L["손실 계산&lt;br/&gt;BCEWithLogits"]
+    L --&gt; BW["역전파 backward"]
+    BW --&gt; OP["optimizer.step()"]
+    OP --&gt; SC["scheduler.step()"]
+    SC -.-&gt;|"다음 에폭"| DL
+    M --&gt; EV["검증/테스트 평가"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="문제와-데이터-정의" class="level3" data-number="1.9.2">
+<h3 data-number="1.9.2" class="anchored" data-anchor-id="문제와-데이터-정의"><span class="header-section-number">1.9.2</span> 문제와 데이터 정의</h3>
+<p>두 개의 반달 모양이 얽힌 형태의 합성 데이터를 사용합니다. 이 데이터는 직선 하나로 나눌 수 없어(비선형 결정경계), 활성화 함수를 가진 MLP가 왜 필요한지 잘 보여줍니다. scikit-learn의 <code>make_moons</code>로 생성합니다<span class="citation" data-cites="pedregosa2011scikit">(<a href="#ref-pedregosa2011scikit" role="doc-biblioref">Pedregosa 기타, 2011</a>)</span>.</p>
+<div class="figbody">
+<p><img src="figs/ch1_moons_boundary.png" class="img-fluid" style="width:100.0%" alt="반달 데이터와 선형·비선형 결정경계"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 1.2</strong> 두 반달(make_moons) 데이터. (a) 직선 하나로는 두 클래스를 나눌 수 없습니다. (b) MLP는 비선형 활성화를 통해 이처럼 휘어진 결정경계를 만들 수 있어 두 클래스를 분리합니다. 이 데이터가 활성화 함수의 필요성을 잘 보여 줍니다.</p>
+</div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> Dataset, DataLoader, random_split</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_moons</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) 합성 데이터 생성 (2차원 입력, 0/1 라벨)</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> make_moons(n_samples<span class="op">=</span><span class="dv">2000</span>, noise<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> StandardScaler().fit_transform(X)   <span class="co"># 특성 표준화(평균0, 분산1)</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor(X, dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.tensor(y, dtype<span class="op">=</span>torch.float32).unsqueeze(<span class="dv">1</span>)   <span class="co"># (N, 1)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>특성을 표준화하면 각 입력 차원의 크기가 비슷해져 최적화가 안정됩니다. 표준화는 다음과 같이 정의됩니다.</p>
+<p><span class="math display">\[
+\tilde{x}_j = \frac{x_j - \mu_j}{\sigma_j},
+\]</span></p>
+<p>여기서 <span class="math inline">\(\mu_j,\sigma_j\)</span>는 훈련 데이터에서 계산한 <span class="math inline">\(j\)</span>번째 특성의 평균과 표준편차입니다. <strong>통계량은 반드시 훈련 데이터에서만 계산</strong>하여 검증·테스트에 적용해야 정보 누출을 막을 수 있습니다.</p>
+</section>
+<section id="dataset과-dataloader" class="level3" data-number="1.9.3">
+<h3 data-number="1.9.3" class="anchored" data-anchor-id="dataset과-dataloader"><span class="header-section-number">1.9.3</span> Dataset과 DataLoader</h3>
+<p><code>Dataset</code>은 “<span class="math inline">\(i\)</span>번째 샘플이 무엇인가”를 정의하고, <code>DataLoader</code>는 그것을 미니배치로 묶어 섞고 병렬로 실어 나릅니다. 미니배치 단위 학습은 경사하강법의 표준적 형태입니다<span class="citation" data-cites="bottou2010large">(<a href="#ref-bottou2010large" role="doc-biblioref">Bottou, 2010</a>)</span>.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MoonDataset(Dataset):</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, X, y):</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.X, <span class="va">self</span>.y <span class="op">=</span> X, y</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__len__</span>(<span class="va">self</span>):</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">len</span>(<span class="va">self</span>.X)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__getitem__</span>(<span class="va">self</span>, i):</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.X[i], <span class="va">self</span>.y[i]</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>full <span class="op">=</span> MoonDataset(X, y)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co"># train/val/test = 70% / 15% / 15% 로 분할</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(full)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>n_train, n_val <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.7</span><span class="op">*</span>n), <span class="bu">int</span>(<span class="fl">0.15</span><span class="op">*</span>n)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>n_test <span class="op">=</span> n <span class="op">-</span> n_train <span class="op">-</span> n_val</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> torch.Generator().manual_seed(<span class="dv">0</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>train_ds, val_ds, test_ds <span class="op">=</span> random_split(full, [n_train, n_val, n_test], generator<span class="op">=</span>g)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(train_ds, batch_size<span class="op">=</span><span class="dv">64</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>val_loader   <span class="op">=</span> DataLoader(val_ds,   batch_size<span class="op">=</span><span class="dv">256</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>test_loader  <span class="op">=</span> DataLoader(test_ds,  batch_size<span class="op">=</span><span class="dv">256</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="mlp-모델-정의" class="level3" data-number="1.9.4">
+<h3 data-number="1.9.4" class="anchored" data-anchor-id="mlp-모델-정의"><span class="header-section-number">1.9.4</span> MLP 모델 정의</h3>
+<p>입력 2차원 → 은닉 32 → 은닉 32 → 출력 1(로짓)의 MLP를 정의합니다. 활성화 함수로는 널리 쓰이는 ReLU를 사용합니다<span class="citation" data-cites="nair2010rectified glorot2011deep">(<a href="#ref-nair2010rectified" role="doc-biblioref">Nair &amp; Hinton, 2010</a>; <a href="#ref-glorot2011deep" role="doc-biblioref">Glorot 기타, 2011</a>)</span>. 비선형 활성화가 없으면 층을 아무리 쌓아도 하나의 아핀 변환으로 축약되어 반달 데이터를 분류할 수 없습니다.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MLP(nn.Module):</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, in_dim<span class="op">=</span><span class="dv">2</span>, hidden<span class="op">=</span><span class="dv">32</span>):</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.net <span class="op">=</span> nn.Sequential(</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>            nn.Linear(in_dim, hidden),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden, hidden),</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden, <span class="dv">1</span>),   <span class="co"># 로짓 1개 출력 (시그모이드는 손실에 포함)</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.net(x)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> MLP().to(device)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이 모델이 반달 데이터를 어떻게 분류하는지 기하학적으로 보면 이해가 깊어집니다. 첫 번째 선형층은 입력 평면을 여러 방향으로 자르는 직선(초평면)들을 만들고, ReLU는 각 직선의 한쪽을 0으로 눌러 <strong>꺾인 경계</strong>를 만듭니다. 이런 꺾임을 여러 개 조합하면 곡선에 가까운 복잡한 결정경계가 만들어집니다. 즉 신경망은 단순한 조각(선형 변환)과 꺾임(비선형)을 반복해 쌓아 임의의 곡선 경계를 근사하는 것입니다. 은닉 뉴런의 수를 늘리면 더 많은 꺾임을 쓸 수 있어 표현력이 커지지만, 그만큼 과적합 위험도 함께 커집니다.</p>
+<p>활성화 함수의 선택도 학습에 영향을 줍니다. 시그모이드나 탄젠트는 입력이 크면 기울기가 0에 가까워지는 포화가 일어나 깊은 망에서 학습이 느려집니다. 반면 ReLU는 양수 구간에서 기울기가 항상 1이라 이 문제가 덜해, 오늘날 은닉층의 기본 선택이 되었습니다.</p>
+<div class="figbody">
+<p><img src="figs/ch1_activations.png" class="img-fluid" style="width:68.0%" alt="ReLU, Sigmoid, Tanh 활성화 함수"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 1.3</strong> 대표적 비선형 활성화 함수. ReLU는 0을 기준으로 꺾이며 양수 구간에서 기울기가 1로 일정합니다. 시그모이드와 탄젠트는 입력이 크거나 작아지면 곡선이 평평해져(포화) 기울기가 0에 가까워집니다.</p>
+</div>
+<p>다만 ReLU는 음수 입력에서 출력과 기울기가 모두 0이 되어 일부 뉴런이 영영 활성화되지 않는 “죽은 ReLU” 현상이 생길 수 있는데, 이를 완화한 LeakyReLU·ELU 같은 변형도 있습니다. 이런 선택지들의 원리는 2장에서 더 깊이 다룹니다.</p>
+</section>
+<section id="손실-함수옵티마이저학습률-스케줄러" class="level3" data-number="1.9.5">
+<h3 data-number="1.9.5" class="anchored" data-anchor-id="손실-함수옵티마이저학습률-스케줄러"><span class="header-section-number">1.9.5</span> 손실 함수·옵티마이저·학습률 스케줄러</h3>
+<p>이진 분류의 손실은 <strong>이진 교차 엔트로피(BCE)</strong>입니다. 수치적으로 안정적인 <code>BCEWithLogitsLoss</code>는 시그모이드와 BCE를 하나로 묶습니다. 라벨 <span class="math inline">\(y\in\{0,1\}\)</span>과 예측 확률 <span class="math inline">\(\hat{p}=\sigma(z)\)</span>에 대해 한 샘플의 손실은 다음과 같습니다.</p>
+<p><span class="math display">\[
+\mathcal{L} = -\big[\, y\log\hat{p} + (1-y)\log(1-\hat{p}) \,\big].
+\]</span></p>
+<p>옵티마이저로는 확률적 경사하강법<span class="citation" data-cites="robbins1951stochastic">(<a href="#ref-robbins1951stochastic" role="doc-biblioref">Robbins &amp; Monro, 1951</a>)</span>에서 발전한, 파라미터별 적응적 학습률을 갖는 Adam을 사용합니다<span class="citation" data-cites="kingma2014adam">(<a href="#ref-kingma2014adam" role="doc-biblioref">Kingma &amp; Ba, 2015</a>)</span>. 학습이 진행됨에 따라 학습률을 코사인 곡선으로 줄이는 스케줄러를 붙여 후반부 수렴을 안정화합니다<span class="citation" data-cites="loshchilov2017sgdr">(<a href="#ref-loshchilov2017sgdr" role="doc-biblioref">Loshchilov &amp; Hutter, 2017</a>)</span>.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.optim <span class="im">as</span> optim</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.BCEWithLogitsLoss()</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-2</span>, weight_decay<span class="op">=</span><span class="fl">1e-4</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>scheduler <span class="op">=</span> optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max<span class="op">=</span><span class="dv">50</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><code>weight_decay</code>는 가중치의 크기에 벌점을 주는 정규화로, 과적합을 억제하고 일반화를 돕습니다. Adam에서는 가중치 감쇠를 분리해 적용하는 방식이 더 낫다는 연구도 참고할 만합니다<span class="citation" data-cites="loshchilov2019decoupled">(<a href="#ref-loshchilov2019decoupled" role="doc-biblioref">Loshchilov &amp; Hutter, 2019</a>)</span>.</p>
+</section>
+<section id="학습검증테스트-루프" class="level3" data-number="1.9.6">
+<h3 data-number="1.9.6" class="anchored" data-anchor-id="학습검증테스트-루프"><span class="header-section-number">1.9.6</span> 학습·검증·테스트 루프</h3>
+<p>한 에폭은 순전파 → 손실 → 역전파 → 파라미터 갱신을 미니배치마다 반복합니다. 검증 단계에서는 기울기를 계산하지 않도록 <code>torch.no_grad()</code>와 <code>model.eval()</code>을 사용합니다. <code>eval()</code>은 드롭아웃·배치정규화 같은 계층을 평가 모드로 전환하는데<span class="citation" data-cites="srivastava2014dropout ioffe2015batch">(<a href="#ref-srivastava2014dropout" role="doc-biblioref">Srivastava 기타, 2014</a>; <a href="#ref-ioffe2015batch" role="doc-biblioref">Ioffe &amp; Szegedy, 2015</a>)</span>, 이 예제에서는 해당 계층이 없지만 습관적으로 항상 켜고 끄는 것이 안전합니다.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_epoch(model, loader, criterion, optimizer<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    is_train <span class="op">=</span> optimizer <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    model.train() <span class="cf">if</span> is_train <span class="cf">else</span> model.<span class="bu">eval</span>()</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    total_loss, correct, total <span class="op">=</span> <span class="fl">0.0</span>, <span class="dv">0</span>, <span class="dv">0</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.set_grad_enabled(is_train):</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>            xb, yb <span class="op">=</span> xb.to(device), yb.to(device)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>            logits <span class="op">=</span> model(xb)                 <span class="co"># 순전파</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> criterion(logits, yb)        <span class="co"># 손실</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> is_train:</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>                optimizer.zero_grad()          <span class="co"># 기울기 초기화</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>                loss.backward()               <span class="co"># 역전파</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>                optimizer.step()              <span class="co"># 파라미터 갱신</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>            total_loss <span class="op">+=</span> loss.item() <span class="op">*</span> <span class="bu">len</span>(xb)</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>            pred <span class="op">=</span> (torch.sigmoid(logits) <span class="op">&gt;</span> <span class="fl">0.5</span>).<span class="bu">float</span>()</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>            correct <span class="op">+=</span> (pred <span class="op">==</span> yb).<span class="bu">sum</span>().item()</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>            total <span class="op">+=</span> <span class="bu">len</span>(xb)</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total_loss <span class="op">/</span> total, correct <span class="op">/</span> total</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이제 전체 학습을 수행합니다. 매 에폭 훈련·검증 손실과 정확도를 기록하고, <strong>검증 정확도가 가장 높은 순간의 파라미터를 저장</strong>해 두었다가 마지막에 테스트에 사용합니다. 이는 과적합 이전의 가장 좋은 모델을 고르는 간단한 조기 선택 전략입니다.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>best_val_acc, best_state <span class="op">=</span> <span class="fl">0.0</span>, <span class="va">None</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>EPOCHS <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, EPOCHS <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    tr_loss, tr_acc <span class="op">=</span> run_epoch(model, train_loader, criterion, optimizer)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    va_loss, va_acc <span class="op">=</span> run_epoch(model, val_loader, criterion)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    scheduler.step()</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> va_acc <span class="op">&gt;</span> best_val_acc:</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>        best_val_acc <span class="op">=</span> va_acc</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>        best_state <span class="op">=</span> {k: v.detach().cpu().clone() <span class="cf">for</span> k, v <span class="kw">in</span> model.state_dict().items()}</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> epoch <span class="op">%</span> <span class="dv">10</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>epoch<span class="sc">:3d}</span><span class="ss">] train_loss=</span><span class="sc">{</span>tr_loss<span class="sc">:.3f}</span><span class="ss"> acc=</span><span class="sc">{</span>tr_acc<span class="sc">:.3f}</span><span class="ss"> | "</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>              <span class="ss">f"val_loss=</span><span class="sc">{</span>va_loss<span class="sc">:.3f}</span><span class="ss"> acc=</span><span class="sc">{</span>va_acc<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 최적 파라미터 복원 후 테스트</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>model.load_state_dict(best_state)</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>te_loss, te_acc <span class="op">=</span> run_epoch(model, test_loader, criterion)</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"테스트 정확도: </span><span class="sc">{</span>te_acc<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이 코드의 골격—Dataset, DataLoader, 모델, 손실, 옵티마이저, 스케줄러, 그리고 train/val/test 루프—은 회귀든 다중 분류든, 이미지든 시계열이든 거의 그대로 재사용됩니다. 바뀌는 것은 데이터셋과 모델, 손실 함수뿐입니다. 이 <span class="key">일관된 템플릿</span>을 손에 익히는 것이 1장의 가장 중요한 목표입니다.</p>
+<div class="keybox">
+<p><strong>핵심.</strong> 파이토치 학습은 언제나 <strong>Dataset → DataLoader → 모델 → 손실 → 역전파 → optimizer.step → scheduler.step</strong>의 반복입니다. 문제가 바뀌어도 이 뼈대는 그대로이고, 데이터셋·출력층·손실 함수만 교체하면 됩니다.</p>
+</div>
+</section>
+<section id="템플릿을-다른-문제로-확장하기" class="level3" data-number="1.9.7">
+<h3 data-number="1.9.7" class="anchored" data-anchor-id="템플릿을-다른-문제로-확장하기"><span class="header-section-number">1.9.7</span> 템플릿을 다른 문제로 확장하기</h3>
+<p>같은 뼈대에서 문제 유형만 바꾸면 다음처럼 대응됩니다. 이 대응표는 앞으로 장마다 반복해서 확인하게 됩니다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>문제 유형</th>
+<th>출력층</th>
+<th>손실 함수</th>
+<th>평가 지표</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>이진 분류</td>
+<td>로짓 1개</td>
+<td><code>BCEWithLogitsLoss</code></td>
+<td>정확도, F1</td>
+</tr>
+<tr class="even">
+<td>다중 분류</td>
+<td>로짓 <span class="math inline">\(C\)</span>개</td>
+<td><code>CrossEntropyLoss</code></td>
+<td>정확도, 매크로 F1</td>
+</tr>
+<tr class="odd">
+<td>회귀</td>
+<td>실수 1개</td>
+<td><code>MSELoss</code>/<code>L1Loss</code></td>
+<td>RMSE, MAE</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="배치스텝에폭과-학습-동역학" class="level3" data-number="1.9.8">
+<h3 data-number="1.9.8" class="anchored" data-anchor-id="배치스텝에폭과-학습-동역학"><span class="header-section-number">1.9.8</span> 배치·스텝·에폭과 학습 동역학</h3>
+<p>학습 루프를 제대로 다루려면 세 가지 시간 단위를 구분해야 합니다. <strong>배치(batch)</strong>는 한 번에 처리하는 샘플 묶음이고, 배치 하나로 파라미터를 한 번 갱신하는 것이 <strong>스텝(step)</strong>이며, 전체 데이터를 한 바퀴 도는 것이 <strong>에폭(epoch)</strong>입니다. 데이터가 <span class="math inline">\(N\)</span>개이고 배치 크기가 <span class="math inline">\(B\)</span>이면 한 에폭은 대략 <span class="math inline">\(N/B\)</span>번의 스텝으로 이루어집니다.</p>
+<p>배치 크기는 학습에 미묘하지만 중요한 영향을 줍니다. 배치가 크면 기울기 추정이 정확해져 갱신이 안정적이지만, 그만큼 잡음이 줄어 평평한 최소점을 벗어나기 어려울 수 있고 메모리도 많이 씁니다. 반대로 배치가 작으면 기울기에 잡음이 많아 갱신이 출렁이지만, 이 잡음이 오히려 얕은 지역 최소를 탈출하는 데 도움을 주기도 합니다. 일반적으로 배치 크기를 키우면 학습률도 함께 조정하는 것이 좋습니다.</p>
+<p>학습이 잘 진행되는지는 에폭에 따른 손실과 정확도의 변화, 즉 <strong>학습 곡선</strong>으로 확인합니다. 그림 1.4은 전형적인 학습 곡선입니다.</p>
+<div class="figbody">
+<p><img src="figs/ch1_learning_curve.png" class="img-fluid" style="width:100.0%" alt="훈련·검증 손실과 정확도 곡선"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 1.4</strong> 전형적인 학습 곡선. 에폭이 진행되며 훈련·검증 손실이 함께 감소하고 정확도가 상승합니다. 훈련과 검증의 격차가 벌어지고 검증 손실이 다시 오르기 시작하면 과적합의 신호이며, 이 지점 부근의 모델을 선택하는 것이 좋습니다.</p>
+</div>
+<p>학습의 목표는 손실 함수라는 고차원 곡면 위에서 낮은 지점을 찾는 것입니다. 이 <strong>손실 지형(loss landscape)</strong>은 파라미터가 수백만 차원이라 직접 볼 수는 없지만, 옵티마이저는 매 스텝 경사를 따라 이 곡면을 내려갑니다. 학습률이 너무 크면 골짜기를 건너뛰며 발산하고, 너무 작으면 수렴이 한없이 느려집니다. 그래서 앞서 붙인 학습률 스케줄러가 초반에는 크게, 후반에는 작게 움직여 안정적인 수렴을 돕는 것입니다.</p>
+<p>한 가지 더, 매 에폭 훈련 데이터를 다시 섞는 이유도 여기에 있습니다. 배치의 구성이 매번 달라지면 기울기 추정의 편향이 줄고, 모델이 데이터 순서에 우연히 의존하는 것을 막습니다. 이런 이유로 훈련 로더는 <code>shuffle=True</code>, 검증·테스트 로더는 순서를 고정합니다. 이렇게 배치·스텝·에폭·학습률·셔플이 맞물려 만들어 내는 것이 곧 신경망의 학습 동역학입니다.</p>
+
+
+</section>
+</section>
+<section id="bibliography" class="level1 unnumbered">
+<h1 class="unnumbered">참고문헌</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="1" role="list">
+<div id="ref-abadi2016tensorflow" class="csl-entry" role="listitem">
+M. Abadi, P. Barham, J. Chen, Z. Chen, A. Davis, J. Dean, &amp; others. 2016. <span>“TensorFlow: A System for Large-Scale Machine Learning”</span>. <em>12th USENIX Symposium on Operating Systems Design and Implementation (OSDI)</em>, pp. 265–283.
+</div>
+<div id="ref-baydin2018automatic" class="csl-entry" role="listitem">
+A. G. Baydin, B. A. Pearlmutter, A. A. Radul, &amp; J. M. Siskind. 2018. <span>“Automatic differentiation in machine learning: A survey”</span>. <em>Journal of Machine Learning Research</em>, vol 18, pp. 1–43.
+</div>
+<div id="ref-bottou2010large" class="csl-entry" role="listitem">
+L. Bottou. 2010. <span>“Large-scale machine learning with stochastic gradient descent”</span>. <em>Proceedings of COMPSTAT’2010</em>, pp. 177–186.
+</div>
+<div id="ref-cybenko1989approximation" class="csl-entry" role="listitem">
+G. Cybenko. 1989. <span>“Approximation by superpositions of a sigmoidal function”</span>. <em>Mathematics of Control, Signals and Systems</em>, vol 2, pp. 303–314.
+</div>
+<div id="ref-glorot2011deep" class="csl-entry" role="listitem">
+X. Glorot, A. Bordes, &amp; Y. Bengio. 2011. <span>“Deep sparse rectifier neural networks”</span>. <em>International Conference on Artificial Intelligence and Statistics (AISTATS)</em>, pp. 315–323.
+</div>
+<div id="ref-goodfellow2016deep" class="csl-entry" role="listitem">
+I. Goodfellow, Y. Bengio, &amp; A. Courville. 2016. <span>“Deep Learning”</span>. MIT Press.
+</div>
+<div id="ref-harris2020numpy" class="csl-entry" role="listitem">
+C. R. Harris, K. J. Millman, S. J. van der Walt, R. Gommers, P. Virtanen, D. Cournapeau, &amp; others. 2020. <span>“Array programming with NumPy”</span>. <em>Nature</em>, vol 585, pp. 357–362. https://doi.org/<a href="https://doi.org/10.1038/s41586-020-2649-2">10.1038/s41586-020-2649-2</a>
+</div>
+<div id="ref-hornik1989multilayer" class="csl-entry" role="listitem">
+K. Hornik, M. Stinchcombe, &amp; H. White. 1989. <span>“Multilayer feedforward networks are universal approximators”</span>. <em>Neural Networks</em>, vol 2, pp. 359–366.
+</div>
+<div id="ref-ioffe2015batch" class="csl-entry" role="listitem">
+S. Ioffe &amp; C. Szegedy. 2015. <span>“Batch normalization: Accelerating deep network training by reducing internal covariate shift”</span>. <em>International Conference on Machine Learning (ICML)</em>, pp. 448–456.
+</div>
+<div id="ref-kingma2014adam" class="csl-entry" role="listitem">
+D. P. Kingma &amp; J. Ba. 2015. <span>“Adam: A method for stochastic optimization”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+</div>
+<div id="ref-krizhevsky2012imagenet" class="csl-entry" role="listitem">
+A. Krizhevsky, I. Sutskever, &amp; G. E. Hinton. 2012. <span>“ImageNet classification with deep convolutional neural networks”</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
+</div>
+<div id="ref-lecun2015deep" class="csl-entry" role="listitem">
+Y. LeCun, Y. Bengio, &amp; G. Hinton. 2015. <span>“Deep learning”</span>. <em>Nature</em>, vol 521, pp. 436–444. https://doi.org/<a href="https://doi.org/10.1038/nature14539">10.1038/nature14539</a>
+</div>
+<div id="ref-loshchilov2017sgdr" class="csl-entry" role="listitem">
+I. Loshchilov &amp; F. Hutter. 2017. <span>“SGDR: Stochastic gradient descent with warm restarts”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+</div>
+<div id="ref-loshchilov2019decoupled" class="csl-entry" role="listitem">
+I. Loshchilov &amp; F. Hutter. 2019. <span>“Decoupled weight decay regularization”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+</div>
+<div id="ref-micikevicius2018mixed" class="csl-entry" role="listitem">
+P. Micikevicius, S. Narang, J. Alben, G. Diamos, E. Elsen, &amp; others. 2018. <span>“Mixed precision training”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+</div>
+<div id="ref-nair2010rectified" class="csl-entry" role="listitem">
+V. Nair &amp; G. E. Hinton. 2010. <span>“Rectified linear units improve restricted Boltzmann machines”</span>. <em>International Conference on Machine Learning (ICML)</em>, pp. 807–814.
+</div>
+<div id="ref-paszke2019pytorch" class="csl-entry" role="listitem">
+A. Paszke, S. Gross, F. Massa, A. Lerer, J. Bradbury, G. Chanan, T. Killeen, Z. Lin, N. Gimelshein, L. Antiga, &amp; others. 2019. <span>“PyTorch: An Imperative Style, High-Performance Deep Learning Library”</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
+</div>
+<div id="ref-pedregosa2011scikit" class="csl-entry" role="listitem">
+F. Pedregosa, G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, &amp; others. 2011. <span>“Scikit-learn: Machine Learning in Python”</span>. <em>Journal of Machine Learning Research</em>, vol 12, pp. 2825–2830.
+</div>
+<div id="ref-robbins1951stochastic" class="csl-entry" role="listitem">
+H. Robbins &amp; S. Monro. 1951. <span>“A stochastic approximation method”</span>. <em>The Annals of Mathematical Statistics</em>, vol 22, pp. 400–407.
+</div>
+<div id="ref-rumelhart1986learning" class="csl-entry" role="listitem">
+D. E. Rumelhart, G. E. Hinton, &amp; R. J. Williams. 1986. <span>“Learning representations by back-propagating errors”</span>. <em>Nature</em>, vol 323, pp. 533–536. https://doi.org/<a href="https://doi.org/10.1038/323533a0">10.1038/323533a0</a>
+</div>
+<div id="ref-srivastava2014dropout" class="csl-entry" role="listitem">
+N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, &amp; R. Salakhutdinov. 2014. <span>“Dropout: A simple way to prevent neural networks from overfitting”</span>. <em>Journal of Machine Learning Research</em>, vol 15, pp. 1929–1958.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".quiz-item input[type='checkbox']").forEach((box) => {
+    box.disabled = false;
+    box.removeAttribute("disabled");
+  });
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "복사완료!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "복사완료!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="머리말">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">머리말</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./week01-quiz.html" class="pagination-link" aria-label="1주차 연습문제">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">1주차 연습문제</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>AI 모델링 실습</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>2026-2학기</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

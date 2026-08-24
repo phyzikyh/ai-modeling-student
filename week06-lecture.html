@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>16&nbsp; 객체탐지와 최신 이미지 모델 – AI 모델링 실습 · 학생용</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 1em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week07-lecture.html" rel="next">
+<link href="./week05-lab.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-dc2f893ab7b818674e6dd1532d8eda25.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색",
+    "search-label": "검색"
+  }
+}</script>
+<meta name="mermaid-theme" content="default">
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="사이드바 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week06-lecture.html">6주차 · 객체탐지와 최신 이미지 모델</a></li><li class="breadcrumb-item"><a href="./week06-lecture.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">객체탐지와 최신 이미지 모델</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="사이드바 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="검색" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">AI 모델링 실습 · 학생용</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="검색"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">머리말</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">1주차 · AI 모델 학습 개요</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">AI 모델 학습 개요</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">1주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">1주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">2주차 · 모델 학습 기본 개념</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">모델 학습 기본 개념</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">2주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">2주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">3주차 · RNN·LSTM·GRU 기반 시계열 모델링</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">RNN·LSTM·GRU 기반 시계열 모델링</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">3주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">3주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">4주차 · Transformer 기반 시계열 모델링</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Transformer 기반 시계열 모델링</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">4주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">4주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">5주차 · CNN 기반 이미지 분류와 전이학습</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week05-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">CNN 기반 이미지 분류와 전이학습</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week05-quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">5주차 연습문제</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week05-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">5주차 코딩 실습</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">6주차 · 객체탐지와 최신 이미지 모델</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week06-lecture.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">객체탐지와 최신 이미지 모델</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">7주차 · 생성 모델 입문</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="토글 섹션">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week07-lecture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">생성 모델 입문</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#sec-cv-concept" id="toc-sec-cv-concept" class="nav-link active" data-scroll-target="#sec-cv-concept"><span class="header-section-number">16.1</span> 컴퓨터 비전이란</a></li>
+  <li><a href="#sec-how-vision" id="toc-sec-how-vision" class="nav-link" data-scroll-target="#sec-how-vision"><span class="header-section-number">16.2</span> 컴퓨터가 시각 정보를 해석하는 방식</a></li>
+  <li><a href="#sec-tasks-compare" id="toc-sec-tasks-compare" class="nav-link" data-scroll-target="#sec-tasks-compare"><span class="header-section-number">16.3</span> 이미지 분류·객체탐지·분할의 관계</a></li>
+  <li><a href="#sec-detection-concept" id="toc-sec-detection-concept" class="nav-link" data-scroll-target="#sec-detection-concept"><span class="header-section-number">16.4</span> 객체탐지의 개념과 평가</a>
+  <ul class="collapse">
+  <li><a href="#겹침-정도-iou" id="toc-겹침-정도-iou" class="nav-link" data-scroll-target="#겹침-정도-iou"><span class="header-section-number">16.4.1</span> 겹침 정도: IoU</a></li>
+  <li><a href="#중복-제거-nms" id="toc-중복-제거-nms" class="nav-link" data-scroll-target="#중복-제거-nms"><span class="header-section-number">16.4.2</span> 중복 제거: NMS</a></li>
+  <li><a href="#종합-성능-map" id="toc-종합-성능-map" class="nav-link" data-scroll-target="#종합-성능-map"><span class="header-section-number">16.4.3</span> 종합 성능: mAP</a></li>
+  </ul></li>
+  <li><a href="#sec-detection-taxonomy" id="toc-sec-detection-taxonomy" class="nav-link" data-scroll-target="#sec-detection-taxonomy"><span class="header-section-number">16.5</span> 객체탐지 모델의 두 갈래</a></li>
+  <li><a href="#sec-two-stage" id="toc-sec-two-stage" class="nav-link" data-scroll-target="#sec-two-stage"><span class="header-section-number">16.6</span> 2단계 검출기: R-CNN 계열</a>
+  <ul class="collapse">
+  <li><a href="#r-cnn" id="toc-r-cnn" class="nav-link" data-scroll-target="#r-cnn"><span class="header-section-number">16.6.1</span> R-CNN</a></li>
+  <li><a href="#fast-r-cnn" id="toc-fast-r-cnn" class="nav-link" data-scroll-target="#fast-r-cnn"><span class="header-section-number">16.6.2</span> Fast R-CNN</a></li>
+  <li><a href="#faster-r-cnn" id="toc-faster-r-cnn" class="nav-link" data-scroll-target="#faster-r-cnn"><span class="header-section-number">16.6.3</span> Faster R-CNN</a></li>
+  <li><a href="#mask-r-cnn" id="toc-mask-r-cnn" class="nav-link" data-scroll-target="#mask-r-cnn"><span class="header-section-number">16.6.4</span> Mask R-CNN</a></li>
+  <li><a href="#cascade-r-cnn" id="toc-cascade-r-cnn" class="nav-link" data-scroll-target="#cascade-r-cnn"><span class="header-section-number">16.6.5</span> Cascade R-CNN</a></li>
+  </ul></li>
+  <li><a href="#sec-one-stage" id="toc-sec-one-stage" class="nav-link" data-scroll-target="#sec-one-stage"><span class="header-section-number">16.7</span> 1단계 검출기</a>
+  <ul class="collapse">
+  <li><a href="#yolo" id="toc-yolo" class="nav-link" data-scroll-target="#yolo"><span class="header-section-number">16.7.1</span> YOLO</a></li>
+  <li><a href="#ssd" id="toc-ssd" class="nav-link" data-scroll-target="#ssd"><span class="header-section-number">16.7.2</span> SSD</a></li>
+  <li><a href="#retinanet과-초점-손실" id="toc-retinanet과-초점-손실" class="nav-link" data-scroll-target="#retinanet과-초점-손실"><span class="header-section-number">16.7.3</span> RetinaNet과 초점 손실</a></li>
+  <li><a href="#efficientdet" id="toc-efficientdet" class="nav-link" data-scroll-target="#efficientdet"><span class="header-section-number">16.7.4</span> EfficientDet</a></li>
+  <li><a href="#앵커-없는-검출기-fcoscenternetcornernet" id="toc-앵커-없는-검출기-fcoscenternetcornernet" class="nav-link" data-scroll-target="#앵커-없는-검출기-fcoscenternetcornernet"><span class="header-section-number">16.7.5</span> 앵커 없는 검출기: FCOS·CenterNet·CornerNet</a></li>
+  <li><a href="#단계와-1단계의-비교" id="toc-단계와-1단계의-비교" class="nav-link" data-scroll-target="#단계와-1단계의-비교"><span class="header-section-number">16.7.6</span> 2단계와 1단계의 비교</a></li>
+  </ul></li>
+  <li><a href="#sec-segmentation" id="toc-sec-segmentation" class="nav-link" data-scroll-target="#sec-segmentation"><span class="header-section-number">16.8</span> 이미지 분할과 인코더-디코더</a>
+  <ul class="collapse">
+  <li><a href="#인코더-디코더-아키텍처" id="toc-인코더-디코더-아키텍처" class="nav-link" data-scroll-target="#인코더-디코더-아키텍처"><span class="header-section-number">16.8.1</span> 인코더-디코더 아키텍처</a></li>
+  <li><a href="#u-net" id="toc-u-net" class="nav-link" data-scroll-target="#u-net"><span class="header-section-number">16.8.2</span> U-Net</a></li>
+  </ul></li>
+  <li><a href="#sec-modern" id="toc-sec-modern" class="nav-link" data-scroll-target="#sec-modern"><span class="header-section-number">16.9</span> 최신 동향: 트랜스포머 기반 검출</a></li>
+  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">참고문헌</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week06-lecture.html">6주차 · 객체탐지와 최신 이미지 모델</a></li><li class="breadcrumb-item"><a href="./week06-lecture.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">객체탐지와 최신 이미지 모델</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-ch6" class="quarto-section-identifier"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">객체탐지와 최신 이미지 모델</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<p>이 장은 이미지 안에서 “무엇이 어디에 있는가”를 찾는 객체탐지와, 픽셀 단위로 영역을 나누는 이미지 분할을 다룹니다. 먼저 컴퓨터 비전의 개념과 컴퓨터가 시각 정보를 해석하는 방식을 정리하고, 이미지 분류·객체탐지·분할의 공통점과 차이를 비교합니다. 이어서 R-CNN 계열의 2단계 검출기와 YOLO 계열의 1단계 검출기를 구조와 학습 방식까지 상세히 살펴보고, 인코더-디코더 구조의 U-Net을 중심으로 분할 모델을 이해합니다.</p>
+</blockquote>
+<section id="sec-cv-concept" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="sec-cv-concept"><span class="header-section-number">16.1</span> 컴퓨터 비전이란</h2>
+<p><strong>컴퓨터 비전(computer vision)</strong>은 컴퓨터가 이미지나 영상 같은 시각 정보를 입력받아 그 내용을 이해하고 해석하도록 하는 인공지능의 한 분야입니다. 사람은 사진 한 장을 보면 즉시 “공원에서 강아지가 뛰고 있다”처럼 장면을 이해하지만, 컴퓨터에게 이미지는 단지 숫자의 격자일 뿐입니다. 컴퓨터 비전의 목표는 이 숫자 격자로부터 의미 있는 정보를 끌어내는 것입니다.</p>
+<p>컴퓨터 비전에는 여러 과제가 있습니다. 이미지 전체가 무엇인지 맞히는 <strong>이미지 분류(image classification)</strong>, 물체의 위치까지 찾는 <strong>객체탐지(object detection)</strong>, 픽셀마다 어떤 물체에 속하는지 구분하는 <strong>이미지 분할(image segmentation)</strong>, 그리고 자세 추정·추적·영상 이해 등이 있습니다. 이 장에서는 그중 위치를 다루는 객체탐지와 분할에 집중합니다.</p>
+<p>컴퓨터 비전이 어려운 근본 이유는, 사람에게는 쉬운 시각 인식이 컴퓨터에게는 매우 복잡한 문제이기 때문입니다. 같은 물체라도 보는 각도, 조명, 크기, 가려짐, 배경에 따라 픽셀 값은 완전히 달라집니다. 고양이 한 마리를 찍은 두 사진이 픽셀 수준에서는 전혀 닮지 않을 수 있습니다. 그럼에도 “둘 다 고양이”라고 인식하려면, 픽셀의 표면적 차이를 넘어 물체의 본질적 형태를 포착하는 표현을 학습해야 합니다. 컴퓨터 비전의 역사는 이 강인한 표현을 어떻게 얻을 것인가에 대한 탐구의 역사이기도 합니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+    CV["컴퓨터 비전"] --&gt; C1["이미지 분류&lt;br/&gt;무엇인가?"]
+    CV --&gt; C2["객체탐지&lt;br/&gt;무엇이 어디에?"]
+    CV --&gt; C3["이미지 분할&lt;br/&gt;픽셀 단위 영역"]
+    CV --&gt; C4["자세 추정·추적 등"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-how-vision" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="sec-how-vision"><span class="header-section-number">16.2</span> 컴퓨터가 시각 정보를 해석하는 방식</h2>
+<p>컴퓨터가 이미지를 해석하는 방식은 시대에 따라 크게 변해 왔습니다. 그 흐름을 이해하면 오늘날의 딥러닝 방식이 왜 강력한지 알 수 있습니다.</p>
+<p>컴퓨터에게 이미지는 근본적으로 픽셀 값들의 격자, 즉 숫자의 배열입니다. 이 숫자들 자체에는 “고양이”나 “자동차”라는 의미가 담겨 있지 않습니다. 따라서 시각 정보를 해석한다는 것은, 이 저수준의 픽셀 값으로부터 점점 더 추상적이고 의미 있는 <strong>표현(representation)</strong>을 단계적으로 만들어 내는 과정이라 할 수 있습니다. 픽셀에서 경계선으로, 경계선에서 부분 형태로, 부분에서 물체 전체로 나아가는 계층적 해석이 핵심입니다.</p>
+<p>초기에는 사람이 이미지에서 의미 있는 <strong>특징을 직접 설계</strong>했습니다. 경계선의 방향 분포를 세는 HOG(Histogram of Oriented Gradients)<span class="citation" data-cites="dalal2005histograms">(<a href="#ref-dalal2005histograms" role="doc-biblioref">Dalal &amp; Triggs, 2005</a>)</span>나, 밝기 차이 패턴을 빠르게 계산해 얼굴을 찾는 비올라-존스 검출기<span class="citation" data-cites="viola2001rapid">(<a href="#ref-viola2001rapid" role="doc-biblioref">Viola &amp; Jones, 2001</a>)</span>가 대표적입니다. 이런 방식은 사람이 “물체의 어떤 성질이 중요한가”를 미리 정하고, 그 성질을 수치화하는 규칙을 손으로 만들었습니다. 잘 동작하는 경우도 있었지만, 조명·자세·배경이 바뀌면 성능이 크게 떨어졌고 새로운 물체마다 특징을 다시 설계해야 했습니다.</p>
+<p>딥러닝은 이 패러다임을 근본적으로 바꾸었습니다. 5장에서 본 합성곱 신경망은 <strong>특징을 사람이 설계하는 대신 데이터로부터 학습</strong>합니다. 앞쪽 층은 모서리·색 같은 저수준 특징을, 뒤쪽 층은 눈·바퀴 같은 고수준 특징을 스스로 조직합니다. 이 계층적 특징 표현이 조명이나 자세 변화에도 강인하게 작동하면서, 컴퓨터 비전의 성능이 비약적으로 향상되었습니다. 오늘날 객체탐지·분할 모델은 모두 이 CNN이 뽑아낸 특징 위에서 동작합니다. 최근에는 합성곱 대신 어텐션으로 이미지를 해석하는 트랜스포머 계열도 등장했습니다<span class="citation" data-cites="dosovitskiy2021image carion2020end">(<a href="#ref-dosovitskiy2021image" role="doc-biblioref">Dosovitskiy 기타, 2021</a>; <a href="#ref-carion2020end" role="doc-biblioref">Carion 기타, 2020</a>)</span>.</p>
+</section>
+<section id="sec-tasks-compare" class="level2" data-number="16.3">
+<h2 data-number="16.3" class="anchored" data-anchor-id="sec-tasks-compare"><span class="header-section-number">16.3</span> 이미지 분류·객체탐지·분할의 관계</h2>
+<p>세 과제는 모두 “이미지를 이해한다”는 공통 목표를 가지지만, 출력의 형태와 세밀함이 다릅니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    IMG["입력 이미지"] --&gt; A["분류&lt;br/&gt;이미지→클래스 1개"]
+    IMG --&gt; B["객체탐지&lt;br/&gt;물체마다 박스+클래스"]
+    IMG --&gt; C["의미 분할&lt;br/&gt;픽셀마다 클래스"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<ul>
+<li><strong>이미지 분류(인식)</strong>: 이미지 전체에 대해 하나의 클래스를 출력합니다. “이 사진은 고양이”처럼 물체가 무엇인지만 답하고, 위치는 다루지 않습니다.</li>
+<li><strong>객체탐지</strong>: 이미지 안의 각 물체에 대해 <strong>경계 상자(bounding box)</strong>와 클래스를 함께 출력합니다. “왼쪽 위에 고양이, 오른쪽 아래에 강아지”처럼 여러 물체의 종류와 위치를 동시에 찾습니다.</li>
+<li><strong>이미지 분할</strong>: 픽셀 하나하나에 클래스를 부여합니다. 같은 종류의 물체를 하나로 묶는 <strong>의미 분할(semantic segmentation)</strong>과, 같은 종류라도 개체를 구분하는 <strong>인스턴스 분할(instance segmentation)</strong>로 나뉩니다.</li>
+</ul>
+<p><strong>공통점</strong>은 셋 모두 CNN이 추출한 특징 위에서 동작하며, 대규모 라벨 데이터로 학습된다는 점입니다. ImageNet으로 사전학습한 분류 모델을 <strong>백본(backbone)</strong>으로 삼아 그 위에 과제별 머리를 붙이는 전이학습 구조가 공통적으로 쓰입니다.</p>
+<p><strong>차이점</strong>은 출력의 공간적 세밀함입니다. 분류는 이미지당 하나의 답, 객체탐지는 물체당 상자와 클래스, 분할은 픽셀당 클래스를 내놓습니다. 세밀할수록 더 정교한 구조와 더 상세한 라벨이 필요합니다. 객체탐지는 분류(무엇인가)와 위치 회귀(어디인가)를 동시에 푸는 문제라는 점에서 분류의 확장으로 볼 수 있습니다.</p>
+</section>
+<section id="sec-detection-concept" class="level2" data-number="16.4">
+<h2 data-number="16.4" class="anchored" data-anchor-id="sec-detection-concept"><span class="header-section-number">16.4</span> 객체탐지의 개념과 평가</h2>
+<p>객체탐지는 두 가지를 동시에 수행합니다. 하나는 물체의 위치를 사각형 상자로 찾는 <strong>위치 추정(localization)</strong>이고, 다른 하나는 그 상자 안 물체가 무엇인지 맞히는 <strong>분류(classification)</strong>입니다. 경계 상자는 보통 중심 좌표와 너비·높이 <span class="math inline">\((x, y, w, h)\)</span>, 또는 좌상단·우하단 좌표로 표현합니다.</p>
+<p>객체탐지가 분류보다 어려운 이유는 여러 가지입니다. 첫째, 한 이미지에 물체가 <strong>몇 개</strong> 있는지 미리 알 수 없습니다. 물체가 하나도 없을 수도, 수십 개가 겹쳐 있을 수도 있어 출력의 개수가 가변적입니다. 둘째, 물체의 <strong>크기 편차</strong>가 큽니다. 멀리 있는 작은 물체와 가까운 큰 물체를 같은 모델이 모두 잡아야 합니다. 셋째, 물체가 서로 <strong>가리거나 겹칠</strong> 때 구분이 어렵습니다. 이런 난점들 때문에 객체탐지는 오랫동안 어려운 문제였고, 이를 해결하는 다양한 구조가 발전해 왔습니다.</p>
+<p>이 문제를 다루는 한 가지 핵심 도구가 <strong>앵커 상자(anchor box)</strong>입니다. 미리 여러 크기와 가로세로 비율을 가진 기준 상자들을 정해 두고, 모델이 각 기준 상자를 얼마나 이동·확대해야 물체에 맞는지를 예측하게 하는 방식입니다. 상자를 무에서 예측하는 대신 기준으로부터의 보정값을 예측하므로 학습이 안정됩니다. 앵커는 Faster R-CNN, SSD, YOLO 등 많은 검출기의 바탕이 되었습니다.</p>
+<div class="figbody">
+<p><img src="figs/ch6_anchors.png" class="img-fluid" style="width:48.0%" alt="한 위치의 앵커 박스"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 6.1</strong> 앵커 박스. 특징 맵의 한 위치(가운데 +)에 서로 다른 크기와 가로세로 비율을 가진 여러 기준 상자를 미리 놓습니다. 모델은 이 기준 상자를 얼마나 이동·확대·축소해야 실제 물체에 맞는지를 예측합니다. 다양한 크기·형태의 물체에 대응하기 위한 장치입니다.</p>
+</div>
+<section id="겹침-정도-iou" class="level3" data-number="16.4.1">
+<h3 data-number="16.4.1" class="anchored" data-anchor-id="겹침-정도-iou"><span class="header-section-number">16.4.1</span> 겹침 정도: IoU</h3>
+<p>예측한 상자가 정답 상자와 얼마나 잘 겹치는지는 <strong>IoU(Intersection over Union)</strong>로 잽니다. 두 상자의 교집합 넓이를 합집합 넓이로 나눈 값입니다.</p>
+<p><span class="math display">\[
+\text{IoU} = \frac{\text{Area}(\text{예측} \cap \text{정답})}{\text{Area}(\text{예측} \cup \text{정답})}.
+\]</span></p>
+<p>IoU는 0에서 1 사이이며, 1에 가까울수록 정확히 겹친 것입니다. 보통 IoU가 0.5 이상이면 올바른 검출로 간주합니다.</p>
+<div class="figbody">
+<p><img src="figs/ch6_iou.png" class="img-fluid" style="width:88.0%" alt="IoU 시각화"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 6.2</strong> IoU(Intersection over Union). 정답 상자(초록)와 예측 상자(빨강 점선)의 교집합(파랑 음영) 넓이를 합집합 넓이로 나눈 값입니다. (a)처럼 어긋나면 IoU가 낮고, (b)처럼 잘 겹치면 IoU가 1에 가까워집니다.</p>
+</div>
+</section>
+<section id="중복-제거-nms" class="level3" data-number="16.4.2">
+<h3 data-number="16.4.2" class="anchored" data-anchor-id="중복-제거-nms"><span class="header-section-number">16.4.2</span> 중복 제거: NMS</h3>
+<p>검출기는 한 물체 주위에 비슷한 상자를 여러 개 예측하기 쉽습니다. 이를 정리하는 것이 <strong>비최대 억제(Non-Maximum Suppression, NMS)</strong>입니다. 같은 물체로 판단되는(IoU가 높은) 상자들 중 확신도가 가장 높은 하나만 남기고 나머지를 제거합니다. NMS는 거의 모든 검출기의 마지막 후처리 단계로 쓰입니다.</p>
+<div class="figbody">
+<p><img src="figs/ch6_nms.png" class="img-fluid" style="width:88.0%" alt="비최대 억제(NMS) 전후"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 6.3</strong> 비최대 억제(NMS). (a) 검출기는 한 물체 주위에 겹치는 상자를 여러 개(각각 확신도 표시) 예측합니다. (b) NMS는 서로 많이 겹치는 상자들 중 확신도가 가장 높은 하나만 남기고 나머지를 제거해, 물체마다 하나의 상자만 출력하도록 정리합니다.</p>
+</div>
+</section>
+<section id="종합-성능-map" class="level3" data-number="16.4.3">
+<h3 data-number="16.4.3" class="anchored" data-anchor-id="종합-성능-map"><span class="header-section-number">16.4.3</span> 종합 성능: mAP</h3>
+<p>검출 성능은 흔히 <strong>mAP(mean Average Precision)</strong>로 측정합니다. 각 클래스에 대해 정밀도-재현율 곡선 아래 면적(AP)을 구하고, 이를 모든 클래스에 대해 평균한 값입니다. PASCAL VOC<span class="citation" data-cites="everingham2010pascal">(<a href="#ref-everingham2010pascal" role="doc-biblioref">Everingham 기타, 2010</a>)</span>나 MS COCO<span class="citation" data-cites="lin2014microsoft">(<a href="#ref-lin2014microsoft" role="doc-biblioref">Lin 기타, 2014</a>)</span> 같은 표준 데이터셋과 mAP가 검출 연구의 공통 척도가 되어 왔습니다.</p>
+</section>
+</section>
+<section id="sec-detection-taxonomy" class="level2" data-number="16.5">
+<h2 data-number="16.5" class="anchored" data-anchor-id="sec-detection-taxonomy"><span class="header-section-number">16.5</span> 객체탐지 모델의 두 갈래</h2>
+<p>딥러닝이 등장하기 전의 검출은 다양한 위치·크기의 창을 이미지 전체에 미끄러뜨리며 각 창을 분류하는 슬라이딩 윈도 방식이 주류였습니다. 그러나 가능한 창의 수가 방대해 매우 느렸고, 손으로 설계한 특징의 한계도 있었습니다. 딥러닝 검출기는 CNN의 강력한 특징과 효율적인 구조로 이 문제를 풀었으며, 접근 방식에 따라 크게 두 갈래로 나뉩니다.</p>
+<p>딥러닝 기반 객체탐지는 크게 <strong>2단계 검출기(two-stage)</strong>와 <strong>1단계 검출기(one-stage)</strong>로 나뉩니다. 2단계는 먼저 물체가 있을 법한 후보 영역을 뽑고 그 후보를 분류하는 두 단계를 거치며, 정확하지만 느립니다. 1단계는 후보 추출 없이 이미지에서 한 번에 상자와 클래스를 예측해 빠릅니다. 두 방식은 “후보를 먼저 좁힌 뒤 정밀하게 볼 것인가, 아니면 전체를 한 번에 훑을 것인가”라는 전략의 차이로 이해할 수 있습니다.</p>
+<div class="figbody">
+<p><img src="figs/ch6_taxonomy_ours.png" class="img-fluid" style="width:95.0%" alt="객체탐지 모델 분류체계"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 6.4</strong> 객체탐지 모델의 분류체계. 후보 영역을 먼저 뽑은 뒤 분류하는 <strong>2단계 검출기</strong>(R-CNN 계열)는 정확하지만 상대적으로 느리고, 후보 추출 없이 한 번에 상자와 클래스를 예측하는 <strong>1단계 검출기</strong>(YOLO·SSD 계열)는 빠르고 실시간에 적합합니다. 각 카드의 부제는 그 모델의 핵심 아이디어를 요약한 것입니다.</p>
+</div>
+</section>
+<section id="sec-two-stage" class="level2" data-number="16.6">
+<h2 data-number="16.6" class="anchored" data-anchor-id="sec-two-stage"><span class="header-section-number">16.6</span> 2단계 검출기: R-CNN 계열</h2>
+<section id="r-cnn" class="level3" data-number="16.6.1">
+<h3 data-number="16.6.1" class="anchored" data-anchor-id="r-cnn"><span class="header-section-number">16.6.1</span> R-CNN</h3>
+<p><strong>R-CNN(Regions with CNN features)</strong>은 딥러닝을 객체탐지에 본격 도입한 모델입니다<span class="citation" data-cites="girshick2014rich">(<a href="#ref-girshick2014rich" role="doc-biblioref">Girshick 기타, 2014</a>)</span>. 동작은 세 단계입니다. 첫째, <strong>선택적 탐색(selective search)</strong><span class="citation" data-cites="uijlings2013selective">(<a href="#ref-uijlings2013selective" role="doc-biblioref">Uijlings 기타, 2013</a>)</span>으로 물체가 있을 법한 후보 영역을 약 2,000개 뽑습니다. 둘째, 각 후보를 일정 크기로 잘라 CNN에 넣어 특징을 추출합니다. 셋째, 그 특징으로 SVM 분류기가 클래스를 판정하고, 별도의 회귀기가 상자 위치를 보정합니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    I["입력 이미지"] --&gt; SS["선택적 탐색&lt;br/&gt;후보 영역 ~2000개"]
+    SS --&gt; CROP["각 후보를 잘라&lt;br/&gt;CNN에 개별 입력"]
+    CROP --&gt; F["특징 추출"]
+    F --&gt; CLS["SVM 분류 + 상자 회귀"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>학습 관점에서 R-CNN은 ImageNet으로 사전학습한 CNN을 검출 데이터로 미세조정하는, 전이학습의 전형을 보여 주었습니다. 후보 영역이 정답 상자와 IoU가 높으면 양성(해당 클래스), 낮으면 음성(배경)으로 라벨을 매겨 CNN을 미세조정하고, 그 특징으로 클래스별 SVM과 상자 회귀기를 학습했습니다. 검출에 딥러닝 특징을 접목한 이 방식이 이후 모든 딥러닝 검출기의 출발점이 되었습니다.</p>
+<p>그러나 R-CNN은 당시로서는 획기적인 정확도를 보였지만, 심각한 단점이 있었습니다. 후보 2,000개마다 CNN을 <strong>따로따로</strong> 실행하므로 매우 느리고, 특징 추출·SVM 분류·상자 회귀가 분리되어 학습이 여러 단계로 복잡했습니다. 게다가 각 후보의 특징을 디스크에 저장해야 해 저장 공간도 많이 들었습니다. 한 이미지를 처리하는 데 수십 초가 걸려 실용성이 떨어졌습니다. 이후 Fast R-CNN과 Faster R-CNN의 발전은 이 비효율을 하나씩 제거해 가는 과정으로 이해할 수 있습니다.</p>
+</section>
+<section id="fast-r-cnn" class="level3" data-number="16.6.2">
+<h3 data-number="16.6.2" class="anchored" data-anchor-id="fast-r-cnn"><span class="header-section-number">16.6.2</span> Fast R-CNN</h3>
+<p><strong>Fast R-CNN</strong>은 이 비효율을 해결했습니다<span class="citation" data-cites="girshick2015fast">(<a href="#ref-girshick2015fast" role="doc-biblioref">Girshick, 2015</a>)</span>. 핵심은 후보마다 CNN을 돌리는 대신, <strong>이미지 전체에 CNN을 한 번만</strong> 적용해 특징 맵을 만든 뒤, 각 후보 영역에 해당하는 부분을 그 특징 맵에서 잘라 쓰는 것입니다. 이때 서로 다른 크기의 후보를 고정 크기 특징으로 바꾸는 <strong>RoI 풀링(Region of Interest pooling)</strong>을 도입했습니다. RoI 풀링은 임의 크기의 후보 영역을 정해진 격자로 나눠 각 칸을 풀링함으로써, 크기가 제각각인 후보들을 뒤따르는 완전연결층이 받을 수 있는 동일한 크기의 특징으로 통일합니다. 이는 공간 피라미드 풀링의 아이디어를 이은 것입니다<span class="citation" data-cites="he2015spatial">(<a href="#ref-he2015spatial" role="doc-biblioref">He 기타, 2015</a>)</span>. 또한 분류와 상자 회귀를 하나의 신경망에서 함께 학습해, 학습을 단일 과정으로 통합했습니다. 그 결과 속도와 정확도가 모두 크게 향상되었습니다. 그러나 후보 영역을 뽑는 선택적 탐색은 여전히 신경망 밖의 느린 단계로 남아 병목이 되었습니다.</p>
+</section>
+<section id="faster-r-cnn" class="level3" data-number="16.6.3">
+<h3 data-number="16.6.3" class="anchored" data-anchor-id="faster-r-cnn"><span class="header-section-number">16.6.3</span> Faster R-CNN</h3>
+<p><strong>Faster R-CNN</strong>은 이 마지막 병목마저 신경망 안으로 끌어들였습니다<span class="citation" data-cites="ren2015faster">(<a href="#ref-ren2015faster" role="doc-biblioref">Ren 기타, 2015</a>)</span>. 후보 영역을 뽑는 별도 알고리즘 대신, 특징 맵 위에서 물체 후보를 직접 예측하는 <strong>영역 제안 네트워크(Region Proposal Network, RPN)</strong>를 도입했습니다. RPN은 특징 맵의 각 위치에 <strong>앵커(anchor)</strong>라 부르는 여러 크기·비율의 기준 상자를 두고, 각 앵커에 물체가 있을 확률과 상자 보정값을 예측합니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    I["입력 이미지"] --&gt; B["백본 CNN&lt;br/&gt;특징 맵"]
+    B --&gt; RPN["RPN&lt;br/&gt;앵커 기반 후보 제안"]
+    B --&gt; ROI["RoI 풀링"]
+    RPN --&gt; ROI
+    ROI --&gt; HEAD["분류 + 상자 회귀"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>RPN과 검출 머리가 특징 맵을 공유하므로, 후보 제안부터 최종 검출까지 하나의 신경망으로 <strong>끝에서 끝까지(end-to-end)</strong> 학습됩니다. 선택적 탐색이라는 느린 외부 단계가 사라지고, 후보 제안이 GPU에서 신경망으로 수행되면서 속도가 크게 빨라졌습니다. 이로써 Faster R-CNN은 준실시간에 가까운 속도와 높은 정확도를 얻어, 이후 2단계 검출기의 표준 틀이 되었습니다.</p>
+<p>여러 크기의 물체를 잘 다루기 위해 서로 다른 해상도의 특징을 결합하는 <strong>특징 피라미드 네트워크(FPN)</strong>가 함께 쓰이기도 합니다<span class="citation" data-cites="lin2017feature">(<a href="#ref-lin2017feature" role="doc-biblioref">Lin 기타, 2017</a>)</span>. FPN은 깊은 층의 의미가 풍부한 특징과 얕은 층의 해상도가 높은 특징을 위에서 아래로 결합해, 작은 물체와 큰 물체를 모두 잘 검출하도록 돕습니다. 이 다중 스케일 특징 결합은 이후 대부분의 검출기에 표준적으로 채택되었습니다.</p>
+</section>
+<section id="mask-r-cnn" class="level3" data-number="16.6.4">
+<h3 data-number="16.6.4" class="anchored" data-anchor-id="mask-r-cnn"><span class="header-section-number">16.6.4</span> Mask R-CNN</h3>
+<p><strong>Mask R-CNN</strong>은 Faster R-CNN에 <strong>분할 머리</strong>를 하나 더 붙여, 검출과 동시에 각 물체의 픽셀 단위 마스크까지 예측합니다<span class="citation" data-cites="he2017mask">(<a href="#ref-he2017mask" role="doc-biblioref">He 기타, 2017</a>)</span>. 즉 같은 종류라도 개체를 구분하는 인스턴스 분할을 수행합니다. 기존 검출 머리(분류·상자 회귀)와 나란히, 각 후보 영역에 대해 이진 마스크를 출력하는 작은 완전 합성곱 가지를 추가한 구조입니다. 이 과정에서 RoI 풀링이 좌표를 반올림하며 생기는 위치 어긋남을 없앤 <strong>RoIAlign</strong>을 도입해 마스크의 정밀도를 크게 높였습니다. RoIAlign은 반올림 대신 이중선형 보간으로 특징을 정확히 정렬해, 픽셀 단위 예측에서 중요한 미세한 위치 정확도를 확보합니다. Mask R-CNN은 검출·분할·자세 추정 등 여러 과제로 확장 가능한 유연한 구조로, 오늘날에도 인스턴스 분할의 대표 모델로 널리 활용됩니다.</p>
+</section>
+<section id="cascade-r-cnn" class="level3" data-number="16.6.5">
+<h3 data-number="16.6.5" class="anchored" data-anchor-id="cascade-r-cnn"><span class="header-section-number">16.6.5</span> Cascade R-CNN</h3>
+<p><strong>Cascade R-CNN</strong>은 검출기를 여러 단계로 이어 붙여 품질을 높입니다<span class="citation" data-cites="cai2018cascade">(<a href="#ref-cai2018cascade" role="doc-biblioref">Cai &amp; Vasconcelos, 2018</a>)</span>. 하나의 IoU 기준만 쓰면, 기준을 낮게 잡으면 부정확한 상자가 늘고 높게 잡으면 학습 예제가 부족해지는 딜레마가 있습니다. Cascade R-CNN은 낮은 IoU 기준으로 학습한 검출기의 출력을, 점점 높은 IoU 기준으로 학습한 다음 검출기가 다시 다듬는 방식으로 이 딜레마를 풉니다. 단계를 거칠수록 상자가 정답에 더 정밀하게 맞춰져, 특히 높은 정확도가 요구되는 상황에서 성능이 향상됩니다.</p>
+</section>
+</section>
+<section id="sec-one-stage" class="level2" data-number="16.7">
+<h2 data-number="16.7" class="anchored" data-anchor-id="sec-one-stage"><span class="header-section-number">16.7</span> 1단계 검출기</h2>
+<p>2단계 검출기는 정확하지만 후보 제안 단계 때문에 실시간 처리에 한계가 있었습니다. 1단계 검출기는 후보 제안 없이 이미지에서 <strong>한 번의 순전파로</strong> 상자와 클래스를 직접 예측해 속도를 크게 높였습니다.</p>
+<section id="yolo" class="level3" data-number="16.7.1">
+<h3 data-number="16.7.1" class="anchored" data-anchor-id="yolo"><span class="header-section-number">16.7.1</span> YOLO</h3>
+<p><strong>YOLO(You Only Look Once)</strong>는 1단계 검출의 대표 모델입니다<span class="citation" data-cites="redmon2016you">(<a href="#ref-redmon2016you" role="doc-biblioref">Redmon 기타, 2016</a>)</span>. 이름 그대로 이미지를 한 번만 보고 모든 물체를 찾습니다. 동작 원리는 이미지를 <span class="math inline">\(S\times S\)</span> 격자로 나누고, 각 격자 칸이 그 칸을 중심으로 하는 물체의 상자·확신도·클래스 확률을 직접 예측하는 것입니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    I["입력 이미지"] --&gt; G["S×S 격자로 분할"]
+    G --&gt; CNN["단일 CNN 순전파"]
+    CNN --&gt; P["각 칸마다&lt;br/&gt;상자 B개 + 확신도 + 클래스 확률"]
+    P --&gt; NMS["NMS로 중복 제거"]
+    NMS --&gt; OUT["최종 검출"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>각 격자 칸은 <span class="math inline">\(B\)</span>개의 상자를 예측하며, 하나의 상자는 위치 <span class="math inline">\((x,y,w,h)\)</span>와 물체 존재 확신도로 이루어집니다. 여기에 칸별 클래스 확률을 곱해 최종 점수를 냅니다. 클래스가 <span class="math inline">\(C\)</span>개일 때 전체 출력은 <span class="math inline">\(S\times S\times(B\times 5 + C)\)</span> 크기의 하나의 텐서로 표현됩니다. 여기서 <span class="math inline">\(5\)</span>는 상자 좌표 네 개와 확신도 하나를 뜻합니다. 이 텐서를 한 번의 순전파로 얻으므로 매우 빠릅니다.</p>
+<p>YOLO의 학습은 이 출력 텐서 전체에 대한 하나의 손실로 이루어집니다. 상자 위치 오차, 확신도 오차, 클래스 오차를 가중합한 손실을 최소화하며, 물체가 있는 칸과 없는 칸의 불균형을 가중치로 조절합니다. 검출을 여러 단계가 아니라 하나의 회귀 문제로 통합한 이 발상이 YOLO의 속도와 단순함의 원천입니다. YOLO는 전체 이미지를 한꺼번에 보므로 배경을 물체로 오인하는 실수가 적다는 장점도 있습니다. 다만 초기 버전은 한 칸이 예측하는 상자 수가 제한되어, 작은 물체가 밀집한 경우에 약했습니다.</p>
+<p>YOLO는 이후 여러 세대로 발전했습니다. 앵커 상자와 배치 정규화를 도입하고 더 많은 클래스를 다룬 YOLO9000(YOLOv2)<span class="citation" data-cites="redmon2017yolo9000">(<a href="#ref-redmon2017yolo9000" role="doc-biblioref">Redmon &amp; Farhadi, 2017</a>)</span>, 다중 스케일 예측으로 작은 물체 검출을 개선한 YOLOv3<span class="citation" data-cites="redmon2018yolov3">(<a href="#ref-redmon2018yolov3" role="doc-biblioref">Redmon &amp; Farhadi, 2018</a>)</span>, 다양한 학습 기법을 결합해 속도와 정확도를 함께 높인 YOLOv4<span class="citation" data-cites="bochkovskiy2020yolov4">(<a href="#ref-bochkovskiy2020yolov4" role="doc-biblioref">Bochkovskiy 기타, 2020</a>)</span> 등으로 이어지며 실시간 검출의 대표 계열이 되었습니다.</p>
+</section>
+<section id="ssd" class="level3" data-number="16.7.2">
+<h3 data-number="16.7.2" class="anchored" data-anchor-id="ssd"><span class="header-section-number">16.7.2</span> SSD</h3>
+<p><strong>SSD(Single Shot MultiBox Detector)</strong>도 1단계 검출기로, YOLO와 비슷한 시기에 등장했습니다<span class="citation" data-cites="liu2016ssd">(<a href="#ref-liu2016ssd" role="doc-biblioref">Liu 기타, 2016</a>)</span>. SSD의 특징은 <strong>여러 해상도의 특징 맵</strong>에서 동시에 검출을 수행한다는 점입니다. 큰 특징 맵은 세밀해 작은 물체를, 작은 특징 맵은 넓은 문맥을 보아 큰 물체를 담당하게 하여, 다양한 크기의 물체를 한 번의 순전파로 잘 잡아냅니다. 각 특징 맵 위치에 여러 비율의 기본 상자(default box)를 두어 예측합니다. 이렇게 여러 스케일에서 검출하는 발상은 초기 YOLO가 약했던 다중 크기 문제를 완화했고, 이후 검출기들이 다중 스케일 특징을 활용하는 흐름으로 이어졌습니다.</p>
+</section>
+<section id="retinanet과-초점-손실" class="level3" data-number="16.7.3">
+<h3 data-number="16.7.3" class="anchored" data-anchor-id="retinanet과-초점-손실"><span class="header-section-number">16.7.3</span> RetinaNet과 초점 손실</h3>
+<p>1단계 검출기는 빠르지만, 오랫동안 정확도에서 2단계에 뒤졌습니다. <strong>RetinaNet</strong>은 그 원인이 <strong>클래스 불균형</strong>에 있음을 밝혔습니다<span class="citation" data-cites="lin2017focal">(<a href="#ref-lin2017focal" role="doc-biblioref">Lin 기타, 2017</a>)</span>. 이미지 대부분이 배경이라, 쉬운 배경 예제가 손실을 지배해 어려운 물체 학습을 방해한 것입니다. 이를 해결하려고 잘 맞힌 쉬운 예제의 손실을 줄이는 <strong>초점 손실(focal loss)</strong>을 제안했습니다.</p>
+<p><span class="math display">\[
+\text{FL}(p_t) = -(1-p_t)^{\gamma}\,\log(p_t).
+\]</span></p>
+<p>여기서 <span class="math inline">\(p_t\)</span>는 정답 클래스에 대한 예측 확률이고 <span class="math inline">\(\gamma\)</span>는 조절 계수입니다. <span class="math inline">\(p_t\)</span>가 1에 가까운(이미 잘 맞힌) 예제는 <span class="math inline">\((1-p_t)^\gamma\)</span>가 작아져 손실 기여가 줄고, 어려운 예제에 학습이 집중됩니다. 예컨대 <span class="math inline">\(\gamma=2\)</span>이고 어떤 배경을 0.9의 확률로 잘 맞혔다면, 그 손실은 일반 교차 엔트로피의 100분의 1 수준으로 줄어듭니다. 이렇게 쉬운 다수 예제의 영향을 억눌러, 소수의 어려운 물체 예제가 학습을 이끌게 합니다. 초점 손실 덕분에 RetinaNet은 1단계의 속도를 유지하면서 2단계에 필적하는 정확도를 얻어, 1단계 검출기가 정확도에서도 경쟁력을 갖추는 계기가 되었습니다.</p>
+</section>
+<section id="efficientdet" class="level3" data-number="16.7.4">
+<h3 data-number="16.7.4" class="anchored" data-anchor-id="efficientdet"><span class="header-section-number">16.7.4</span> EfficientDet</h3>
+<p><strong>EfficientDet</strong>은 효율적인 백본 EfficientNet 위에, 여러 해상도 특징을 가중 결합하는 <strong>BiFPN</strong>과 복합 스케일링을 결합해 정확도와 효율을 함께 높인 검출기입니다<span class="citation" data-cites="tan2020efficientdet">(<a href="#ref-tan2020efficientdet" role="doc-biblioref">Tan 기타, 2020</a>)</span>. 제한된 연산 자원에서 높은 성능을 내도록 설계되어, 자원 대비 성능이 우수합니다.</p>
+</section>
+<section id="앵커-없는-검출기-fcoscenternetcornernet" class="level3" data-number="16.7.5">
+<h3 data-number="16.7.5" class="anchored" data-anchor-id="앵커-없는-검출기-fcoscenternetcornernet"><span class="header-section-number">16.7.5</span> 앵커 없는 검출기: FCOS·CenterNet·CornerNet</h3>
+<p>앞의 많은 검출기는 미리 정의한 앵커 상자에 의존했는데, 앵커의 크기·비율을 사람이 조정해야 하는 부담이 있었습니다. <strong>앵커 프리(anchor-free)</strong> 검출기는 이 앵커를 없앱니다.</p>
+<ul>
+<li><strong>FCOS</strong>는 특징 맵의 <strong>각 픽셀</strong>에서 그 픽셀이 물체 안에 있는지와 상자 네 변까지의 거리를 직접 예측합니다<span class="citation" data-cites="tian2019fcos">(<a href="#ref-tian2019fcos" role="doc-biblioref">Tian 기타, 2019</a>)</span>. 앵커 없이 완전 합성곱만으로 검출을 수행해 구조가 단순합니다.</li>
+<li><strong>CenterNet(Objects as Points)</strong>은 물체를 <strong>중심점 하나</strong>로 표현합니다<span class="citation" data-cites="zhou2019objects">(<a href="#ref-zhou2019objects" role="doc-biblioref">Zhou 기타, 2019</a>)</span>. 히트맵으로 물체 중심을 찾고, 그 위치에서 크기와 오프셋을 회귀합니다. NMS조차 거의 필요 없을 만큼 간결합니다.</li>
+<li><strong>CornerNet</strong>은 물체를 좌상단·우하단 <strong>두 모서리 점의 쌍</strong>으로 검출합니다<span class="citation" data-cites="law2018cornernet">(<a href="#ref-law2018cornernet" role="doc-biblioref">Law &amp; Deng, 2018</a>)</span>. 키포인트 검출 방식을 객체탐지에 적용한 초기 앵커 프리 모델입니다.</li>
+</ul>
+<p>이런 앵커 프리 접근은 앵커의 크기·비율·개수 같은 하이퍼파라미터를 사람이 조정할 필요를 없애, 구조를 단순화하고 다양한 데이터에 더 잘 적응하게 만드는 흐름을 이끌었습니다. 물체를 상자가 아니라 점이나 키포인트로 표현하는 이 발상은, 검출을 바라보는 새로운 관점을 열었다는 점에서도 의미가 있습니다.</p>
+</section>
+<section id="단계와-1단계의-비교" class="level3" data-number="16.7.6">
+<h3 data-number="16.7.6" class="anchored" data-anchor-id="단계와-1단계의-비교"><span class="header-section-number">16.7.6</span> 2단계와 1단계의 비교</h3>
+<p>두 갈래의 특징을 정리하면 다음과 같습니다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>구분</th>
+<th>2단계 검출기</th>
+<th>1단계 검출기</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>절차</td>
+<td>후보 제안 → 분류</td>
+<td>한 번에 직접 예측</td>
+</tr>
+<tr class="even">
+<td>대표</td>
+<td>Faster/Mask R-CNN</td>
+<td>YOLO, SSD, RetinaNet</td>
+</tr>
+<tr class="odd">
+<td>속도</td>
+<td>상대적으로 느림</td>
+<td>빠름(실시간)</td>
+</tr>
+<tr class="even">
+<td>정확도</td>
+<td>전통적으로 높음</td>
+<td>초점 손실 등으로 근접</td>
+</tr>
+<tr class="odd">
+<td>활용</td>
+<td>정밀도 중시 과제</td>
+<td>실시간·모바일</td>
+</tr>
+</tbody>
+</table>
+<p>실무에서는 정확도가 중요하면 2단계를, 속도가 중요하면 1단계를 택하되, 최근에는 1단계의 정확도가 크게 올라 경계가 흐려지고 있습니다.</p>
+<div class="keybox">
+<p><strong>핵심.</strong> 객체탐지는 <span class="key">위치(박스) + 분류</span>를 동시에 푸는 문제이며, IoU·NMS·mAP로 평가합니다. <strong>2단계 검출기</strong>(R-CNN 계열)는 후보를 먼저 뽑아 정밀하게, <strong>1단계 검출기</strong>(YOLO·SSD·RetinaNet)는 한 번에 예측해 빠르게 처리합니다.</p>
+</div>
+</section>
+</section>
+<section id="sec-segmentation" class="level2" data-number="16.8">
+<h2 data-number="16.8" class="anchored" data-anchor-id="sec-segmentation"><span class="header-section-number">16.8</span> 이미지 분할과 인코더-디코더</h2>
+<p><strong>이미지 분할</strong>은 픽셀마다 클래스를 부여하는 과제입니다. 분류가 이미지 하나에 라벨 하나를 주는 것과 달리, 분할은 입력과 같은 크기의 라벨 지도를 출력해야 합니다. 이를 위해서는 특징을 추출해 압축한 뒤 다시 원래 해상도로 복원하는 구조가 필요합니다.</p>
+<p>일반적인 분류 CNN은 풀링을 거치며 해상도를 계속 낮추므로, 마지막에는 공간 정보가 거의 사라진 작은 특징만 남습니다. 이는 “무엇인가”를 판단하기엔 충분하지만 “어디인가”를 픽셀 단위로 답하기엔 부족합니다. 따라서 분할 모델은 낮아진 해상도를 다시 키우는 <strong>업샘플링(upsampling)</strong> 과정을 두어야 합니다. 업샘플링에는 단순히 값을 키우는 보간법이나, 학습되는 <strong>전치 합성곱(transposed convolution)</strong>이 쓰입니다. 전치 합성곱은 합성곱의 역방향으로 작은 특징 맵을 큰 특징 맵으로 확장하는 학습 가능한 연산입니다.</p>
+<section id="인코더-디코더-아키텍처" class="level3" data-number="16.8.1">
+<h3 data-number="16.8.1" class="anchored" data-anchor-id="인코더-디코더-아키텍처"><span class="header-section-number">16.8.1</span> 인코더-디코더 아키텍처</h3>
+<p>분할의 표준 틀은 <strong>인코더-디코더(encoder-decoder)</strong> 구조입니다. <strong>인코더</strong>는 합성곱과 풀링으로 이미지를 점점 작은 특징 맵으로 압축하며 “무엇이 있는가”라는 의미 정보를 추출합니다. <strong>디코더</strong>는 업샘플링으로 특징 맵을 점점 키워 원래 해상도의 픽셀별 예측을 복원하며 “어디에 있는가”라는 위치 정보를 되살립니다. 이 구조는 4장에서 본 시퀀스 모델의 인코더-디코더와 목적은 다르지만, “압축 후 복원”이라는 발상을 공유합니다.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    I["입력 이미지"] --&gt; E["인코더&lt;br/&gt;다운샘플링·의미 추출"]
+    E --&gt; Z["압축된 특징"]
+    Z --&gt; D["디코더&lt;br/&gt;업샘플링·해상도 복원"]
+    D --&gt; O["픽셀별 클래스 지도"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>분할은 라벨의 세밀함에 따라 두 종류로 나뉩니다. <strong>의미 분할</strong>은 같은 종류의 물체를 하나로 묶어 픽셀마다 클래스만 구분합니다. 예를 들어 화면의 모든 사람 픽셀을 “사람”으로 칠하되 개인은 구분하지 않습니다. <strong>인스턴스 분할</strong>은 같은 종류라도 개체를 따로 구분해, 사람 A와 사람 B를 다른 영역으로 나눕니다. 앞서 본 Mask R-CNN이 인스턴스 분할의 대표라면, 지금 볼 인코더-디코더 계열은 주로 의미 분할에 쓰입니다.</p>
+<p>이 발상을 처음 픽셀 단위 분할에 적용한 것이 <strong>완전 합성곱 네트워크(FCN)</strong>입니다<span class="citation" data-cites="long2015fully">(<a href="#ref-long2015fully" role="doc-biblioref">Long 기타, 2015</a>)</span>. FCN은 분류 CNN의 완전연결층을 합성곱으로 바꿔, 임의 크기 입력에 대해 픽셀별 예측을 내놓을 수 있게 했습니다. 인코더의 풀링 인덱스를 기억해 디코더에서 되살리는 SegNet<span class="citation" data-cites="badrinarayanan2017segnet">(<a href="#ref-badrinarayanan2017segnet" role="doc-biblioref">Badrinarayanan 기타, 2017</a>)</span>, 확장 합성곱으로 넓은 문맥을 보는 DeepLab<span class="citation" data-cites="chen2018deeplab">(<a href="#ref-chen2018deeplab" role="doc-biblioref">Chen 기타, 2018</a>)</span> 등이 이 계보를 이었습니다.</p>
+</section>
+<section id="u-net" class="level3" data-number="16.8.2">
+<h3 data-number="16.8.2" class="anchored" data-anchor-id="u-net"><span class="header-section-number">16.8.2</span> U-Net</h3>
+<p><strong>U-Net</strong>은 인코더-디코더 구조에 <strong>스킵 연결(skip connection)</strong>을 더한 분할 모델로, 특히 의료 영상에서 널리 쓰입니다<span class="citation" data-cites="ronneberger2015unet">(<a href="#ref-ronneberger2015unet" role="doc-biblioref">Ronneberger 기타, 2015</a>)</span>. 이름은 인코더와 디코더가 대칭을 이루어 알파벳 U자 모양을 그리는 데서 왔습니다.</p>
+<div class="figbody">
+<p><img src="figs/ch6_unet_arch.png" class="img-fluid" style="width:98.0%" alt="U-Net 아키텍처"></p>
+</div>
+<div class="figcap">
+<p><strong>그림 6.5</strong> U-Net 아키텍처. 왼쪽 인코더는 다운샘플링으로 공간 크기를 줄이며 의미 정보를 추출하고(H×W → H/8×W/8), 오른쪽 디코더는 업샘플링으로 원래 해상도를 복원합니다. 핵심은 붉은 <strong>스킵 연결</strong>로, 같은 해상도의 인코더 특징을 디코더에 직접 이어 붙여 다운샘플링에서 잃은 세밀한 위치 정보를 되살립니다. 인코더-디코더가 대칭을 이루어 알파벳 U자 모양이 됩니다.</p>
+</div>
+<p>U-Net의 핵심은 스킵 연결입니다. 인코더에서 다운샘플링하며 잃어버리는 <strong>세밀한 위치 정보</strong>를, 같은 해상도의 인코더 특징을 디코더에 직접 이어 붙여 되살립니다. 디코더는 이렇게 “의미 정보(깊은 층)”와 “세밀한 경계 정보(얕은 층)”를 함께 활용해 경계가 정확한 분할을 만듭니다. 스킵 연결이 없으면 디코더는 압축 과정에서 사라진 미세한 경계를 복원하기 어려워 분할 경계가 뭉개집니다.</p>
+<p>이 스킵 연결 덕분에 U-Net은 적은 학습 데이터로도 정밀한 분할을 해내어, 데이터가 귀한 의료 영상 분야에서 표준처럼 자리 잡았습니다. 세포·장기·병변의 경계를 픽셀 단위로 정확히 나누어야 하는 의료 영상에서 U-Net과 그 변형들은 지금도 널리 쓰이며, 위성 영상 분석이나 산업 결함 검사 등 정밀한 영역 구분이 필요한 여러 분야로 확장되었습니다. 스킵 연결로 저수준·고수준 특징을 결합한다는 아이디어는 앞서 본 FPN과도 통하는, 현대 시각 모델의 핵심 설계 원리 중 하나입니다.</p>
+</section>
+</section>
+<section id="sec-modern" class="level2" data-number="16.9">
+<h2 data-number="16.9" class="anchored" data-anchor-id="sec-modern"><span class="header-section-number">16.9</span> 최신 동향: 트랜스포머 기반 검출</h2>
+<p>최근에는 4장에서 배운 트랜스포머가 객체탐지에도 도입되었습니다. 앞서 본 검출기들은 앵커 설계, NMS, 후보 제안 같은 사람이 정한 요소를 많이 포함했는데, 이런 부분이 성능을 좌우하면서도 조정이 까다로웠습니다. <strong>DETR(Detection Transformer)</strong>는 이런 수작업 요소를 없애고, 검출을 <strong>집합 예측(set prediction)</strong> 문제로 다룹니다<span class="citation" data-cites="carion2020end">(<a href="#ref-carion2020end" role="doc-biblioref">Carion 기타, 2020</a>)</span>. CNN 백본이 뽑은 특징에 트랜스포머 인코더-디코더를 적용하고, 학습된 질의(object query)들이 각각 하나의 물체를 직접 예측합니다. 어텐션이 이미지 전체의 관계를 보므로, 물체 사이의 문맥까지 고려한 예측이 가능합니다. 예측과 정답을 일대일로 짝짓는 이분 매칭 손실로 학습하므로, 한 물체에 여러 상자가 나오지 않아 중복을 제거하는 NMS가 필요 없습니다. DETR는 복잡했던 검출 파이프라인을 하나의 신경망으로 단순화했고, 초기의 느린 수렴 문제를 개선한 여러 변형으로 활발히 발전하고 있습니다.</p>
+<p>지금까지의 흐름을 되짚으면 하나의 방향이 보입니다. 검출 파이프라인에서 사람이 손으로 설계하던 부분—특징, 후보 제안, 앵커, 중복 제거—이 하나씩 학습 가능한 신경망 안으로 흡수되며 점점 단순하고 강력해져 왔습니다. 이처럼 객체탐지는 손으로 설계한 특징에서 CNN 기반 2단계·1단계 검출기로, 그리고 앵커 프리와 트랜스포머 기반 방식으로 꾸준히 발전해 왔습니다. 그 바탕에는 언제나 CNN이 학습한 강력한 시각 특징이 있으며, 검출·분할은 그 특징을 어떻게 활용해 “무엇이 어디에 있는가”를 답하느냐의 문제였습니다. 이 장에서 다룬 구조들은 자율주행·의료 영상·산업 검사·영상 분석 등 시각 정보를 다루는 거의 모든 응용의 토대가 됩니다.</p>
+
+
+</section>
+<section id="bibliography" class="level1 unnumbered">
+<h1 class="unnumbered">참고문헌</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="1" role="list">
+<div id="ref-badrinarayanan2017segnet" class="csl-entry" role="listitem">
+V. Badrinarayanan, A. Kendall, &amp; R. Cipolla. 2017. <span>“SegNet: A deep convolutional encoder-decoder architecture for image segmentation”</span>. <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>, vol 39, pp. 2481–2495.
+</div>
+<div id="ref-bochkovskiy2020yolov4" class="csl-entry" role="listitem">
+A. Bochkovskiy, C.-Y. Wang, &amp; H.-Y. M. Liao. 2020. <span>“YOLOv4: Optimal speed and accuracy of object detection”</span>. <em>arXiv preprint arXiv:2004.10934</em>.
+</div>
+<div id="ref-cai2018cascade" class="csl-entry" role="listitem">
+Z. Cai &amp; N. Vasconcelos. 2018. <span>“Cascade R-CNN: Delving into high quality object detection”</span>. <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>, pp. 6154–6162.
+</div>
+<div id="ref-carion2020end" class="csl-entry" role="listitem">
+N. Carion, F. Massa, G. Synnaeve, N. Usunier, A. Kirillov, &amp; S. Zagoruyko. 2020. <span>“End-to-end object detection with transformers”</span>. <em>European Conference on Computer Vision (ECCV)</em>, pp. 213–229.
+</div>
+<div id="ref-chen2018deeplab" class="csl-entry" role="listitem">
+L.-C. Chen, G. Papandreou, I. Kokkinos, K. Murphy, &amp; A. L. Yuille. 2018. <span>“DeepLab: Semantic image segmentation with deep convolutional nets, atrous convolution, and fully connected CRFs”</span>. <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>, vol 40, pp. 834–848.
+</div>
+<div id="ref-dalal2005histograms" class="csl-entry" role="listitem">
+N. Dalal &amp; B. Triggs. 2005. <span>“Histograms of oriented gradients for human detection”</span>. <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>, pp. 886–893.
+</div>
+<div id="ref-dosovitskiy2021image" class="csl-entry" role="listitem">
+A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, &amp; others. 2021. <span>“An image is worth 16x16 words: Transformers for image recognition at scale”</span>. <em>International Conference on Learning Representations (ICLR)</em>.
+</div>
+<div id="ref-everingham2010pascal" class="csl-entry" role="listitem">
+M. Everingham, L. Van Gool, C. K. I. Williams, J. Winn, &amp; A. Zisserman. 2010. <span>“The PASCAL Visual Object Classes (VOC) challenge”</span>. <em>International Journal of Computer Vision</em>, vol 88, pp. 303–338.
+</div>
+<div id="ref-girshick2015fast" class="csl-entry" role="listitem">
+R. Girshick. 2015. <span>“Fast R-CNN”</span>. <em>IEEE International Conference on Computer Vision (ICCV)</em>, pp. 1440–1448.
+</div>
+<div id="ref-girshick2014rich" class="csl-entry" role="listitem">
+R. Girshick, J. Donahue, T. Darrell, &amp; J. Malik. 2014. <span>“Rich feature hierarchies for accurate object detection and semantic segmentation”</span>. <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>, pp. 580–587.
+</div>
+<div id="ref-he2017mask" class="csl-entry" role="listitem">
+K. He, G. Gkioxari, P. Dollar, &amp; R. Girshick. 2017. <span>“Mask R-CNN”</span>. <em>IEEE International Conference on Computer Vision (ICCV)</em>, pp. 2961–2969.
+</div>
+<div id="ref-he2015spatial" class="csl-entry" role="listitem">
+K. He, X. Zhang, S. Ren, &amp; J. Sun. 2015. <span>“Spatial pyramid pooling in deep convolutional networks for visual recognition”</span>. <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>, vol 37, pp. 1904–1916.
+</div>
+<div id="ref-law2018cornernet" class="csl-entry" role="listitem">
+H. Law &amp; J. Deng. 2018. <span>“CornerNet: Detecting objects as paired keypoints”</span>. <em>European Conference on Computer Vision (ECCV)</em>, pp. 734–750.
+</div>
+<div id="ref-lin2017feature" class="csl-entry" role="listitem">
+T.-Y. Lin, P. Dollar, R. Girshick, K. He, B. Hariharan, &amp; S. Belongie. 2017. <span>“Feature pyramid networks for object detection”</span>. <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>, pp. 2117–2125.
+</div>
+<div id="ref-lin2017focal" class="csl-entry" role="listitem">
+T.-Y. Lin, P. Goyal, R. Girshick, K. He, &amp; P. Dollar. 2017. <span>“Focal loss for dense object detection”</span>. <em>IEEE International Conference on Computer Vision (ICCV)</em>, pp. 2980–2988.
+</div>
+<div id="ref-lin2014microsoft" class="csl-entry" role="listitem">
+T.-Y. Lin, M. Maire, S. Belongie, J. Hays, P. Perona, D. Ramanan, P. Dollar, &amp; C. L. Zitnick. 2014. <span>“Microsoft COCO: Common objects in context”</span>. <em>European Conference on Computer Vision (ECCV)</em>, pp. 740–755.
+</div>
+<div id="ref-liu2016ssd" class="csl-entry" role="listitem">
+W. Liu, D. Anguelov, D. Erhan, C. Szegedy, S. Reed, C.-Y. Fu, &amp; A. C. Berg. 2016. <span>“SSD: Single shot multibox detector”</span>. <em>European Conference on Computer Vision (ECCV)</em>, pp. 21–37.
+</div>
+<div id="ref-long2015fully" class="csl-entry" role="listitem">
+J. Long, E. Shelhamer, &amp; T. Darrell. 2015. <span>“Fully convolutional networks for semantic segmentation”</span>. <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>, pp. 3431–3440.
+</div>
+<div id="ref-redmon2016you" class="csl-entry" role="listitem">
+J. Redmon, S. Divvala, R. Girshick, &amp; A. Farhadi. 2016. <span>“You only look once: Unified, real-time object detection”</span>. <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>, pp. 779–788.
+</div>
+<div id="ref-redmon2017yolo9000" class="csl-entry" role="listitem">
+J. Redmon &amp; A. Farhadi. 2017. <span>“YOLO9000: Better, faster, stronger”</span>. <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>, pp. 7263–7271.
+</div>
+<div id="ref-redmon2018yolov3" class="csl-entry" role="listitem">
+J. Redmon &amp; A. Farhadi. 2018. <span>“YOLOv3: An incremental improvement”</span>. <em>arXiv preprint arXiv:1804.02767</em>.
+</div>
+<div id="ref-ren2015faster" class="csl-entry" role="listitem">
+S. Ren, K. He, R. Girshick, &amp; J. Sun. 2015. <span>“Faster R-CNN: Towards real-time object detection with region proposal networks”</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
+</div>
+<div id="ref-ronneberger2015unet" class="csl-entry" role="listitem">
+O. Ronneberger, P. Fischer, &amp; T. Brox. 2015. <span>“U-Net: Convolutional networks for biomedical image segmentation”</span>. <em>Medical Image Computing and Computer-Assisted Intervention (MICCAI)</em>, pp. 234–241.
+</div>
+<div id="ref-tan2020efficientdet" class="csl-entry" role="listitem">
+M. Tan, R. Pang, &amp; Q. V. Le. 2020. <span>“EfficientDet: Scalable and efficient object detection”</span>. <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>, pp. 10781–10790.
+</div>
+<div id="ref-tian2019fcos" class="csl-entry" role="listitem">
+Z. Tian, C. Shen, H. Chen, &amp; T. He. 2019. <span>“FCOS: Fully convolutional one-stage object detection”</span>. <em>IEEE International Conference on Computer Vision (ICCV)</em>, pp. 9627–9636.
+</div>
+<div id="ref-uijlings2013selective" class="csl-entry" role="listitem">
+J. R. R. Uijlings, K. E. A. van de Sande, T. Gevers, &amp; A. W. M. Smeulders. 2013. <span>“Selective search for object recognition”</span>. <em>International Journal of Computer Vision</em>, vol 104, pp. 154–171.
+</div>
+<div id="ref-viola2001rapid" class="csl-entry" role="listitem">
+P. Viola &amp; M. Jones. 2001. <span>“Rapid object detection using a boosted cascade of simple features”</span>. <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>.
+</div>
+<div id="ref-zhou2019objects" class="csl-entry" role="listitem">
+X. Zhou, D. Wang, &amp; P. Krahenbuhl. 2019. <span>“Objects as points”</span>. <em>arXiv preprint arXiv:1904.07850</em>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".quiz-item input[type='checkbox']").forEach((box) => {
+    box.disabled = false;
+    box.removeAttribute("disabled");
+  });
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "복사완료!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "복사완료!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./week05-lab.html" class="pagination-link" aria-label="5주차 코딩 실습">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">5주차 코딩 실습</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./week07-lecture.html" class="pagination-link" aria-label="생성 모델 입문">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">생성 모델 입문</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>AI 모델링 실습</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>2026-2학기</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
